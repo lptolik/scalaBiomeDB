@@ -171,7 +171,7 @@ class GraphElementsTest extends FunSuite {
 
   test("coordinates gene test") {
     new TestNodesAndRels {
-      assert(gene.getCoordinates === Coordinates(150,301,Strand.reverse))
+      assert(gene.getCoordinates === Coordinates(150, 301, Strand.reverse))
     }
   }
 

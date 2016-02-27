@@ -167,7 +167,7 @@ case class Coordinates(
                         end: Int,
                         strand: Strand.Value) {
 
-  require (start < end, "Start coordinate cannot have bigger value than end coordinate!")
+  require (start <= end, "Start coordinate cannot have bigger value than end coordinate!")
 
   def getStart = start
 
@@ -185,7 +185,7 @@ case class Coordinates(
 
   def comesBefore(that: Coordinates) = that match{
     case that: Coordinates => this.getStrand == that.getStrand &&
-      this.getStart > that.getStart &&
+      this.getStart < that.getStart &&
       this.getClass == that.getClass
     case _ => false
   }
@@ -194,13 +194,13 @@ case class Coordinates(
 case class Boundaries(
                        firstGene: Gene,
                        lastGene: Gene) {
-  require(firstGene.getCoordinates.comesBefore(lastGene.getCoordinates),
-    "Start coordinate cannot have bigger value than end coordinate!")
+  require(firstGene.getCoordinates comesBefore lastGene.getCoordinates,
+    "Start gene coordinate cannot have bigger value than end gene coordinate!")
 
-  require(firstGene.getCoordinates.getStrand.equals(lastGene.getCoordinates.getStrand),
+  require(firstGene.getCoordinates.getStrand equals lastGene.getCoordinates.getStrand,
     "Genes in the operon must be located on the same strand!")
 
-  require(firstGene.getOrganism.equals(lastGene.getOrganism),
+  require(firstGene.getOrganism equals lastGene.getOrganism,
     "Genes in the operon must be located in the same organism!")
 
   def getFirstGene = firstGene
@@ -262,12 +262,13 @@ abstract class Feature(coordinates: Coordinates,
 
   def getCCP = ccp
 
-  override def equals(that: Any) = that match {
-    case that: Feature => this.getCCP == that.getCCP &&
-      this.getCoordinates == that.getCoordinates &&
-      this.getClass == that.getClass
-    case _ => false
-  }
+//  override def equals(that: Any) = that match {
+//    case that: Feature => this.getCCP == that.getCCP &&
+//      this.getCoordinates == that.getCoordinates
+//    case _ => false
+//  }
+
+//  def canEqual(that: Any): Boolean
 }
 
 case class Gene(
@@ -299,6 +300,8 @@ case class Gene(
     case _ => false
   }
 
+//  override def canEqual(that: Any) = that.isInstanceOf[Gene]
+
   def getOrganism = organism
 }
 
@@ -311,6 +314,8 @@ case class Terminator(
   with DNA {
 
   override def getLabels = List("Terminator", "Feature", "DNA")
+
+
 }
 
 case class Promoter(name: String,

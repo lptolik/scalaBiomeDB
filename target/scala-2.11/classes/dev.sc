@@ -3,6 +3,8 @@ import java.security.MessageDigest
 import BioGraph._
 import sun.security.provider.MD5
 
+import scala.collection.immutable.HashSet
+
 
 val genbank = new DBNode("GenBank")
 
@@ -31,7 +33,7 @@ val coordinates2 = new Coordinates(387, 780, Strand.forward)
 val coordinates3 = new Coordinates(750, 1013, Strand.reverse)
 val gene = new Gene("Super name", coordinates, plasmid, geneTerm, organism, Map("source" -> "GenBank"), nodeId = 134)
 val gene2 = new Gene("Such name", coordinates2, contig, geneTerm2, organism)
-val gene3 = new Gene("Super name", coordinates, plasmid, geneTerm, organism, Map("source" -> "GenBank"), nodeId = 134)
+val gene3 = new Gene("Super name", coordinates3, plasmid, geneTerm, organism, Map("source" -> "GenBank"), nodeId = 134)
 gene.setProperties(Map("comment" -> "new comment"))
 gene.getCoordinates.getStrand
 gene.getId
@@ -42,13 +44,14 @@ Coordinates(11, 12, Strand.forward)
 class Properties[K, V](k: K, v: V){}
 val props = new Properties[String, Double]("key", 1.23)
 val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
-geneNew == gene2
+geneNew equals gene2
+
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
 val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid)
 val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid)
 //val operon = new Operon("Very operonious", )
-miscFeature == miscStructure
+
 val boundaries = new Boundaries(gene, gene3)
 val operonTerm = new Term("So much very operonious term")
 val operon = new Operon("So operonious", boundaries, operonTerm, organism)
@@ -81,8 +84,6 @@ val polyBlast3 = new Polypeptide("Blast poly 3", xrefBlast3, sequenceBlast3, ter
 sequenceBlast1.addSimilarity(sequenceBlast2)
 
 //sequenceBlast2.similarities
-
-
 
 /////////////////////
 
