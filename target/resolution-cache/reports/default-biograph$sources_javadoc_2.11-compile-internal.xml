@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160226155954"/>
+		date="20160226230006"/>
 	<dependencies>
 		<module organisation="org.neo4j" name="neo4j">
 			<revision name="2.3.1" status="release" pubdate="20151111212117" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
@@ -18,10 +18,10 @@
 					<artifact name="neo4j" type="jar" ext="jar" status="no" details="" size="22807" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/jars/neo4j-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j/2.3.1/neo4j-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="19887" time="366" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/srcs/neo4j-2.3.1-sources.jar">
+					<artifact name="neo4j" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="19887" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/srcs/neo4j-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j/2.3.1/neo4j-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="1776596" time="3020" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/docs/neo4j-2.3.1-javadoc.jar">
+					<artifact name="neo4j" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1776596" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/docs/neo4j-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j/2.3.1/neo4j-2.3.1-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -36,10 +36,10 @@
 					<artifact name="neo4j-consistency-check" type="jar" ext="jar" status="no" details="" size="369161" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/jars/neo4j-consistency-check-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-consistency-check" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="186334" time="520" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/srcs/neo4j-consistency-check-2.3.1-sources.jar">
+					<artifact name="neo4j-consistency-check" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="186334" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/srcs/neo4j-consistency-check-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j-consistency-check" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="830149" time="1597" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/docs/neo4j-consistency-check-2.3.1-javadoc.jar">
+					<artifact name="neo4j-consistency-check" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="830149" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/docs/neo4j-consistency-check-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -54,10 +54,10 @@
 					<artifact name="neo4j-consistency-check-legacy" type="jar" ext="jar" status="no" details="" size="327843" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/jars/neo4j-consistency-check-legacy-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-consistency-check-legacy" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="157190" time="517" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/srcs/neo4j-consistency-check-legacy-2.3.1-sources.jar">
+					<artifact name="neo4j-consistency-check-legacy" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="157190" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/srcs/neo4j-consistency-check-legacy-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j-consistency-check-legacy" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="628158" time="1348" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/docs/neo4j-consistency-check-legacy-2.3.1-javadoc.jar">
+					<artifact name="neo4j-consistency-check-legacy" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="628158" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/docs/neo4j-consistency-check-legacy-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -69,13 +69,13 @@
 				<metadata-artifact status="no" details="" size="25218" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-jmx" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="58379" time="429" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/docs/neo4j-jmx-2.3.1-javadoc.jar">
+					<artifact name="neo4j-jmx" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="58379" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/docs/neo4j-jmx-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-jmx" type="jar" ext="jar" status="no" details="" size="46760" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/jars/neo4j-jmx-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-jmx" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="36631" time="311" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/srcs/neo4j-jmx-2.3.1-sources.jar">
+					<artifact name="neo4j-jmx" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="36631" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/srcs/neo4j-jmx-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -87,10 +87,10 @@
 				<metadata-artifact status="no" details="" size="41195" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-cypher" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="167129" time="580" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/docs/neo4j-cypher-2.3.1-javadoc.jar">
+					<artifact name="neo4j-cypher" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="167129" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/docs/neo4j-cypher-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-cypher" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="136571" time="454" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/srcs/neo4j-cypher-2.3.1-sources.jar">
+					<artifact name="neo4j-cypher" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="136571" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/srcs/neo4j-cypher-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-cypher" type="jar" ext="jar" status="no" details="" size="1137733" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/jars/neo4j-cypher-2.3.1.jar">
@@ -105,13 +105,13 @@
 				<metadata-artifact status="no" details="" size="3228" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/ivy-2.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/net/sf/opencsv/opencsv/2.3/opencsv-2.3.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3" rev-constraint-default="2.3" rev-constraint-dynamic="2.3" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="opencsv" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="78430" time="386" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/docs/opencsv-2.3-javadoc.jar">
+					<artifact name="opencsv" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="78430" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/docs/opencsv-2.3-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/net/sf/opencsv/opencsv/2.3/opencsv-2.3-javadoc.jar"/>
 					</artifact>
 					<artifact name="opencsv" type="jar" ext="jar" status="no" details="" size="19827" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/jars/opencsv-2.3.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar"/>
 					</artifact>
-					<artifact name="opencsv" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="17058" time="286" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/srcs/opencsv-2.3-sources.jar">
+					<artifact name="opencsv" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="17058" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/srcs/opencsv-2.3-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/net/sf/opencsv/opencsv/2.3/opencsv-2.3-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -123,10 +123,10 @@
 				<metadata-artifact status="no" details="" size="36119" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-cypher-compiler-2.3" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="869184" time="1473" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/srcs/neo4j-cypher-compiler-2.3-2.3.1-sources.jar">
+					<artifact name="neo4j-cypher-compiler-2.3" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="869184" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/srcs/neo4j-cypher-compiler-2.3-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j-cypher-compiler-2.3" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="105807" time="497" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/docs/neo4j-cypher-compiler-2.3-2.3.1-javadoc.jar">
+					<artifact name="neo4j-cypher-compiler-2.3" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="105807" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/docs/neo4j-cypher-compiler-2.3-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-cypher-compiler-2.3" type="jar" ext="jar" status="no" details="" size="8733249" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/jars/neo4j-cypher-compiler-2.3-2.3.1.jar">
@@ -141,13 +141,13 @@
 				<metadata-artifact status="no" details="" size="5094" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/ivy-1.4.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="1.4.2" rev-constraint-default="1.4.2" rev-constraint-dynamic="1.4.2" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="concurrentlinkedhashmap-lru" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="58654" time="347" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/docs/concurrentlinkedhashmap-lru-1.4.2-javadoc.jar">
+					<artifact name="concurrentlinkedhashmap-lru" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="58654" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/docs/concurrentlinkedhashmap-lru-1.4.2-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2-javadoc.jar"/>
 					</artifact>
 					<artifact name="concurrentlinkedhashmap-lru" type="jar" ext="jar" status="no" details="" size="116565" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/jars/concurrentlinkedhashmap-lru-1.4.2.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.jar"/>
 					</artifact>
-					<artifact name="concurrentlinkedhashmap-lru" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="57410" time="343" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/srcs/concurrentlinkedhashmap-lru-1.4.2-sources.jar">
+					<artifact name="concurrentlinkedhashmap-lru" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="57410" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/srcs/concurrentlinkedhashmap-lru-1.4.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -159,10 +159,10 @@
 				<metadata-artifact status="no" details="" size="41652" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-cypher-frontend-2.3" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="251542" time="615" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/srcs/neo4j-cypher-frontend-2.3-2.3.1-sources.jar">
+					<artifact name="neo4j-cypher-frontend-2.3" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="251542" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/srcs/neo4j-cypher-frontend-2.3-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j-cypher-frontend-2.3" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="2811" time="355" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/docs/neo4j-cypher-frontend-2.3-2.3.1-javadoc.jar">
+					<artifact name="neo4j-cypher-frontend-2.3" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="2811" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/docs/neo4j-cypher-frontend-2.3-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-cypher-frontend-2.3" type="jar" ext="jar" status="no" details="" size="3414589" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/jars/neo4j-cypher-frontend-2.3-2.3.1.jar">
@@ -177,13 +177,13 @@
 				<metadata-artifact status="no" details="" size="34990" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/ivy-2.2.6.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.2.6" rev-constraint-default="2.2.6" rev-constraint-dynamic="2.2.6" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-cypher-compiler-2.2_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="38194" time="396" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/docs/neo4j-cypher-compiler-2.2_2.11-2.2.6-javadoc.jar">
+					<artifact name="neo4j-cypher-compiler-2.2_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="38194" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/docs/neo4j-cypher-compiler-2.2_2.11-2.2.6-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-cypher-compiler-2.2_2.11" type="jar" ext="jar" status="no" details="" size="10404861" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/jars/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar"/>
 					</artifact>
-					<artifact name="neo4j-cypher-compiler-2.2_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="928154" time="1566" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/srcs/neo4j-cypher-compiler-2.2_2.11-2.2.6-sources.jar">
+					<artifact name="neo4j-cypher-compiler-2.2_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="928154" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/srcs/neo4j-cypher-compiler-2.2_2.11-2.2.6-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -195,10 +195,10 @@
 				<metadata-artifact status="no" details="" size="2968" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/ivy-1.1.7.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="parboiled-scala_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="601740" time="1101" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/docs/parboiled-scala_2.11-1.1.7-javadoc.jar">
+					<artifact name="parboiled-scala_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="601740" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/docs/parboiled-scala_2.11-1.1.7-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7-javadoc.jar"/>
 					</artifact>
-					<artifact name="parboiled-scala_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="28671" time="433" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/srcs/parboiled-scala_2.11-1.1.7-sources.jar">
+					<artifact name="parboiled-scala_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="28671" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/srcs/parboiled-scala_2.11-1.1.7-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7-sources.jar"/>
 					</artifact>
 					<artifact name="parboiled-scala_2.11" type="jar" ext="jar" status="no" details="" size="233224" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/jars/parboiled-scala_2.11-1.1.7.jar">
@@ -213,10 +213,10 @@
 				<metadata-artifact status="no" details="" size="2663" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/ivy-1.1.7.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="parboiled-core" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="166639" time="492" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/srcs/parboiled-core-1.1.7-sources.jar">
+					<artifact name="parboiled-core" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="166639" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/srcs/parboiled-core-1.1.7-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7-sources.jar"/>
 					</artifact>
-					<artifact name="parboiled-core" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="465512" time="908" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/docs/parboiled-core-1.1.7-javadoc.jar">
+					<artifact name="parboiled-core" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="465512" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/docs/parboiled-core-1.1.7-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7-javadoc.jar"/>
 					</artifact>
 					<artifact name="parboiled-core" type="jar" ext="jar" status="no" details="" size="186607" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.7.jar">
@@ -231,10 +231,10 @@
 				<metadata-artifact status="no" details="" size="34281" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/ivy-2.0.5.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.0.5" rev-constraint-default="2.0.5" rev-constraint-dynamic="2.0.5" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-cypher-compiler-1.9_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="37876" time="326" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/docs/neo4j-cypher-compiler-1.9_2.11-2.0.5-javadoc.jar">
+					<artifact name="neo4j-cypher-compiler-1.9_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="37876" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/docs/neo4j-cypher-compiler-1.9_2.11-2.0.5-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-cypher-compiler-1.9_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="282790" time="1315" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/srcs/neo4j-cypher-compiler-1.9_2.11-2.0.5-sources.jar">
+					<artifact name="neo4j-cypher-compiler-1.9_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="282790" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/srcs/neo4j-cypher-compiler-1.9_2.11-2.0.5-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-cypher-compiler-1.9_2.11" type="jar" ext="jar" status="no" details="" size="2986228" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/jars/neo4j-cypher-compiler-1.9_2.11-2.0.5.jar">
@@ -252,10 +252,10 @@
 					<artifact name="neo4j-codegen" type="jar" ext="jar" status="no" details="" size="131280" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/jars/neo4j-codegen-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-codegen" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="75082" time="368" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/srcs/neo4j-codegen-2.3.1-sources.jar">
+					<artifact name="neo4j-codegen" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="75082" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/srcs/neo4j-codegen-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j-codegen" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="199498" time="882" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/docs/neo4j-codegen-2.3.1-javadoc.jar">
+					<artifact name="neo4j-codegen" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="199498" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/docs/neo4j-codegen-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -266,10 +266,10 @@
 				<metadata-artifact status="no" details="" size="3758" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/ivy-5.0.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="5.0.2" rev-constraint-default="5.0.2" rev-constraint-dynamic="5.0.2" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="asm" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1041260" time="1785" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/srcs/asm-5.0.2-sources.jar">
+					<artifact name="asm" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="1041260" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/srcs/asm-5.0.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2-sources.jar"/>
 					</artifact>
-					<artifact name="asm" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="1702366" time="2661" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/docs/asm-5.0.2-javadoc.jar">
+					<artifact name="asm" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1702366" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/docs/asm-5.0.2-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2-javadoc.jar"/>
 					</artifact>
 					<artifact name="asm" type="jar" ext="jar" status="no" details="" size="53232" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/jars/asm-5.0.2.jar">
@@ -290,7 +290,7 @@
 					<artifact name="scala-parser-combinators_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="42276" time="0" location="/home/artem/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/srcs/scala-parser-combinators_2.11-1.0.4-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4-sources.jar"/>
 					</artifact>
-					<artifact name="scala-parser-combinators_2.11" type="jar" ext="jar" status="successful" details="" size="423753" time="869" location="/home/artem/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/jars/scala-parser-combinators_2.11-1.0.4.jar">
+					<artifact name="scala-parser-combinators_2.11" type="jar" ext="jar" status="no" details="" size="423753" time="0" location="/home/artem/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/jars/scala-parser-combinators_2.11-1.0.4.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.jar"/>
 					</artifact>
 				</artifacts>
@@ -323,10 +323,10 @@
 					<artifact name="neo4j-graph-matching" type="jar" ext="jar" status="no" details="" size="55596" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/jars/neo4j-graph-matching-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-graph-matching" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="130630" time="527" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/docs/neo4j-graph-matching-2.3.1-javadoc.jar">
+					<artifact name="neo4j-graph-matching" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="130630" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/docs/neo4j-graph-matching-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-graph-matching" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="49158" time="419" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/srcs/neo4j-graph-matching-2.3.1-sources.jar">
+					<artifact name="neo4j-graph-matching" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="49158" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/srcs/neo4j-graph-matching-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -341,10 +341,10 @@
 					<artifact name="neo4j-udc" type="jar" ext="jar" status="no" details="" size="37793" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/jars/neo4j-udc-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-udc" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="32551" time="309" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/srcs/neo4j-udc-2.3.1-sources.jar">
+					<artifact name="neo4j-udc" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="32551" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/srcs/neo4j-udc-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1-sources.jar"/>
 					</artifact>
-					<artifact name="neo4j-udc" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="49449" time="499" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/docs/neo4j-udc-2.3.1-javadoc.jar">
+					<artifact name="neo4j-udc" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="49449" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/docs/neo4j-udc-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -356,13 +356,13 @@
 				<metadata-artifact status="no" details="" size="25371" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-graph-algo" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="133023" time="624" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/srcs/neo4j-graph-algo-2.3.1-sources.jar">
+					<artifact name="neo4j-graph-algo" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="133023" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/srcs/neo4j-graph-algo-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-graph-algo" type="jar" ext="jar" status="no" details="" size="183238" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/jars/neo4j-graph-algo-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-graph-algo" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="75546" time="446" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/docs/neo4j-graph-algo-2.3.1-javadoc.jar">
+					<artifact name="neo4j-graph-algo" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="75546" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/docs/neo4j-graph-algo-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -374,10 +374,10 @@
 				<metadata-artifact status="no" details="" size="26092" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-lucene-index" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="403746" time="910" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/docs/neo4j-lucene-index-2.3.1-javadoc.jar">
+					<artifact name="neo4j-lucene-index" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="403746" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/docs/neo4j-lucene-index-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-lucene-index" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="151891" time="604" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/srcs/neo4j-lucene-index-2.3.1-sources.jar">
+					<artifact name="neo4j-lucene-index" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="151891" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/srcs/neo4j-lucene-index-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-lucene-index" type="jar" ext="jar" status="no" details="" size="236617" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/jars/neo4j-lucene-index-2.3.1.jar">
@@ -394,10 +394,10 @@
 					<artifact name="lucene-core" type="jar" ext="jar" status="no" details="" size="1539086" time="0" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/jars/lucene-core-3.6.2.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.jar"/>
 					</artifact>
-					<artifact name="lucene-core" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1431379" time="2240" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/srcs/lucene-core-3.6.2-sources.jar">
+					<artifact name="lucene-core" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="1431379" time="0" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/srcs/lucene-core-3.6.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2-sources.jar"/>
 					</artifact>
-					<artifact name="lucene-core" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="3648427" time="5322" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/docs/lucene-core-3.6.2-javadoc.jar">
+					<artifact name="lucene-core" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="3648427" time="0" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/docs/lucene-core-3.6.2-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -409,13 +409,13 @@
 				<metadata-artifact status="no" details="" size="27083" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-kernel" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="1504120" time="2443" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/docs/neo4j-kernel-2.3.1-javadoc.jar">
+					<artifact name="neo4j-kernel" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1504120" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/docs/neo4j-kernel-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-kernel" type="jar" ext="jar" status="no" details="" size="3360858" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/jars/neo4j-kernel-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-kernel" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="2120566" time="3368" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/srcs/neo4j-kernel-2.3.1-sources.jar">
+					<artifact name="neo4j-kernel" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="2120566" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/srcs/neo4j-kernel-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -427,13 +427,13 @@
 				<metadata-artifact status="no" details="" size="25448" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-logging" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="136607" time="535" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/docs/neo4j-logging-2.3.1-javadoc.jar">
+					<artifact name="neo4j-logging" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="136607" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/docs/neo4j-logging-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-logging" type="jar" ext="jar" status="no" details="" size="67789" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/jars/neo4j-logging-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-logging" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="38565" time="331" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/srcs/neo4j-logging-2.3.1-sources.jar">
+					<artifact name="neo4j-logging" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="38565" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/srcs/neo4j-logging-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -445,10 +445,10 @@
 				<metadata-artifact status="no" details="" size="30746" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-csv" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="191656" time="609" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/docs/neo4j-csv-2.3.1-javadoc.jar">
+					<artifact name="neo4j-csv" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="191656" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/docs/neo4j-csv-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-csv" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="47409" time="412" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/srcs/neo4j-csv-2.3.1-sources.jar">
+					<artifact name="neo4j-csv" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="47409" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/srcs/neo4j-csv-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-csv" type="jar" ext="jar" status="no" details="" size="69029" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/jars/neo4j-csv-2.3.1.jar">
@@ -463,10 +463,10 @@
 				<metadata-artifact status="no" details="" size="25639" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-io" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="275333" time="1057" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/docs/neo4j-io-2.3.1-javadoc.jar">
+					<artifact name="neo4j-io" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="275333" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/docs/neo4j-io-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-io" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="111383" time="504" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/srcs/neo4j-io-2.3.1-sources.jar">
+					<artifact name="neo4j-io" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="111383" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/srcs/neo4j-io-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-io" type="jar" ext="jar" status="no" details="" size="128745" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/jars/neo4j-io-2.3.1.jar">
@@ -480,13 +480,13 @@
 				<metadata-artifact status="no" details="" size="10428" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/ivy-3.3.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="3.3.2" rev-constraint-default="3.3.2" rev-constraint-dynamic="3.3.2" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="commons-lang3" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="1074965" time="1852" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/docs/commons-lang3-3.3.2-javadoc.jar">
+					<artifact name="commons-lang3" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1074965" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/docs/commons-lang3-3.3.2-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2-javadoc.jar"/>
 					</artifact>
 					<artifact name="commons-lang3" type="jar" ext="jar" status="no" details="" size="412739" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.3.2.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"/>
 					</artifact>
-					<artifact name="commons-lang3" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="470961" time="920" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/srcs/commons-lang3-3.3.2-sources.jar">
+					<artifact name="commons-lang3" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="470961" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/srcs/commons-lang3-3.3.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -498,13 +498,13 @@
 				<metadata-artifact status="no" details="" size="31326" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-primitive-collections" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="638618" time="1315" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/docs/neo4j-primitive-collections-2.3.1-javadoc.jar">
+					<artifact name="neo4j-primitive-collections" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="638618" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/docs/neo4j-primitive-collections-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="neo4j-primitive-collections" type="jar" ext="jar" status="no" details="" size="191174" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/jars/neo4j-primitive-collections-2.3.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1.jar"/>
 					</artifact>
-					<artifact name="neo4j-primitive-collections" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="126436" time="436" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/srcs/neo4j-primitive-collections-2.3.1-sources.jar">
+					<artifact name="neo4j-primitive-collections" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="126436" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/srcs/neo4j-primitive-collections-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -516,10 +516,10 @@
 				<metadata-artifact status="no" details="" size="30942" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-function" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="282408" time="876" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/docs/neo4j-function-2.3.1-javadoc.jar">
+					<artifact name="neo4j-function" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="282408" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/docs/neo4j-function-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-function" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="67592" time="432" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/srcs/neo4j-function-2.3.1-sources.jar">
+					<artifact name="neo4j-function" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="67592" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/srcs/neo4j-function-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-function" type="jar" ext="jar" status="no" details="" size="66370" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/jars/neo4j-function-2.3.1.jar">
@@ -534,10 +534,10 @@
 				<metadata-artifact status="no" details="" size="30897" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1.pom"/>
 				<caller organisation="default" name="biograph$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="neo4j-unsafe" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="50058" time="432" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/docs/neo4j-unsafe-2.3.1-javadoc.jar">
+					<artifact name="neo4j-unsafe" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="50058" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/docs/neo4j-unsafe-2.3.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="neo4j-unsafe" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="21358" time="294" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/srcs/neo4j-unsafe-2.3.1-sources.jar">
+					<artifact name="neo4j-unsafe" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="21358" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/srcs/neo4j-unsafe-2.3.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1-sources.jar"/>
 					</artifact>
 					<artifact name="neo4j-unsafe" type="jar" ext="jar" status="no" details="" size="26616" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/jars/neo4j-unsafe-2.3.1.jar">

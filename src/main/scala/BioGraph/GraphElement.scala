@@ -175,7 +175,7 @@ case class Coordinates(
 
   def getStrand = strand
 
-  def equals(that: Coordinates) = that match {
+  override def equals(that: Any) = that match {
     case that: Coordinates => this.getStrand == that.getStrand &&
       this.getStart == that.getStart &&
       this.getEnd == that.getEnd &&
@@ -220,7 +220,10 @@ case class DBNode(
 
   def getName = name
 
-  def equals(that: DBNode): Boolean = this.getName == that.getName && this.getClass == that.getClass
+  override def equals(that: Any) =  that match {
+    case that: DBNode => this.getName == that.getName && this.getClass == that.getClass
+    case _ => false
+  }
 }
 
 case class XRef(xrefId: String,
@@ -235,7 +238,7 @@ case class XRef(xrefId: String,
 
   def getDB = dbNode
 
-  def equals(that: XRef) = that match {
+  override def equals(that: Any) = that match {
     case that: XRef => xrefId.toUpperCase == that.getXRef.toUpperCase && this.getClass == that.getClass
     case _ => false
   }
@@ -259,7 +262,7 @@ abstract class Feature(coordinates: Coordinates,
 
   def getCCP = ccp
 
-  def equals(that: Feature) = that match {
+  override def equals(that: Any) = that match {
     case that: Feature => this.getCCP == that.getCCP &&
       this.getCoordinates == that.getCoordinates &&
       this.getClass == that.getClass
@@ -289,7 +292,7 @@ case class Gene(
 
   def getStandardName = term
 
-  def equals(that: Gene): Boolean = that match {
+  override def equals(that: Any): Boolean = that match {
     case that: Gene => this.getCoordinates == that.getCoordinates &&
       this.getCCP == that.getCCP &&
       this.getClass == that.getClass
@@ -519,7 +522,7 @@ case class Term(
 
   def getLabels = List("Term")
 
-  def equals(that: Term) = that match {
+  override def equals(that: Any) = that match {
     case that: Term => this.getText == that.getText && this.getClass == that.getClass
     case _ => false
   }
@@ -537,7 +540,7 @@ case class Organism(
 
   def getName = name
 
-  def equals(that: Organism) = that match {
+  override def equals(that: Any) = that match {
     case that: Organism => this.getName == that.getName && this.getClass == that.getClass
     case _ => false
   }
@@ -568,7 +571,7 @@ case class Polypeptide(
 
   def getSeq = sequence
 
-  def equals(that: Polypeptide) = that match {
+  override def equals(that: Any) = that match {
     case that: Polypeptide => this.getSeq.equals(that.getSeq) &&
       this.getOrganism == that.getOrganism &&
       this.getName == that.getName &&
@@ -595,7 +598,7 @@ case class Sequence(
 
   def countMD5 = utilFunctions.md5ToString(sequence)
 
-  def equals(that: Sequence) = that match {
+  override def equals(that: Any) = that match {
     case that: Sequence => this.getMD5 == that.getMD5 && this.getClass == that.getClass
     case _ => false
   }
@@ -646,7 +649,7 @@ case class Compound(
 
   def setXrefs(newXref: XRef): Unit = reference = List(newXref) ::: reference
 
-  def equals(that: Compound): Boolean = that match {
+  override def equals(that: Any): Boolean = that match {
     case that: Compound => this.getInchi == that.getInchi &&
       this.getClass == that.getClass
     case _ => false

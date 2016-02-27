@@ -3,6 +3,8 @@ import java.security.MessageDigest
 import BioGraph._
 import sun.security.provider.MD5
 
+import scala.collection.immutable.HashSet
+
 
 val genbank = new DBNode("GenBank")
 
@@ -42,7 +44,7 @@ Coordinates(11, 12, Strand.forward)
 class Properties[K, V](k: K, v: V){}
 val props = new Properties[String, Double]("key", 1.23)
 val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
-geneNew == gene2
+geneNew equals gene2
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
 val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid)
