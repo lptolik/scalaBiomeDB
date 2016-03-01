@@ -1,6 +1,7 @@
 import java.security.MessageDigest
 
 import BioGraph._
+import utilFunctions._
 import sun.security.provider.MD5
 
 import scala.collection.immutable.HashSet
@@ -81,13 +82,17 @@ val termBlast3 = new Term("reduced ferredoxin")
 val polyBlast1 = new Polypeptide("Blast poly 1", xrefBlast1, sequenceBlast1, termBlast1, organismBlast)
 val polyBlast2 = new Polypeptide("Blast poly 2", xrefBlast2, sequenceBlast2, termBlast2, organismBlast)
 val polyBlast3 = new Polypeptide("Blast poly 3", xrefBlast3, sequenceBlast3, termBlast3, organismBlast)
-sequenceBlast1.addSimilarity(sequenceBlast2)
+val seqSet: Set[Sequence] = Set(sequenceBlast1, sequenceBlast2)
+sequenceBlast1.similarities
+sequenceBlast3.similarities
+seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(sequenceBlast3)
+seqSet.filter(x => x equals sequenceBlast1).head.similarities
+val blastedSequences = utilFunctions.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
+
+
 
 //sequenceBlast2.similarities
-
 /////////////////////
-
-
 //gene.getName
 //gene.isInstanceOf[Int]
 //val promoter = new Promoter(Map("source" -> "MetaCyc",
@@ -97,7 +102,4 @@ sequenceBlast1.addSimilarity(sequenceBlast2)
 //  "strand" -> "unknown",
 //  "tss" -> 1852948))
 //promoter.getCoordinates
-
-
-
 

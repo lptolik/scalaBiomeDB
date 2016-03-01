@@ -615,6 +615,8 @@ case class Sequence(
       similarSequence.addSimilarity(this)
     }
   }
+
+  override def toString = md5
 }
 
 case class Taxon(

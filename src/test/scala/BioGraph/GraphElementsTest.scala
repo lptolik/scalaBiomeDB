@@ -1,6 +1,7 @@
 package BioGraph
 
 import org.scalatest.FunSuite
+import utilFunctions.utilFunctions
 
 /**
   * Created by artem on 11.02.16.
@@ -214,6 +215,13 @@ class GraphElementsTest extends FunSuite {
   test("name mobileElement test") {
     new TestNodesAndRels {
       assert(mobileElement.getName === "So mobile")
+    }
+  }
+
+  test("test read blast result") {
+    new TestNodesAndRels {
+      val blastedSequences: Map[Int, Sequence] = utilFunctions.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt")
+      assert(blastedSequences.size === 242)
     }
   }
 

@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160226230006"/>
+		date="20160301151254"/>
 	<dependencies>
 		<module organisation="org.neo4j" name="neo4j">
 			<revision name="2.3.1" status="release" pubdate="20151111212117" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
