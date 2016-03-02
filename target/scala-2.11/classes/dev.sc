@@ -83,10 +83,11 @@ val seqSet: Set[Sequence] = Set(sequenceBlast1, sequenceBlast2)
 sequenceBlast1.similarities
 sequenceBlast3.similarities
 seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(new Similarity(sequenceBlast3, 1e-10, 98.0 ))
-seqSet.filter(x => x equals sequenceBlast1).head.similarities
+seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val blastedSequences = utilFunctions.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 val sequenceBlast4 = sequenceBlast1.copy()
-//val setSeq = HashSet(sequenceBlast3)
+val setSeq = HashSet(sequenceBlast1)
+setSeq contains sequenceBlast4
 //sequenceBlast2.similarities
 /////////////////////
 //gene.getName
