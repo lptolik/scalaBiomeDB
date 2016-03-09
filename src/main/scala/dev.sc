@@ -25,7 +25,7 @@ val organism = new Organism("Eschrichia coli")
 val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
 val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
 val xref2 = new XRef("NZ_ACKO99999999", uniprot, Map("db_id" -> "NZ_ACKO99999999_GenBank"))
-val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", SourceType.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
+val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
 val plasmid = new Plasmid("Listeria grayi DSM 20601", organism = organism)
 val contig = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
 //    val gene = new Gene("gene name", Map())
@@ -46,13 +46,11 @@ class Properties[K, V](k: K, v: V){}
 val props = new Properties[String, Double]("key", 1.23)
 val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
 geneNew equals gene2
-
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
 val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid)
 val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid)
 //val operon = new Operon("Very operonious", )
-
 val boundaries = new Boundaries(gene, gene3)
 val operonTerm = new Term("So much very operonious term")
 val operon = new Operon("So operonious", boundaries, operonTerm, organism)
@@ -66,7 +64,6 @@ operon.addTU(tu2)
 operon.getTUs
 val taxon1 = new Taxon("Test taxon 1", TaxonType.phylum)
 organism.setTaxon(taxon1)
-
 //BLAST architecture//
 val organismBlast = new Organism("BLAST organism")
 val DBBlast = new DBNode("UniProt")
@@ -85,10 +82,13 @@ val polyBlast3 = new Polypeptide("Blast poly 3", xrefBlast3, sequenceBlast3, ter
 val seqSet: Set[Sequence] = Set(sequenceBlast1, sequenceBlast2)
 sequenceBlast1.similarities
 sequenceBlast3.similarities
-seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(sequenceBlast3)
-seqSet.filter(x => x equals sequenceBlast1).head.similarities
-val blastedSequences = utilFunctions.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
+seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(new Similarity(sequenceBlast3, 1e-10, 98.0 ))
+seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
+val sequenceBlast4 = sequenceBlast1.copy()
+val setSeq = HashSet(sequenceBlast1)
+val sim = new Similarity(sequenceBlast2, 1e-10, 111)
 
+//utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 
 
 //sequenceBlast2.similarities

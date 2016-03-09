@@ -1,8 +1,11 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
-import java.security.MessageDigest
-import sun.awt.image.DataBufferNative
+  import java.io.File
+  import java.security.MessageDigest
+  import org.neo4j.graphdb.{RelationshipType, DynamicLabel, Transaction}
+  import org.neo4j.graphdb.factory.GraphDatabaseFactory
+  import sun.awt.image.DataBufferNative
 import sun.security.provider.MD5
 import utilFunctions._
 
@@ -95,9 +98,11 @@ trait CCP extends BioEntity {
 
   def getType: CCPType.Value
 
-  def getSource: SourceType.Value
+  def getSource: ReferenceSource.Value
 
   def getChromType: DNAType.Value
+
+  def getOrganism: Organism
 }
 
 trait FunctionalRegion {}
@@ -127,7 +132,7 @@ object Strand extends Enumeration {
   override def toString = Value.toString
 }
 
-object SourceType extends Enumeration {
+object ReferenceSource extends Enumeration {
 
   type SourceType = Value
 
@@ -175,18 +180,24 @@ case class Coordinates(
 
   def getStrand = strand
 
-  override def equals(that: Any) = that match {
-    case that: Coordinates => this.getStrand == that.getStrand &&
+  override def equals(that: Any): Boolean = that match {
+    case that: Coordinates =>
+      (that canEqual this) &&
+      this.getStrand == that.getStrand &&
       this.getStart == that.getStart &&
-      this.getEnd == that.getEnd &&
-      this.getClass == that.getClass
+      this.getEnd == that.getEnd
     case _ => false
   }
 
+  override def canEqual(that: Any) = that.isInstanceOf[Coordinates]
+
+  override def hashCode: Int = 41 * (41 * (41 + start.hashCode) + end.hashCode) + strand.hashCode
+
   def comesBefore(that: Coordinates) = that match{
-    case that: Coordinates => this.getStrand == that.getStrand &&
+    case that: Coordinates =>
+      this.getStrand == that.getStrand &&
       this.getStart < that.getStart &&
-      this.getClass == that.getClass
+      (that canEqual this)
     case _ => false
   }
 }
@@ -194,20 +205,50 @@ case class Coordinates(
 case class Boundaries(
                        firstGene: Gene,
                        lastGene: Gene) {
-  require(firstGene.getCoordinates comesBefore lastGene.getCoordinates,
-    "Start gene coordinate cannot have bigger value than end gene coordinate!")
+  require(firstGene.getOrganism equals lastGene.getOrganism,
+    "Genes in the operon must be located in the same organism!")
+
+  require(firstGene.getCCP equals lastGene.getCCP,
+    "Genes must be located on the same CCP!")
 
   require(firstGene.getCoordinates.getStrand equals lastGene.getCoordinates.getStrand,
     "Genes in the operon must be located on the same strand!")
 
-  require(firstGene.getOrganism equals lastGene.getOrganism,
-    "Genes in the operon must be located in the same organism!")
+  require(firstGene.getCoordinates comesBefore lastGene.getCoordinates,
+    "Start gene coordinate cannot have bigger value than end gene coordinate!")
 
   def getFirstGene = firstGene
 
   def getLastGene = lastGene
 
   def getStrand = getFirstGene.getCoordinates.getStrand
+
+  override def equals(that: Any): Boolean = that match {
+    case that: Boundaries =>
+      (that canEqual this) &&
+      (this.getFirstGene equals that.getFirstGene) &&
+      (this.getLastGene equals that.getLastGene)
+    case _ => false
+  }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Boundaries]
+
+  override def hashCode: Int = 41 * (41 + firstGene.hashCode) + lastGene.hashCode
+}
+
+case class Similarity(
+                       sequence: Sequence,
+                       evalue: Double,
+                       identity: Double) {
+  require(identity <= 100.0,
+  "Identity cannot be more than 100%.")
+
+  def getSequence = sequence
+
+  def getEvalue = evalue
+
+  def getIdentity = identity
+
 }
 
 case class DBNode(
@@ -221,9 +262,15 @@ case class DBNode(
   def getName = name
 
   override def equals(that: Any) =  that match {
-    case that: DBNode => this.getName == that.getName && this.getClass == that.getClass
+    case that: DBNode =>
+      (that canEqual this) &&
+      this.getName == that.getName
     case _ => false
   }
+
+  override def canEqual(that: Any) = that.isInstanceOf[DBNode]
+
+  override def hashCode = 41 * name.hashCode
 }
 
 case class XRef(xrefId: String,
@@ -294,13 +341,16 @@ case class Gene(
   def getStandardName = term
 
   override def equals(that: Any): Boolean = that match {
-    case that: Gene => this.getCoordinates == that.getCoordinates &&
-      this.getCCP == that.getCCP &&
-      this.getClass == that.getClass
+    case that: Gene =>
+      (that canEqual this) &&
+      this.getCoordinates == that.getCoordinates &&
+      this.getCCP == that.getCCP
     case _ => false
   }
 
-//  override def canEqual(that: Any) = that.isInstanceOf[Gene]
+  override def canEqual(that: Any) = that.isInstanceOf[Gene]
+
+  override def hashCode = 41 * coordinates.hashCode
 
   def getOrganism = organism
 }
@@ -439,7 +489,7 @@ case class TU(
 
 case class Chromosome(
                        name: String,
-                       source: SourceType.Value = SourceType.unknown,
+                       source: ReferenceSource.Value = ReferenceSource.unknown,
                        dnaType: DNAType.Value = DNAType.unknown,
                        organism: Organism,
                        length: Int = -1,
@@ -462,11 +512,23 @@ case class Chromosome(
 
   def getLabels = List("Chromosome", "BioEntity")
 
+  override def equals(that: Any): Boolean = that match {
+    case that: Chromosome =>
+      (that canEqual this) &&
+        this.getName == that.getName &&
+        this.getOrganism == that.getOrganism
+    case _ => false
+  }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Chromosome]
+
+  override def hashCode: Int = 41 * (41 + name.hashCode) + organism.hashCode
+
 }
 
 case class Plasmid(
                     name: String,
-                    source: SourceType.Value = SourceType.unknown,
+                    source: ReferenceSource.Value = ReferenceSource.unknown,
                     dnaType: DNAType.Value = DNAType.unknown,
                     organism: Organism,
                     length: Int = -1,
@@ -489,11 +551,22 @@ case class Plasmid(
 
   def getOrganism = organism
 
+  override def equals(that: Any): Boolean = that match {
+    case that: Plasmid =>
+      (that canEqual this) &&
+        this.getName == that.getName &&
+        this.getOrganism == that.getOrganism
+    case _ => false
+  }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Plasmid]
+
+  override def hashCode: Int = 41 * (41 + name.hashCode) + organism.hashCode
 }
 
 case class Contig(
                    name: String,
-                   source: SourceType.Value = SourceType.unknown,
+                   source: ReferenceSource.Value = ReferenceSource.unknown,
                    dnaType: DNAType.Value = DNAType.unknown,
                    organism: Organism,
                    length: Int = -1,
@@ -516,6 +589,17 @@ case class Contig(
 
   def getOrganism = organism
 
+  override def equals(that: Any): Boolean = that match {
+    case that: Contig =>
+      (that canEqual this) &&
+        this.getName == that.getName &&
+        this.getOrganism == that.getOrganism
+    case _ => false
+  }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Contig]
+
+  override def hashCode: Int = 41 * (41 + name.hashCode) + organism.hashCode
 }
 
 case class Term(
@@ -528,9 +612,15 @@ case class Term(
   def getLabels = List("Term")
 
   override def equals(that: Any) = that match {
-    case that: Term => this.getText == that.getText && this.getClass == that.getClass
+    case that: Term =>
+      (that canEqual this) &&
+      this.getText == that.getText
     case _ => false
   }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Term]
+
+  override def hashCode = 41 * text.hashCode
 
 }
 
@@ -546,9 +636,15 @@ case class Organism(
   def getName = name
 
   override def equals(that: Any) = that match {
-    case that: Organism => this.getName == that.getName && this.getClass == that.getClass
+    case that: Organism =>
+      (that canEqual this) &&
+      this.getName == that.getName
     case _ => false
   }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Organism]
+
+  override def hashCode = 41 * name.hashCode
 
   def getTaxon = taxon
 
@@ -577,18 +673,23 @@ case class Polypeptide(
   def getSeq = sequence
 
   override def equals(that: Any) = that match {
-    case that: Polypeptide => this.getSeq.equals(that.getSeq) &&
+    case that: Polypeptide =>
+      (that canEqual this) &&
+      this.getSeq == that.getSeq &&
       this.getOrganism == that.getOrganism &&
-      this.getName == that.getName &&
-      this.getClass == that.getClass
+      this.getName == that.getName
     case _ => false
   }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Polypeptide]
+
+  override def hashCode = 41 * (41 * (41 + sequence.hashCode) + organism.hashCode) + name.hashCode
 }
 
 case class Sequence(
                      sequence: String,
                      var md5: String = "",
-                     var similarities: List[Sequence] = List(),
+                     var similarities: List[Similarity] = List(),
                      properties: Map[String, Any] = Map(),
                      nodeId: Int = -1)
   extends Node(properties, nodeId) {
@@ -601,18 +702,28 @@ case class Sequence(
 
   def getMD5 = md5
 
-  def countMD5 = utilFunctions.md5ToString(sequence)
+  def getSimilarities = similarities
+
+  def countMD5 = utilFunctionsObject.md5ToString(sequence)
 
   override def equals(that: Any) = that match {
-    case that: Sequence => this.getMD5 == that.getMD5 && this.getClass == that.getClass
+    case that: Sequence =>
+      (that canEqual this) &&
+      this.getMD5 == that.getMD5
     case _ => false
   }
 
-  def addSimilarity(similarSequence: Sequence): Unit = {
-    if (!similarities.contains(similarSequence)) {
-      var newSimilarity = List(similarSequence) ::: similarities
+  override def canEqual(that: Any) = that.isInstanceOf[Sequence]
+
+  override def hashCode: Int = {
+    41 * md5.hashCode
+  }
+
+  def addSimilarity(similarity: Similarity): Unit = {
+    if (!similarities.contains(similarity)) {
+      var newSimilarity = List(similarity) ::: similarities
       similarities = newSimilarity
-      similarSequence.addSimilarity(this)
+      similarity.getSequence.addSimilarity(new Similarity(this, similarity.getEvalue, similarity.getIdentity))
     }
   }
 
@@ -657,10 +768,15 @@ case class Compound(
   def setXrefs(newXref: XRef): Unit = reference = List(newXref) ::: reference
 
   override def equals(that: Any): Boolean = that match {
-    case that: Compound => this.getInchi == that.getInchi &&
-      this.getClass == that.getClass
+    case that: Compound =>
+      (that canEqual this) &&
+      this.getInchi == that.getInchi
     case _ => false
   }
+
+  override def canEqual(that: Any) = that.isInstanceOf[Compound]
+
+  override def hashCode = 41 * inchi.hashCode
 }
 
 //case class Enzyme(
@@ -728,6 +844,65 @@ case class Compound(
 
   }
 
+  object Main extends App {
+    class myNeo4j {
+      def main() {
+        val f = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
+        val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(f)
+        val tx: Transaction = gdb.beginTx()
+        try {
+
+          val organismNode = gdb.createNode(DynamicLabel.label("Organism"))
+          organismNode.setProperty("name", "E. coli")
+
+          val geneNode = gdb.createNode(DynamicLabel.label("Gene"))
+          geneNode.setProperty("name", "qyur")
+
+          val polyNode = gdb.createNode(DynamicLabel.label("Polypeptide"))
+          polyNode.setProperty("name", "Qyur")
+
+          val dbNode = gdb.createNode(DynamicLabel.label("DB"))
+          dbNode.setProperty("name", "UniProt")
+
+          val termNode = gdb.createNode(DynamicLabel.label("XRef"))
+          termNode.setProperty("XRef", "A001")
+
+          val partOf = new RelationshipType {
+            override def name(): String = "PART_OF"
+          }
+
+          val encodes = new RelationshipType {
+            override def name(): String = "ENCODES"
+          }
+
+          val linkTo = new RelationshipType {
+            override def name(): String = "LINK_TO"
+          }
+
+          val evidence = new RelationshipType {
+            override def name(): String = "EVIDENCE"
+          }
+
+          geneNode.createRelationshipTo(organismNode, partOf)
+          geneNode.createRelationshipTo(polyNode, encodes)
+          geneNode.createRelationshipTo(termNode, evidence)
+          polyNode.createRelationshipTo(organismNode, partOf)
+          termNode.createRelationshipTo(dbNode, linkTo)
+
+
+          tx.success()
+          println("Succesfull transaction.")
+        }
+        finally {
+          tx.close()
+          gdb.shutdown()
+          println("Succesful disconnect.")
+        }
+      }
+    }
+    val runScript = new myNeo4j
+    runScript.main()
+  }
 
 }
 
