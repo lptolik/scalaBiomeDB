@@ -739,8 +739,6 @@ case class Taxon(
 
   def getLabels = List("Taxon")
 
-  def getType = taxonType
-
   def getTaxID = taxID
 
   def getTaxonType = taxonType

@@ -86,7 +86,6 @@ seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(new Similarity(se
 seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
-val sim = new Similarity(sequenceBlast2, 1e-10, 111)
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 

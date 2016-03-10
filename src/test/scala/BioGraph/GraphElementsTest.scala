@@ -10,6 +10,7 @@ class GraphElementsTest extends FunSuite {
 
   trait TestNodesAndRels {
     val geneTerm = new Term("Gene standard name")
+    val geneTermCopy = new Term("Gene standard name")
     val geneTerm2 = new Term("Such standard")
     val geneTerm3 = new Term("The most common gene name")
     val geneTerm4 = new Term("The most common gene name on forward strand")
@@ -17,42 +18,70 @@ class GraphElementsTest extends FunSuite {
 
     val promoterTerm = new Term("Gene standard name")
 
-    val organism = new Organism("Eschrichia coli")
+    val taxon = new Taxon("Very taxonious", TaxonType.family)
+    val taxonCopy = new Taxon("Very taxonious", TaxonType.family)
+    val taxon2 = new Taxon("Much more taxonious", TaxonType.genus)
+
+    val organism = new Organism("Eschrichia coli", taxon = taxon)
+    val organismCopy = new Organism("Eschrichia coli", taxon = taxon)
+    val organism2 = new Organism("Bacillus subtilis", taxon = taxon2)
 
     val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
     val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
     val link = new LinkTo(xref, uniprot)
 
-    val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
-    val plasmid = new Plasmid("Listeria grayi DSM 20601", organism = organism)
-    val contig = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
+    val chromosome1 = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
+    val chromosome1Copy = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
+    val chromosome2 = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
+    val plasmid1 = new Plasmid("Listeria grayi DSM 20601", organism = organism)
+    val plasmid1Copy = new Plasmid("Listeria grayi DSM 20601", organism = organism)
+    val plasmid2 = new Plasmid("Bacteroides fragilis 3_1_12 plasmid unnamed supercont", organism = organism)
+    val contig1 = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
+    val contig1Copy = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
+    val contig2 = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld0, whole genome shotgun sequence.", organism = organism)
 
     val coordinates1 = new Coordinates(150, 301, Strand.reverse)
+    val coordinates1Copy = new Coordinates(150, 301, Strand.reverse)
     val coordinates2 = new Coordinates(2460, 2874, Strand.reverse)
     val coordinates3 = new Coordinates(750, 1013, Strand.reverse)
     val coordinates4 = new Coordinates(1753, 1917, Strand.forward)
     val coordinates5 = new Coordinates(524, 729, Strand.reverse)
 
-    val gene1 = new Gene("Super name", coordinates1, plasmid, geneTerm, organism, Map("source" -> "GenBank"))
-    val gene2 = new Gene("Such name", coordinates2, plasmid, geneTerm2, organism)
-    val gene3 = new Gene("Super long gene name", coordinates3, plasmid, geneTerm3, organism, Map("source" -> "GenBank"))
-    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid, geneTerm4, organism, Map("source" -> "GenBank"))
-    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig, geneTerm4, organism, Map("source" -> "GenBank"))
+    val gene1 = new Gene("Super name", coordinates1, plasmid1, geneTerm, organism, Map("source" -> "GenBank"))
+    val gene2 = new Gene("Such name", coordinates2, plasmid1, geneTerm2, organism)
+    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, geneTerm3, organism, Map("source" -> "GenBank"))
+    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, geneTerm4, organism, Map("source" -> "GenBank"))
+    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, geneTerm4, organism, Map("source" -> "GenBank"))
 
     val evidence = new Evidence(gene1, xref)
 
-    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid, organism, 1852948, promoterTerm)
-    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid)
-    val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid)
-    val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid)
-    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid)
+    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm)
+    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1)
+    val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid1)
+    val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid1)
+    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1)
 
     val boundaries1 = new Boundaries(gene1, gene2)
+    val boundaries1Copy = new Boundaries(gene1, gene2)
     val boundaries2 = new Boundaries(gene3, gene2)
 
     val sequence1 = new Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
+    val sequence1Copy = new Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
     val sequence2 = new Sequence("MNITATVLLAFGMSMDAFAASIGKGATLHKPKFSEALRTGLIFGAVETLTPLIGWGMGMLASRFVLEWNHWIAFVLLIFLGGRMIIEGFRGADDEDEEPRRRHGFWLLVTTAIATSLDAMAVGVGLAFLQVNIIATALAIGCATLIMSTLGMMVGRFIGSIIGKKAEILGGLVLIGIGVQILWTHFHG")
     val sequence3 = new Sequence("MPKIVILPHQDLCPDGAVLEANSGETILDAALRNGIEIEHACEKSCACTTCHCIVREGFDSLPESSEQEDDMLDKAWGLEPESRLSCQARVTDEDLVVEIPRYTINHAREH")
+
+    val term1 = new Term("L-arginine ABC transporter")
+    val term2 = new Term("putative Mn(2+) efflux pump, mntR-regulated")
+    val term3 = new Term("reduced ferredoxin")
+
+    val xref1 = new XRef("EG11568", uniprot)
+    val xref2 = new XRef("EG10995", uniprot)
+    val xref3 = new XRef("EG11850", uniprot)
+
+    val poly1 = new Polypeptide("Test poly 1", xref1, sequence1, term1, organism)
+    val poly1Copy = new Polypeptide("Test poly 1", xref1, sequence1, term1, organism)
+    val poly2 = new Polypeptide("Test poly 2", xref2, sequence2, term2, organism)
+    val poly3 = new Polypeptide("Test poly 3", xref3, sequence3, term3, organism)
 
     val similarity1 = new Similarity(sequence2, 1e-12, 78.5)
     val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
@@ -60,49 +89,49 @@ class GraphElementsTest extends FunSuite {
 
   }
 
-  test("labels DBNode test") {
+  test("test DBNode getLabels") {
     new TestNodesAndRels {
       assert(uniprot.getLabels === List("DB"))
     }
   }
 
-  test("get properties DBNode test") {
+  test("test getProperties DBNode") {
     new TestNodesAndRels {
       assert(uniprot.getProperties === Map("some property" -> "U123"))
     }
   }
 
-  test("get name DBNode test") {
+  test("test getName DBNode") {
     new TestNodesAndRels {
       assert(uniprot.getName === "UniProt")
     }
   }
 
-  test("labels XRef test") {
+  test("test XRef getLabels  ") {
     new TestNodesAndRels {
       assert(xref.getLabels === List("XRef"))
     }
   }
 
-  test("get properties XRef test") {
+  test("test XRef getProperties") {
     new TestNodesAndRels {
       assert(xref.getProperties === Map("db_id" -> "NZ_ACKO02000005_GenBank"))
     }
   }
 
-  test("get XRef XRef test") {
+  test("test XRef getXRef") {
     new TestNodesAndRels {
       assert(xref.getXRef === "NZ_ACKO02000005")
     }
   }
 
-  test("get DB XRef test") {
+  test("test XRef getDB") {
     new TestNodesAndRels {
       assert(xref.getDB === uniprot)
     }
   }
 
-  test("get properties link test") {
+  test("test link getProperties") {
     new TestNodesAndRels {
       assert(link.getProperties === Map())
     }
@@ -120,7 +149,7 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("get labels evidence test") {
+  test("test evidence getLabels") {
     new TestNodesAndRels {
       assert(evidence.getLabel === "EVIDENCE")
     }
@@ -132,92 +161,127 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("start end nodes evidence test") {
+  test("test evidence start end nodes  ") {
     new TestNodesAndRels {
       assert(List(evidence.startNode, evidence.endNode) === List(gene1, xref))
     }
   }
 
-  test("get properties chromosome test") {
+  test("test chromosome getProperties") {
     new TestNodesAndRels {
-      assert(chromosome.getProperties === Map("some property" -> "works fine"))
+      assert(chromosome2.getProperties === Map("some property" -> "works fine"))
     }
   }
 
-  test("get labels chromosome test") {
+  test("test chromosome getLabels") {
     new TestNodesAndRels {
-      assert(chromosome.getLabels === List("Chromosome", "BioEntity"))
+      assert(chromosome2.getLabels === List("Chromosome", "BioEntity"))
     }
   }
 
-  test("length chromosome test") {
+  test("test chromosome getLength") {
     new TestNodesAndRels {
-      assert(chromosome.getLength === 3282708)
+      assert(chromosome2.getLength === 3282708)
     }
   }
 
-  test("type chromosome test") {
+  test("test chromosome getType") {
     new TestNodesAndRels {
-      assert(chromosome.getType === CCPType.Chromosome)
+      assert(chromosome2.getType === CCPType.Chromosome)
     }
   }
 
-  test("source chromosome test") {
+  test("test chromosome getSource") {
     new TestNodesAndRels {
-//      assert(chromosome.getSource === "MetaCyc")
-      assert(chromosome.getSource === ReferenceSource.MetaCyc)
+      assert(chromosome2.getSource === ReferenceSource.MetaCyc)
     }
   }
 
-  test("name chromosome test") {
+  test("test chromosome getName") {
     new TestNodesAndRels {
-      assert(chromosome.getName === "Corynebacterium glutamicum ATCC 13032, complete genome.")
+      assert(chromosome2.getName === "Corynebacterium glutamicum ATCC 13032, complete genome.")
     }
   }
 
-  test("get labels plasmid test") {
+  test("test chromosome equals negative") {
     new TestNodesAndRels {
-      assert(plasmid.getLabels === List("Plasmid", "BioEntity"))
+      assert((chromosome2 equals chromosome1) === false)
     }
   }
 
-  test("get labels contig test") {
+  test("test chromosome equals positive") {
     new TestNodesAndRels {
-      assert(contig.getLabels === List("Contig", "BioEntity"))
+      assert((chromosome1Copy equals chromosome1) === true)
     }
   }
 
-  test("get labels gene test") {
+  test("test plasmid getLabels") {
+    new TestNodesAndRels {
+      assert(plasmid1.getLabels === List("Plasmid", "BioEntity"))
+    }
+  }
+
+  test("test plasmid equals negative") {
+    new TestNodesAndRels {
+      assert((plasmid1 equals plasmid2) === false)
+    }
+  }
+
+  test("test plasmid equals positive") {
+    new TestNodesAndRels {
+      assert((plasmid1Copy equals plasmid1) === true)
+    }
+  }
+
+  test("test contig getLabels") {
+    new TestNodesAndRels {
+      assert(contig1.getLabels === List("Contig", "BioEntity"))
+    }
+  }
+
+  test("test contig equals negative") {
+    new TestNodesAndRels {
+      assert((contig1 equals contig2) === false)
+    }
+  }
+
+  test("test contig equals positive") {
+    new TestNodesAndRels {
+      assert((contig1Copy equals contig1) === true)
+    }
+  }
+
+  test("test gene getLabels") {
     new TestNodesAndRels {
       assert(gene1.getLabels === List("BioEntity", "Feature", "Gene"))
     }
   }
 
-  test("name gene test") {
+  test("test gene getName") {
     new TestNodesAndRels {
       assert(gene1.getName === "Super name")
     }
   }
 
-  test("coordinates gene test") {
+  test("test gene getCoordinates") {
     new TestNodesAndRels {
       assert(gene1.getCoordinates === Coordinates(150, 301, Strand.reverse))
     }
   }
 
-  test("get labels promoter test") {
+  test("test promoter getLabels") {
     new TestNodesAndRels {
       assert(promoter.getLabels === List("Promoter", "BioEntity", "Feature", "DNA"))
     }
   }
 
-  test("name promoter test") {
+  test("test promoter getName") {
     new TestNodesAndRels {
       assert(promoter.getName === "ydjFp1")
     }
   }
 
-  test("get labels terminator test") {
+  test("test terminator getLabels") {
     new TestNodesAndRels {
       assert(terminator.getLabels === List("Terminator", "Feature", "DNA"))
     }
@@ -247,7 +311,7 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("test read blast result") {
+  test("test utilFunctionsObject.readInsideBlastResultFile result") {
     new TestNodesAndRels {
       val blastedSequences: Map[Int, Sequence] = utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt")
       assert(blastedSequences.size === 242)
@@ -281,9 +345,15 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("test coordinates equals") {
+  test("test coordinates equals negative") {
     new TestNodesAndRels {
       assert((coordinates1 equals coordinates2) === false)
+    }
+  }
+
+  test("test coordinates equals positive") {
+    new TestNodesAndRels {
+      assert((coordinates1Copy equals coordinates1) === true)
     }
   }
 
@@ -347,9 +417,15 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("test boundaries equals") {
+  test("test boundaries equals negative") {
     new TestNodesAndRels {
       assert((boundaries1 equals boundaries2) === false)
+    }
+  }
+
+  test("test boundaries equals positive") {
+    new TestNodesAndRels {
+      assert((boundaries1Copy equals boundaries1) === true)
     }
   }
 
@@ -383,9 +459,15 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("test sequence equals") {
+  test("test sequence equals negative") {
     new TestNodesAndRels {
       assert((sequence3 equals sequence1) === false)
+    }
+  }
+
+  test("test sequence equals positive") {
+    new TestNodesAndRels {
+      assert((sequence1Copy equals sequence1) === true)
     }
   }
 
@@ -405,4 +487,140 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  test("test term getLabels") {
+    new TestNodesAndRels {
+      assert(geneTerm.getLabels === List("Term"))
+    }
+  }
+
+  test("test term getText") {
+    new TestNodesAndRels {
+      assert(geneTerm.getText === "Gene standard name")
+    }
+  }
+
+  test("test term equals negative") {
+    new TestNodesAndRels {
+      assert((geneTerm equals geneTerm2) === false)
+    }
+  }
+
+  test("test term equals positive") {
+    new TestNodesAndRels {
+      assert((geneTermCopy equals geneTerm) === true)
+    }
+  }
+
+  test("test organism getLabels") {
+    new TestNodesAndRels {
+      assert(organism.getLabels === List("Organism"))
+    }
+  }
+
+  test("test organism getName") {
+    new TestNodesAndRels {
+      assert(organism.getName === "Eschrichia coli")
+    }
+  }
+
+  test("test organism getTaxon") {
+    new TestNodesAndRels {
+      assert(organism.getTaxon === taxon)
+    }
+  }
+
+  test("test organism setTaxon") {
+    new TestNodesAndRels {
+      organismCopy.setTaxon(taxon2)
+      assert(organismCopy.getTaxon === taxon2)
+    }
+  }
+
+  test("test organism equals negative") {
+    new TestNodesAndRels {
+      assert((organism equals organism2) === false)
+    }
+  }
+
+  test("test organism equals positive") {
+    new TestNodesAndRels {
+      assert((organismCopy equals organism) === true)
+    }
+  }
+
+  test("test taxon getLabels") {
+    new TestNodesAndRels {
+      assert(taxon.getLabels === List("Taxon"))
+    }
+  }
+
+  test("test taxon getTaxonType") {
+    new TestNodesAndRels {
+      assert(taxon.getTaxonType === TaxonType.family)
+    }
+  }
+
+  test("test taxon getTaxID") {
+    new TestNodesAndRels {
+      assert(taxon.getTaxID === -1)
+    }
+  }
+
+
+  test("test taxon equals positive") {
+    new TestNodesAndRels {
+      assert((taxonCopy equals taxon) === true)
+    }
+  }
+
+  test("test taxon equals negative") {
+    new TestNodesAndRels {
+      assert((taxon equals taxon2) === false)
+    }
+  }
+
+  test("test polypeptide getName") {
+    new TestNodesAndRels {
+      assert(poly1.getName === "Test poly 1")
+    }
+  }
+
+  test("test polypeptide getLabels") {
+    new TestNodesAndRels {
+      assert(poly1.getLabels === List("Polypeptide", "Peptide", "BioEntity"))
+    }
+  }
+
+  test("test polypeptide getGene") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception]{
+        poly1.getGene
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
+  test("test polypeptide getOrganism") {
+    new TestNodesAndRels {
+      assert(poly1.getOrganism === organism)
+    }
+  }
+
+  test("test polypeptide getSeq") {
+    new TestNodesAndRels {
+      assert(poly1.getSeq === sequence1)
+    }
+  }
+
+  test("test polypeptide equals positive") {
+    new TestNodesAndRels {
+      assert((poly1Copy equals poly1) === true)
+    }
+  }
+
+  test("test polypeptide equals negative") {
+    new TestNodesAndRels {
+      assert((poly1 equals poly2) === false)
+    }
+  }
 }

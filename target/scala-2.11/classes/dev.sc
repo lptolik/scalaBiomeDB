@@ -25,7 +25,7 @@ val organism = new Organism("Eschrichia coli")
 val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
 val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
 val xref2 = new XRef("NZ_ACKO99999999", uniprot, Map("db_id" -> "NZ_ACKO99999999_GenBank"))
-val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", SourceType.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
+val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
 val plasmid = new Plasmid("Listeria grayi DSM 20601", organism = organism)
 val contig = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
 //    val gene = new Gene("gene name", Map())
@@ -84,10 +84,12 @@ sequenceBlast1.similarities
 sequenceBlast3.similarities
 seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(new Similarity(sequenceBlast3, 1e-10, 98.0 ))
 seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
-val blastedSequences = utilFunctions.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
-setSeq contains sequenceBlast4
+
+//utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
+
+
 //sequenceBlast2.similarities
 /////////////////////
 //gene.getName
