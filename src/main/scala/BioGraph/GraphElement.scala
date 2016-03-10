@@ -470,6 +470,7 @@ case class TU(
                name: String,
                term: Term,
                operon: Operon,
+               promoter: Promoter,
                organism: Organism,
                composition: List[Feature],
                properties: Map[String, Any] = Map(),
@@ -482,7 +483,7 @@ case class TU(
 
   def getName = name
 
-  def consistsOf = composition
+  def consistsOf = List(promoter) ::: composition
 
   def getStandardName = term
 

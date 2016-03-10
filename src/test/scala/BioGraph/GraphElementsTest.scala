@@ -84,6 +84,16 @@ class GraphElementsTest extends FunSuite {
     val poly2 = new Polypeptide("Test poly 2", xref2, sequence2, term2, organism)
     val poly3 = new Polypeptide("Test poly 3", xref3, sequence3, term3, organism)
 
+    val tuTerm1 = new Term("So much very transcriptional unit")
+    val tuTerm2 = new Term("Much more transcriptional unit")
+
+    val operonTerm = new Term("So much very operonious term")
+    val operon = new Operon("So operonious", boundaries1, operonTerm, organism)
+
+    val tu1 = new TU("Very transcriptonal", tuTerm1, operon, promoter, organism, List(gene1))
+    val tu2 = new TU("More transcriptonal", tuTerm2, operon, promoter, organism, List(gene3))
+    operon.addTU(tu1)
+
     val compound1 = new Compound(
       "oxybuprocaine",
       inchi = "InChI=1S/C17H28N2O3/c1-4-7-11-21-16-13-14(8-9-15(16)18)17(20)22-12-10-19(5-2)6-3/h8-9,13H,4-7,10-12,18H2,1-3H3",
@@ -291,6 +301,30 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  test("test gene getStandardName") {
+    new TestNodesAndRels {
+      assert(gene1.getStandardName === geneTerm)
+    }
+  }
+
+  test("test gene getProduct") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        gene1.getProduct
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
+  test("test gene controlledBy") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        gene1.controlledBy
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
   test("test promoter getLabels") {
     new TestNodesAndRels {
       assert(promoter.getLabels === List("Promoter", "BioEntity", "Feature", "DNA"))
@@ -300,6 +334,27 @@ class GraphElementsTest extends FunSuite {
   test("test promoter getName") {
     new TestNodesAndRels {
       assert(promoter.getName === "ydjFp1")
+    }
+  }
+
+  test("test promoter getStandardName") {
+    new TestNodesAndRels {
+      assert(promoter.getStandardName === promoterTerm)
+    }
+  }
+
+  test("test promoter getOrganism") {
+    new TestNodesAndRels {
+      assert(promoter.getOrganism === organism)
+    }
+  }
+
+  test("test gene getRegulationType") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        promoter.getRegulationType
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
     }
   }
 
@@ -327,7 +382,7 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("name mobileElement test") {
+  test("test mobileElement getName") {
     new TestNodesAndRels {
       assert(mobileElement.getName === "So mobile")
     }
@@ -342,7 +397,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test coordinates required start and end") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         new Coordinates(101, 100, Strand.forward)
       }
       assert(thrown.getMessage === "requirement failed: Start coordinate cannot have bigger value than end coordinate!")
@@ -387,7 +442,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test boundaries required organism") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         new Boundaries(gene1, gene4)
       }
       assert(thrown.getMessage === "requirement failed: Genes in the operon must be located on the same strand!")
@@ -396,7 +451,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test boundaries required ccp") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         new Boundaries(gene1, gene5)
       }
       assert(thrown.getMessage === "requirement failed: Genes must be located on the same CCP!")
@@ -405,7 +460,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test boundaries required strand") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         new Boundaries(gene1, gene4)
       }
       assert(thrown.getMessage === "requirement failed: Genes in the operon must be located on the same strand!")
@@ -414,7 +469,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test boundaries required comesBefore") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         new Boundaries(gene2, gene1)
       }
       assert(thrown.getMessage === "requirement failed: Start gene coordinate cannot have bigger value than end gene coordinate!")
@@ -502,7 +557,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test similarity required identity") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         new Similarity(sequence1, 1E-10, 101.5)
       }
       assert(thrown.getMessage === "requirement failed: Identity cannot be more than 100%.")
@@ -615,7 +670,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test polypeptide getGene") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception]{
+      val thrown = intercept[Exception] {
         poly1.getGene
       }
       assert(thrown.getMessage === "Not implemented yet!")
@@ -722,6 +777,88 @@ class GraphElementsTest extends FunSuite {
   test("test similarity equals negative") {
     new TestNodesAndRels {
       assert((similarity1 equals similarity2) === false)
+    }
+  }
+
+  test("test operon getLabels") {
+    new TestNodesAndRels {
+      assert(operon.getLabels === List("Operon", "BioEntity", "DNA"))
+    }
+  }
+
+  test("test operon getName") {
+    new TestNodesAndRels {
+      assert(operon.getName === "So operonious")
+    }
+  }
+
+  test("test operon getOrganism") {
+    new TestNodesAndRels {
+      assert(operon.getOrganism === organism)
+    }
+  }
+
+  test("test operon getStandardName") {
+    new TestNodesAndRels {
+      assert(operon.getStandardName === operonTerm)
+    }
+  }
+
+  test("test operon getTUs") {
+    new TestNodesAndRels {
+      assert(operon.getTUs === List(tu1))
+    }
+  }
+
+  test("test operon addTU") {
+    new TestNodesAndRels {
+      operon.addTU(tu2)
+      assert(operon.getTUs === List(tu2, tu1))
+    }
+  }
+
+  test("test tu getLabels") {
+    new TestNodesAndRels {
+      assert(tu1.getLabels === List("TU", "BioEntity", "DNA"))
+    }
+  }
+
+  test("test tu getName") {
+    new TestNodesAndRels {
+      assert(tu1.getName === "Very transcriptonal")
+    }
+  }
+
+  test("test tu consistsOf") {
+    new TestNodesAndRels {
+      assert(tu1.consistsOf === List(promoter, gene1))
+    }
+  }
+
+  test("test tu getStandardName") {
+    new TestNodesAndRels {
+      assert(tu1.getStandardName === tuTerm1)
+    }
+  }
+
+  test("test tu participatesIn") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        tu1.participatesIn
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
+  test("test tu getOperon") {
+    new TestNodesAndRels {
+      assert(tu1.getOperon === operon)
+    }
+  }
+
+  test("test tu getOrganism") {
+    new TestNodesAndRels {
+      assert(tu1.getOrganism === organism)
     }
   }
 }
