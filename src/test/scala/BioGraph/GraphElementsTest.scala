@@ -83,6 +83,20 @@ class GraphElementsTest extends FunSuite {
     val poly2 = new Polypeptide("Test poly 2", xref2, sequence2, term2, organism)
     val poly3 = new Polypeptide("Test poly 3", xref3, sequence3, term3, organism)
 
+    val compound1 = new Compound(
+      "oxybuprocaine",
+      inchi = "InChI=1S/C17H28N2O3/c1-4-7-11-21-16-13-14(8-9-15(16)18)17(20)22-12-10-19(5-2)6-3/h8-9,13H,4-7,10-12,18H2,1-3H3",
+      smiles = "CCCCCCCCCC(CCCCCCCCCCCC([O-])=O)OC1(OC(C(C(C1OC2(OC(C(C(C2O)O)O)COC(C)=O))O)O)COC(=O)C)",
+      reference = List(xref1))
+    val compound1Copy = new Compound(
+      "oxybuprocaine",
+      inchi = "InChI=1S/C17H28N2O3/c1-4-7-11-21-16-13-14(8-9-15(16)18)17(20)22-12-10-19(5-2)6-3/h8-9,13H,4-7,10-12,18H2,1-3H3",
+      smiles = "CCCCCCCCCC(CCCCCCCCCCCC([O-])=O)OC1(OC(C(C(C1OC2(OC(C(C(C2O)O)O)COC(C)=O))O)O)COC(=O)C)",
+      reference = List(xref1))
+    val compound2 = new Compound(
+      "\t2-styrylquinoline",
+      inchi = "InChI=1S/C17H13N/c1-2-6-14(7-3-1)10-12-16-13-11-15-8-4-5-9-17(15)18-16/h1-13H")
+
     val similarity1 = new Similarity(sequence2, 1e-12, 78.5)
     val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
     sequence3.addSimilarity(similarity1)
@@ -621,6 +635,54 @@ class GraphElementsTest extends FunSuite {
   test("test polypeptide equals negative") {
     new TestNodesAndRels {
       assert((poly1 equals poly2) === false)
+    }
+  }
+
+  test("test compound getLabels") {
+    new TestNodesAndRels {
+      assert(compound1.getLabels === List("Compound", "BioEntity"))
+    }
+  }
+
+  test("test compound getName") {
+    new TestNodesAndRels {
+      assert(compound1.getName === "oxybuprocaine")
+    }
+  }
+
+  test("test compound getInchi") {
+    new TestNodesAndRels {
+      assert(compound1.getInchi === "InChI=1S/C17H28N2O3/c1-4-7-11-21-16-13-14(8-9-15(16)18)17(20)22-12-10-19(5-2)6-3/h8-9,13H,4-7,10-12,18H2,1-3H3")
+    }
+  }
+
+  test("test compound getSmiles") {
+    new TestNodesAndRels {
+      assert(compound1.getSmiles === "CCCCCCCCCC(CCCCCCCCCCCC([O-])=O)OC1(OC(C(C(C1OC2(OC(C(C(C2O)O)O)COC(C)=O))O)O)COC(=O)C)")
+    }
+  }
+
+  test("test compound getXrefs") {
+    new TestNodesAndRels {
+      assert(compound1.getXrefs === List(xref1))
+    }
+  }
+
+  test("test compound setXrefs") {
+    new TestNodesAndRels {
+      compound1.setXrefs(xref2)
+      assert(compound1.getXrefs === List(xref2, xref1))
+    }
+  }
+  test("test compound equals positive") {
+    new TestNodesAndRels {
+      assert((compound1Copy equals compound1) === true)
+    }
+  }
+
+  test("test compound equals negative") {
+    new TestNodesAndRels {
+      assert((compound1 equals compound2) === false)
     }
   }
 }
