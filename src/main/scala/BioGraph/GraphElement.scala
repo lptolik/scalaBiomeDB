@@ -166,7 +166,6 @@ object TaxonType extends Enumeration {
   override def toString = Value.toString
 }
 
-
 case class Coordinates(
                         start: Int,
                         end: Int,
@@ -285,10 +284,17 @@ case class XRef(xrefId: String,
 
   def getDB = dbNode
 
-  override def equals(that: Any) = that match {
-    case that: XRef => xrefId.toUpperCase == that.getXRef.toUpperCase && this.getClass == that.getClass
+  override def equals(that: Any) =  that match {
+    case that: XRef =>
+      (that canEqual this) &&
+      xrefId.toUpperCase == that.getXRef.toUpperCase
     case _ => false
   }
+
+  override def canEqual(that: Any) = that.isInstanceOf[XRef]
+
+  override def hashCode = 41 * xrefId.toUpperCase.hashCode
+
 }
 
 abstract class Feature(coordinates: Coordinates,
@@ -840,66 +846,6 @@ case class Compound(
 
     def getEnd = end
 
-  }
-
-  object Main extends App {
-    class myNeo4j {
-      def main() {
-        val f = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
-        val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(f)
-        val tx: Transaction = gdb.beginTx()
-        try {
-
-          val organismNode = gdb.createNode(DynamicLabel.label("Organism"))
-          organismNode.setProperty("name", "E. coli")
-
-          val geneNode = gdb.createNode(DynamicLabel.label("Gene"))
-          geneNode.setProperty("name", "qyur")
-
-          val polyNode = gdb.createNode(DynamicLabel.label("Polypeptide"))
-          polyNode.setProperty("name", "Qyur")
-
-          val dbNode = gdb.createNode(DynamicLabel.label("DB"))
-          dbNode.setProperty("name", "UniProt")
-
-          val termNode = gdb.createNode(DynamicLabel.label("XRef"))
-          termNode.setProperty("XRef", "A001")
-
-          val partOf = new RelationshipType {
-            override def name(): String = "PART_OF"
-          }
-
-          val encodes = new RelationshipType {
-            override def name(): String = "ENCODES"
-          }
-
-          val linkTo = new RelationshipType {
-            override def name(): String = "LINK_TO"
-          }
-
-          val evidence = new RelationshipType {
-            override def name(): String = "EVIDENCE"
-          }
-
-          geneNode.createRelationshipTo(organismNode, partOf)
-          geneNode.createRelationshipTo(polyNode, encodes)
-          geneNode.createRelationshipTo(termNode, evidence)
-          polyNode.createRelationshipTo(organismNode, partOf)
-          termNode.createRelationshipTo(dbNode, linkTo)
-
-
-          tx.success()
-          println("Succesfull transaction.")
-        }
-        finally {
-          tx.close()
-          gdb.shutdown()
-          println("Succesful disconnect.")
-        }
-      }
-    }
-    val runScript = new myNeo4j
-    runScript.main()
   }
 
 }

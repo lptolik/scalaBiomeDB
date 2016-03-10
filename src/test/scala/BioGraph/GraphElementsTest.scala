@@ -28,6 +28,7 @@ class GraphElementsTest extends FunSuite {
 
     val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
     val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
+    val xrefCopy = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
     val link = new LinkTo(xref, uniprot)
 
     val chromosome1 = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
@@ -98,6 +99,7 @@ class GraphElementsTest extends FunSuite {
       inchi = "InChI=1S/C17H13N/c1-2-6-14(7-3-1)10-12-16-13-11-15-8-4-5-9-17(15)18-16/h1-13H")
 
     val similarity1 = new Similarity(sequence2, 1e-12, 78.5)
+    val similarity1Copy = new Similarity(sequence2, 1e-12, 78.5)
     val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
     sequence3.addSimilarity(similarity1)
 
@@ -145,9 +147,15 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("test link getProperties") {
+  test("test XRef equals negative") {
     new TestNodesAndRels {
-      assert(link.getProperties === Map())
+      assert((xref equals xref1) === false)
+    }
+  }
+
+  test("test XRef equals positive") {
+    new TestNodesAndRels {
+      assert((xrefCopy equals xref) === true)
     }
   }
 
@@ -674,6 +682,7 @@ class GraphElementsTest extends FunSuite {
       assert(compound1.getXrefs === List(xref2, xref1))
     }
   }
+
   test("test compound equals positive") {
     new TestNodesAndRels {
       assert((compound1Copy equals compound1) === true)
@@ -683,6 +692,36 @@ class GraphElementsTest extends FunSuite {
   test("test compound equals negative") {
     new TestNodesAndRels {
       assert((compound1 equals compound2) === false)
+    }
+  }
+
+  test("test similarity getSequence") {
+    new TestNodesAndRels {
+      assert(similarity1.getSequence === sequence2)
+    }
+  }
+
+  test("test similarity getEvalue") {
+    new TestNodesAndRels {
+      assert(similarity1.getEvalue === 1.0E-12)
+    }
+  }
+
+  test("test similarity getIdentity") {
+    new TestNodesAndRels {
+      assert(similarity1.getIdentity === 78.5)
+    }
+  }
+
+  test("test similarity equals positive") {
+    new TestNodesAndRels {
+      assert((similarity1Copy equals similarity1) === true)
+    }
+  }
+
+  test("test similarity equals negative") {
+    new TestNodesAndRels {
+      assert((similarity1 equals similarity2) === false)
     }
   }
 }
