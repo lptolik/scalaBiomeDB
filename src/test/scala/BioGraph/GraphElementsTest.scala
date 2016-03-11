@@ -325,6 +325,33 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  test("test feature/gene previous") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        gene1.previous
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
+  test("test feature/gene next") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        gene1.next
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
+  test("test feature/gene overlaps") {
+    new TestNodesAndRels {
+      val thrown = intercept[Exception] {
+        gene1.overlaps
+      }
+      assert(thrown.getMessage === "Not implemented yet!")
+    }
+  }
+
   test("test promoter getLabels") {
     new TestNodesAndRels {
       assert(promoter.getLabels === List("Promoter", "BioEntity", "Feature", "DNA"))
@@ -349,7 +376,7 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
-  test("test gene getRegulationType") {
+  test("test promoter getRegulationType") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
         promoter.getRegulationType

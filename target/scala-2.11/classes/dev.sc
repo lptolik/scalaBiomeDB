@@ -40,7 +40,7 @@ gene.getCoordinates.getStrand
 gene.getId
 val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid, organism, 1852948, promoterTerm)
 promoter.getLabels
-val aaa = ("AR" -> "banana")
+val aaa = "AR" -> "banana"
 Coordinates(11, 12, Strand.forward)
 class Properties[K, V](k: K, v: V){}
 val props = new Properties[String, Double]("key", 1.23)
@@ -56,8 +56,8 @@ val operonTerm = new Term("So much very operonious term")
 val operon = new Operon("So operonious", boundaries, operonTerm, organism)
 val tuTerm1 = new Term("So much very transcriptional unit")
 val tuTerm2 = new Term("Much more transcriptional unit")
-val tu1 = new TU("Very transcriptonal", tuTerm1, operon, organism, List(gene))
-val tu2 = new TU("More transcriptonal", tuTerm2, operon, organism, List(gene3))
+val tu1 = new TU("Very transcriptonal", tuTerm1, operon, promoter, organism, List(gene))
+val tu2 = new TU("More transcriptonal", tuTerm2, operon, promoter, organism, List(gene3))
 operon.addTU(tu1)
 operon.addTU(tu2)
 //operon.tuList :: List(tu1)
@@ -86,6 +86,8 @@ seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(new Similarity(se
 seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
+
+tu1.consistsOf
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 
