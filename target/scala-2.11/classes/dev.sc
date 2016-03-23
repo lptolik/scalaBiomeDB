@@ -1,10 +1,11 @@
 import java.security.MessageDigest
 
 import BioGraph._
+import org.neo4j.graphdb.DynamicLabel
 import utilFunctions._
 import sun.security.provider.MD5
 
-import scala.collection.immutable.HashSet
+import scala.collection.immutable.{HashMap, HashSet}
 
 
 val genbank = new DBNode("GenBank")
@@ -86,12 +87,14 @@ seqSet.filter(x => x equals sequenceBlast1).head.addSimilarity(new Similarity(se
 seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
-
 tu1.consistsOf
+//val polysMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
+//polys.next().getProperty("seq")
+//val polyMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
+//val filtered = polyMap.filter(x => x._2.length > 1)
+//filtered.size
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
-
-
 //sequenceBlast2.similarities
 /////////////////////
 //gene.getName

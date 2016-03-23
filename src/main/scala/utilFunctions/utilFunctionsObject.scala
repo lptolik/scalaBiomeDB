@@ -1,12 +1,18 @@
 import BioGraph._
 package utilFunctions {
 
+  import org.neo4j.graphdb.traversal.Evaluators
+  import org.neo4j.graphdb.{Result, ResourceIterator, DynamicLabel, Transaction, Node}
   import java.security.MessageDigest
-
-  import org.neo4j.kernel.api.Neo4jTypes
-
-  import scala.Predef
+  import java.io.File
+  import org.neo4j.graphdb.factory.GraphDatabaseFactory
+  import utilFunctions.BiomeDBRelations
+  import scala.collection.immutable.Map
+  import scala.collection.mutable
+  import scala.collection.parallel.immutable.ParHashMap
   import scala.io.Source
+  import scala.collection.immutable.HashMap
+  import scala.collection.JavaConverters
 
   /**
     * Created by artem on 12.02.16.
@@ -167,6 +173,120 @@ package utilFunctions {
       MessageDigest.getInstance("MD5").digest(inputString.getBytes()).map("%02X".format(_)).mkString
     }
 
-  }
+    def makeSequencesForPolypeptidesCypher(
+                                            pathToDataBase: String,
+                                            skipValue: Int,
+                                            previousMD5: String,
+                                            previousSequenceID: String): Tuple2[String, String] = {
+      val dataBaseFile = new File(pathToDataBase)
+      val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
+      val transaction: Transaction = gdb.beginTx()
+      val polypeptidesIterator = gdb.findNodes(DynamicLabel.label("Polypeptide"))
+      try{
+        val cypherQueryResult = gdb.execute(
+          "match (p:Polypeptide) " +
+          "where exists(p.seq) " +
+          "return p.seq, ID(p) " +
+          "order by p.seq " +
+          "skip " + skipValue + " limit 100000")
+        def loop(queryResult: Result, previousMD5: String, previousSequenceID: String): Tuple2[String, String] = {
+          if (queryResult.hasNext){
+            val currentPolypeptide = queryResult.next()
+            val currentSequence = currentPolypeptide.get("p.seq").toString
+            val currentMD5 = utilFunctionsObject.md5ToString(currentSequence)
+            val currentPolypeptideID = currentPolypeptide.get("ID(p)")
+            if (previousMD5 equals currentMD5) {
+              gdb.execute(
+                "START p=node(" + currentPolypeptideID + "), s=node(" + previousSequenceID + ") " +
+                  "CREATE (p)-[:IS_A]->(s)")
+              loop(queryResult, previousMD5, previousSequenceID)
+            }
+            else {
+              val created = gdb.execute(
+                "START p=node(" + currentPolypeptideID + ") " +
+                  "CREATE (s:Sequence:AA_Sequence {md5: '" +  currentMD5 + "', seq: '" + currentSequence + "'}) " +
+                  "CREATE (p)-[:IS_A]->(s) " +
+                  "RETURN ID(s)")
+              loop(queryResult, currentMD5, created.next().get("ID(s)").toString)
+            }
+          }
+          else Tuple2(previousMD5, previousSequenceID)
+        }
+        loop(cypherQueryResult, previousMD5, previousSequenceID)
+        transaction.success()
+//        val firstNode = cypherQueryResult.next()
+//        val polypeptideSequence = firstNode.get("p.seq").toString
+//        val polyNode = firstNode.get("p")
+//        println(polyNode.isInstanceOf[Node])
 
+//        var sequences = HashMap[String, String]()
+//        while (cypherQueryResult.hasNext) {
+//          var node = cypherQueryResult.next()
+//          sequences += node.entrySet()
+//        }
+      }
+      finally {
+        transaction.close()
+        gdb.shutdown()
+        println("Successful disconnect.")
+      }
+      Tuple2(previousMD5, previousSequenceID)
+    }
+
+    def makeSequencesForPolypeptides(pathToDataBase: String): Unit = {
+      val dataBaseFile = new File(pathToDataBase)
+      val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
+      val transactionToRead: Transaction = gdb.beginTx()
+      val polypeptidesIterator = gdb.findNodes(DynamicLabel.label("Polypeptide"))
+      try {
+//        val td = gdb.traversalDescription()
+        val transactionToWrite: Transaction = gdb.beginTx()
+        def processingPolypeptidesLoop(
+                                        polypeptideIterator: ResourceIterator[Node],
+                                        seqCollector: ParHashMap[String, Node],
+                                        transactionSize: Int,
+                                        transactionToWrite: Transaction): Unit = {
+          if (polypeptideIterator.hasNext) {
+            val polyNode = polypeptideIterator.next()
+
+            def defineCurrentTransaction(): Transaction = {
+              if (transactionSize % 150000 == 0) {
+                transactionToWrite.success()
+                transactionToWrite.close()
+                println("Transaction commited, counter = " + transactionSize, seqCollector.size)
+                val currentTransaction = gdb.beginTx()
+                currentTransaction
+              }
+              else transactionToWrite
+            }
+
+            val currentTransaction = defineCurrentTransaction()
+            if (polyNode.hasProperty("seq")) {
+              val polySequence = polyNode.getProperty("seq").toString
+              val polyMD5 = md5ToString(polySequence)
+              if (seqCollector.contains(polyMD5)) {
+                polyNode.createRelationshipTo(seqCollector(polyMD5), BiomeDBRelations.isA)
+                processingPolypeptidesLoop(polypeptideIterator, seqCollector, transactionSize + 1, currentTransaction)
+              }
+              else {
+                val sequenceNode = gdb.createNode(DynamicLabel.label("Sequence"), DynamicLabel.label("AA_Seqeunce"))
+                sequenceNode.setProperty("md5", polyMD5)
+                sequenceNode.setProperty("seq", polySequence)
+                polyNode.createRelationshipTo(sequenceNode, BiomeDBRelations.isA)
+                processingPolypeptidesLoop(polypeptideIterator, seqCollector + (polyMD5 -> sequenceNode), transactionSize + 1, currentTransaction)
+              }
+            }
+            else processingPolypeptidesLoop(polypeptideIterator, seqCollector, transactionSize, currentTransaction)
+          }
+          else transactionToWrite.close()
+        }
+        processingPolypeptidesLoop(polypeptidesIterator, ParHashMap(), 1, transactionToWrite)
+      }
+      finally {
+        transactionToRead.close()
+        gdb.shutdown()
+        println("Successful disconnect.")
+      }
+    }
+  }
 }

@@ -1,11 +1,11 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
-  import java.io.File
-  import java.security.MessageDigest
-  import org.neo4j.graphdb.{RelationshipType, DynamicLabel, Transaction}
-  import org.neo4j.graphdb.factory.GraphDatabaseFactory
-  import sun.awt.image.DataBufferNative
+import java.io.File
+import java.security.MessageDigest
+import org.neo4j.graphdb.{RelationshipType, DynamicLabel, Transaction}
+import org.neo4j.graphdb.factory.GraphDatabaseFactory
+import sun.awt.image.DataBufferNative
 import sun.security.provider.MD5
 import utilFunctions._
 
