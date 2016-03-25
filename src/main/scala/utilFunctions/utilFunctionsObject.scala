@@ -1,8 +1,12 @@
 import BioGraph._
 package utilFunctions {
 
+  import java.util
+  import java.util.function.Consumer
+
+  import org.neo4j.cypher.internal.compiler.v1_9.symbols.RelationshipType
   import org.neo4j.graphdb.traversal.Evaluators
-  import org.neo4j.graphdb.{Result, ResourceIterator, DynamicLabel, Transaction, Node}
+  import org.neo4j.graphdb.{RelationshipType, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
   import java.security.MessageDigest
   import java.io.File
   import org.neo4j.graphdb.factory.GraphDatabaseFactory
@@ -13,6 +17,7 @@ package utilFunctions {
   import scala.io.Source
   import scala.collection.immutable.HashMap
   import scala.collection.JavaConverters
+  import scala.collection.JavaConverters._
 
   /**
     * Created by artem on 12.02.16.
@@ -214,16 +219,6 @@ package utilFunctions {
         }
         loop(cypherQueryResult, previousMD5, previousSequenceID)
         transaction.success()
-//        val firstNode = cypherQueryResult.next()
-//        val polypeptideSequence = firstNode.get("p.seq").toString
-//        val polyNode = firstNode.get("p")
-//        println(polyNode.isInstanceOf[Node])
-
-//        var sequences = HashMap[String, String]()
-//        while (cypherQueryResult.hasNext) {
-//          var node = cypherQueryResult.next()
-//          sequences += node.entrySet()
-//        }
       }
       finally {
         transaction.close()
@@ -231,6 +226,86 @@ package utilFunctions {
         println("Successful disconnect.")
       }
       Tuple2(previousMD5, previousSequenceID)
+    }
+
+    def changeSimilarRelations(pathToDataBase: String): Unit = {
+      val dataBaseFile = new File(pathToDataBase)
+      val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
+      val transaction: Transaction = gdb.beginTx()
+      val polypeptides = gdb.findNodes(DynamicLabel.label("Polypeptide"))
+      try {
+        def polypeptideLoop(polypeptideIter: ResourceIterator[Node], size: Int): Unit = {
+          if (polypeptideIter.hasNext && size < 600000) {
+            val polypeptideNode = polypeptideIter.next
+            val polypeptideIsARelationshipIter = polypeptideNode.getRelationships(
+              Direction.OUTGOING,
+              BiomeDBRelations.isA).iterator
+            val polypeptideSimilarRelationshipIter = polypeptideNode.getRelationships(
+              Direction.OUTGOING,
+              BiomeDBRelations.similar).iterator
+            if (polypeptideIsARelationshipIter.hasNext && polypeptideSimilarRelationshipIter.hasNext) {
+              val findSequenceNode = checkIsASequence(polypeptideIsARelationshipIter)
+              if (findSequenceNode.nonEmpty) {
+                val sequenceNode = findSequenceNode.head
+                def similarLoop(similarRelationshipIter: util.Iterator[Relationship], changesCounter: Int): Int = {
+                  if (similarRelationshipIter.hasNext) {
+                    val polypeptideSimilarRelationship = similarRelationshipIter.next
+                    val similarPolypeptideNode = polypeptideSimilarRelationship.getEndNode
+                    val similarPolypeptideSequenceNode = similarPolypeptideNode.getRelationships(
+                      Direction.OUTGOING,
+                      BiomeDBRelations.isA).iterator().next.getEndNode
+                    if (
+                      !checkRelationExistence(sequenceNode, similarPolypeptideSequenceNode)
+                        && !(sequenceNode equals similarPolypeptideSequenceNode)) {
+                      sequenceNode.createRelationshipTo(similarPolypeptideSequenceNode, BiomeDBRelations.similar)
+                    }
+                    polypeptideSimilarRelationship.delete()
+                    similarLoop(similarRelationshipIter, changesCounter + 1)
+                  }
+                  else changesCounter
+                }
+                val changesCounter = similarLoop(polypeptideSimilarRelationshipIter, 0)
+                if (size > 10000) println(size + " polypeptides updated.")
+                polypeptideLoop(polypeptideIter, size + changesCounter)
+              }
+              else polypeptideLoop(polypeptideIter, size)
+            }
+            else polypeptideLoop(polypeptideIter, size)
+          }
+        }
+        polypeptideLoop(polypeptides, 0)
+        transaction.success()
+      }
+      finally {
+        transaction.close()
+        gdb.shutdown()
+      }
+    }
+
+    def checkRelationExistence(nodeA: Node, nodeB: Node): Boolean = {
+      def relationshipLoop(relationshipIterator: util.Iterator[Relationship]): Boolean = {
+        if (relationshipIterator.hasNext) {
+          if (relationshipIterator.next.getOtherNode(nodeA) equals nodeB) true
+          else relationshipLoop(relationshipIterator)
+        }
+        else false
+      }
+      val nodeARelationships = nodeA.getRelationships().iterator()
+      relationshipLoop(nodeARelationships)
+    }
+
+    def checkIsASequence(isARelationshipIter: util.Iterator[Relationship]): List[Node] = {
+      val isARelationships = isARelationshipIter.asScala.toList
+      def loop(rels: List[Relationship]): List[Node] = {
+        if (rels.nonEmpty) {
+          val currentNode = rels.head.getEndNode
+          val nodeLabels = currentNode.getLabels.asScala.toList
+          if (nodeLabels contains DynamicLabel.label("Sequence")) List(currentNode)
+          else loop(rels.tail)
+        }
+        else List()
+      }
+      loop(isARelationships)
     }
 
     def makeSequencesForPolypeptides(pathToDataBase: String): Unit = {
