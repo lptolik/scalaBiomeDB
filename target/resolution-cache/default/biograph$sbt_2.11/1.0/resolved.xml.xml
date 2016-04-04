@@ -4,7 +4,7 @@
 		module="biograph$sbt_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160325140812"
+		publication="20160404103216"
 	/>
 	<configurations>
 		<conf name="default" visibility="public"/>

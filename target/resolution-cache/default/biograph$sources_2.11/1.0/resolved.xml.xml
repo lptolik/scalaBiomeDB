@@ -4,7 +4,7 @@
 		module="biograph$sources_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160325140814"
+		publication="20160404103220"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>

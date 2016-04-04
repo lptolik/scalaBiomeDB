@@ -2,21 +2,13 @@ import BioGraph._
 package utilFunctions {
 
   import java.util
-  import java.util.function.Consumer
-
-  import org.neo4j.cypher.internal.compiler.v1_9.symbols.RelationshipType
-  import org.neo4j.graphdb.traversal.Evaluators
-  import org.neo4j.graphdb.{RelationshipType, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
+  import org.neo4j.graphdb.{Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
   import java.security.MessageDigest
   import java.io.File
   import org.neo4j.graphdb.factory.GraphDatabaseFactory
-  import utilFunctions.BiomeDBRelations
   import scala.collection.immutable.Map
-  import scala.collection.mutable
   import scala.collection.parallel.immutable.ParHashMap
   import scala.io.Source
-  import scala.collection.immutable.HashMap
-  import scala.collection.JavaConverters
   import scala.collection.JavaConverters._
 
   /**
@@ -40,72 +32,6 @@ package utilFunctions {
       case _ => throw new Exception("Length must of Int type!")
     }
 
-    //  def getSourceProperty(properties: Map[String, Any]): List[String] = properties("source") match {
-    //    case Some(x: List[String]) => x
-    //    case None => throw new Exception("Node has no source!")
-    //    case _  => throw new Exception("Source must be List[String] type!")
-    //  }
-
-    //  def collectSequences(organism: Organism, taxon: Taxon): List[Sequence] = {
-    //    // using Java API get Sequences.
-    //    // resultPolyList = filter(poly.getOrganism == organism)
-    ////     writeToFile(">" + poly.getSequence.getId + "/n" + poly.getSequence.getSequence + "\n")
-    //    ???
-    //  }
-
-    //  def readInsideBlastResultFile(resultFileName: String): List[Sequence] = {
-    //    val source = Source.fromFile(resultFileName)
-    //    val lines = source.getLines()
-    //
-    //    def insideBlastReadLoop(
-    //              currentLines: Iterator[String],
-    //              blastedSequences: List[Sequence]): List[Sequence] = {
-    //
-    //      if (lines.hasNext) {
-    //        var matchedSequences: List[Sequence] = List()
-    //        val line = lines.next()
-    //        val queryMD5: String = line.split('\t')(0).split('|')(0)
-    //        val querySeqId: Int = line.split('\t')(0).split('|')(1).toInt
-    //        val querySeq: String = line.split('\t').last
-    //        val targetSeq: String = line.split("\t")(2)
-    //        val targetMD5: String = line.split("\t")(3).split('|')(0)
-    //        for (targetSeqId <- line.split("\t")(3).split('|').tail){
-    //          matchedSequences = new Sequence(
-    //            sequence = targetSeq,
-    //            md5 = targetMD5,
-    //            nodeId = targetSeqId.toInt) :: matchedSequences
-    //        }
-    //        insideBlastReadLoop(
-    //          lines,
-    //          new Sequence(
-    //            sequence = querySeq,
-    //            md5 = queryMD5,
-    //            similarities = matchedSequences,
-    //            nodeId = querySeqId) :: blastedSequences)
-    //      }
-    //      else {
-    //        source.close()
-    //        blastedSequences
-    //      }
-    //    }
-    ////    def outsideBlastReadLoop(
-    ////                              currentLines: Iterator[String],
-    ////                              blastedSequences: List[Sequence]): List[Sequence] = {
-    ////      if (lines.hasNext) {
-    ////        var matchedSequences: List[Sequence] = List()
-    ////        val line = lines.next()
-    ////        val querySeqId: Int = line.split('\t')(0).toInt
-    ////        val querySeq: String = line.split('\t').last
-    ////        val targetSeq: String = line.split("\t")(2)
-    ////      }
-    ////      else {
-    ////        source.close()
-    ////        blastedSequences
-    ////      }
-    ////    }
-    //    insideBlastReadLoop(lines, List())
-    //  }
-
     def readBlastResultFile(readFunction: (Iterator[String], Map[Int, Sequence], Source) => Map[Int, Sequence])(resultFileName: String): Map[Int, Sequence] = {
       val source = Source.fromFile(resultFileName)
       val currentLines = source.getLines()
@@ -120,14 +46,14 @@ package utilFunctions {
         val queryMD5: String = line.split('\t')(0).split('|')(0)
         val querySeqId: Int = line.split('\t')(0).split('|')(1).toInt
         val querySeq: String = line.split('\t').last
-        val targetSeq: String = line.split("\t")(2)
-        val targetMD5: String = line.split("\t")(3).split('|')(0)
-        val evalue: Double = line.split("\t")(10).toDouble
-        val identity: Double = line.split("\t")(1).toDouble
+        val targetSeq: String = line.split('\t')(2)
+        val targetMD5: String = line.split('\t')(3).split('|')(0)
+        val evalue: Double = line.split('\t')(10).toDouble
+        val identity: Double = line.split('\t')(1).toDouble
         val currentSeq =
           if (blastedSequences contains querySeqId) blastedSequences(querySeqId)
           else new Sequence(sequence = querySeq, md5 = queryMD5, nodeId = querySeqId)
-        for (targetSeqId <- line.split("\t")(3).split('|').tail) {
+        for (targetSeqId <- line.split('\t')(3).split('|').tail) {
           val similarSeq = new Sequence(
             sequence = targetSeq,
             md5 = targetMD5,
@@ -167,6 +93,8 @@ package utilFunctions {
     }
 
     def readInsideBlastResultFile(name: String): Map[Int, Sequence] = readBlastResultFile(insideBlastReadLoop)(name)
+
+    def readOutsideBlastResultFile(name: String): Map[Int, Sequence] = readBlastResultFile(outsideBlastReadLoop)(name)
 
     //  def readOutsideBlastResultFile(name: String): Map[Int, Sequence] = readBlastResultFile(outsideBlastReadLoop, name)
 
@@ -255,7 +183,7 @@ package utilFunctions {
                       Direction.OUTGOING,
                       BiomeDBRelations.isA).iterator().next.getEndNode
                     if (
-                      !checkRelationExistence(sequenceNode, similarPolypeptideSequenceNode)
+                      !checkRelationExistenceWithoutDirection(sequenceNode, similarPolypeptideSequenceNode)
                         && !(sequenceNode equals similarPolypeptideSequenceNode)) {
                       sequenceNode.createRelationshipTo(similarPolypeptideSequenceNode, BiomeDBRelations.similar)
                     }
@@ -282,7 +210,7 @@ package utilFunctions {
       }
     }
 
-    def checkRelationExistence(nodeA: Node, nodeB: Node): Boolean = {
+    def checkRelationExistenceWithoutDirection(nodeA: Node, nodeB: Node): Boolean = {
       def relationshipLoop(relationshipIterator: util.Iterator[Relationship]): Boolean = {
         if (relationshipIterator.hasNext) {
           if (relationshipIterator.next.getOtherNode(nodeA) equals nodeB) true
@@ -292,6 +220,12 @@ package utilFunctions {
       }
       val nodeARelationships = nodeA.getRelationships().iterator()
       relationshipLoop(nodeARelationships)
+    }
+
+    def checkRelationExistenceWithDirection(nodeA: Node, nodeB: Node): Boolean = {
+      val listOfRelationships = nodeA.getRelationships().asScala.toSet
+      val listOfNeighbours = listOfRelationships.map(_.getEndNode)
+      listOfNeighbours(nodeB)
     }
 
     def checkIsASequence(isARelationshipIter: util.Iterator[Relationship]): List[Node] = {
