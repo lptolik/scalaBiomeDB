@@ -7,8 +7,66 @@
 		revision="1.0"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160301191349"/>
+		date="20160425101352"/>
 	<dependencies>
+		<module organisation="org.biojava" name="biojava-core">
+			<revision name="4.2.0" status="release" pubdate="20160323123904" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.biojava.org" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="32">
+				<license name="GNU LGPL v2" url="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt"/>
+				<metadata-artifact status="no" details="" size="6402" time="0" location="/home/artem/.ivy2/cache/org.biojava/biojava-core/ivy-4.2.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/biojava/biojava-core/4.2.0/biojava-core-4.2.0.pom"/>
+				<caller organisation="default" name="biograph_2.11" conf="compile, runtime" rev="4.2.0" rev-constraint-default="4.2.0" rev-constraint-dynamic="4.2.0" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="biojava-core" type="jar" ext="jar" status="no" details="" size="458425" time="0" location="/home/artem/.ivy2/cache/org.biojava/biojava-core/jars/biojava-core-4.2.0.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/biojava/biojava-core/4.2.0/biojava-core-4.2.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.logging.log4j" name="log4j-slf4j-impl">
+			<revision name="2.5" status="release" pubdate="20151210133637" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="34">
+				<metadata-artifact status="no" details="" size="24771" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-slf4j-impl/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-slf4j-impl/2.5/log4j-slf4j-impl-2.5.pom"/>
+				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="4.2.0"/>
+				<artifacts>
+					<artifact name="log4j-slf4j-impl" type="jar" ext="jar" status="no" details="" size="22935" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-slf4j-impl/jars/log4j-slf4j-impl-2.5.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-slf4j-impl/2.5/log4j-slf4j-impl-2.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.slf4j" name="slf4j-api">
+			<revision name="1.7.14" status="release" pubdate="20160125001403" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.slf4j.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="33">
+				<metadata-artifact status="no" details="" size="5289" time="0" location="/home/artem/.ivy2/cache/org.slf4j/slf4j-api/ivy-1.7.14.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.14/slf4j-api-1.7.14.pom"/>
+				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="1.7.14" rev-constraint-default="1.7.14" rev-constraint-dynamic="1.7.14" callerrev="4.2.0"/>
+				<caller organisation="org.apache.logging.log4j" name="log4j-slf4j-impl" conf="compile, runtime" rev="1.7.14" rev-constraint-default="1.7.14" rev-constraint-dynamic="1.7.12" callerrev="2.5"/>
+				<artifacts>
+					<artifact name="slf4j-api" type="jar" ext="jar" status="no" details="" size="33562" time="0" location="/home/artem/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.14.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.14/slf4j-api-1.7.14.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.logging.log4j" name="log4j-core">
+			<revision name="2.5" status="release" pubdate="20151210133639" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="31">
+				<metadata-artifact status="no" details="" size="28967" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-core/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-core/2.5/log4j-core-2.5.pom"/>
+				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="4.2.0"/>
+				<caller organisation="default" name="biograph_2.11" conf="compile, runtime" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="log4j-core" type="jar" ext="jar" status="no" details="" size="1106090" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-core/jars/log4j-core-2.5.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-core/2.5/log4j-core-2.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.logging.log4j" name="log4j-api">
+			<revision name="2.5" status="release" pubdate="20151210133636" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="35">
+				<metadata-artifact status="no" details="" size="30413" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-api/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-api/2.5/log4j-api-2.5.pom"/>
+				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="4.2.0"/>
+				<artifacts>
+					<artifact name="log4j-api" type="jar" ext="jar" status="no" details="" size="146761" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-api/jars/log4j-api-2.5.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-api/2.5/log4j-api-2.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
 		<module organisation="org.neo4j" name="neo4j">
 			<revision name="2.3.1" status="release" pubdate="20151111212117" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>

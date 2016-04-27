@@ -48,11 +48,11 @@ class GraphElementsTest extends FunSuite {
     val coordinates4 = new Coordinates(1753, 1917, Strand.forward)
     val coordinates5 = new Coordinates(524, 729, Strand.reverse)
 
-    val gene1 = new Gene("Super name", coordinates1, plasmid1, geneTerm, organism, Map("source" -> "GenBank"))
-    val gene2 = new Gene("Such name", coordinates2, plasmid1, geneTerm2, organism)
-    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, geneTerm3, organism, Map("source" -> "GenBank"))
-    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, geneTerm4, organism, Map("source" -> "GenBank"))
-    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, geneTerm4, organism, Map("source" -> "GenBank"))
+    val gene1 = new Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, Map("source" -> "GenBank"))
+    val gene2 = new Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism)
+    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, Map("source" -> "GenBank"))
+    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, Map("source" -> "GenBank"))
+    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, Map("source" -> "GenBank"))
 
     val evidence = new Evidence(gene1, xref)
 
@@ -79,10 +79,10 @@ class GraphElementsTest extends FunSuite {
     val xref2 = new XRef("EG10995", uniprot)
     val xref3 = new XRef("EG11850", uniprot)
 
-    val poly1 = new Polypeptide("Test poly 1", xref1, sequence1, term1, organism)
-    val poly1Copy = new Polypeptide("Test poly 1", xref1, sequence1, term1, organism)
-    val poly2 = new Polypeptide("Test poly 2", xref2, sequence2, term2, organism)
-    val poly3 = new Polypeptide("Test poly 3", xref3, sequence3, term3, organism)
+    val poly1 = new Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), organism)
+    val poly1Copy = new Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), organism)
+    val poly2 = new Polypeptide("Test poly 2", List(xref2), sequence2, List(term2), organism)
+    val poly3 = new Polypeptide("Test poly 3", List(xref3), sequence3, List(term3), organism)
 
     val tuTerm1 = new Term("So much very transcriptional unit")
     val tuTerm2 = new Term("Much more transcriptional unit")
@@ -113,6 +113,10 @@ class GraphElementsTest extends FunSuite {
     val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
     sequence3.addSimilarity(similarity1)
 
+    val rna1 = new RNA("5S ribosomal RNA", List("GenBank"), organism, "sRNA")
+    val rna1Copy = rna1.copy()
+    val rna2 = new RNA("16S ribosomal RNA", List("GenBank"), organism, "sRNA")
+    val rna3 = new RNA("15S ribosomal RNA", List("GenBank"), organism2, "tRNA")
   }
 
   test("test DBNode getLabels") {
@@ -303,7 +307,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test gene getStandardName") {
     new TestNodesAndRels {
-      assert(gene1.getStandardName === geneTerm)
+      assert(gene1.getNames === List(geneTerm))
     }
   }
 
@@ -652,6 +656,12 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  test("test organism getSource") {
+    new TestNodesAndRels {
+      assert(organism.getSource === "GenBank")
+    }
+  }
+
   test("test taxon getLabels") {
     new TestNodesAndRels {
       assert(taxon.getLabels === List("Taxon"))
@@ -713,6 +723,18 @@ class GraphElementsTest extends FunSuite {
   test("test polypeptide getSeq") {
     new TestNodesAndRels {
       assert(poly1.getSeq === sequence1)
+    }
+  }
+
+  test("test polypeptide getXrefs") {
+    new TestNodesAndRels {
+      assert(poly1.getXrefs === List(xref1))
+    }
+  }
+
+  test("test polypeptide getTerms") {
+    new TestNodesAndRels {
+      assert(poly1.getTerms === List(term1))
     }
   }
 
@@ -888,4 +910,41 @@ class GraphElementsTest extends FunSuite {
       assert(tu1.getOrganism === organism)
     }
   }
+
+  test("test rna getOrganism") {
+    new TestNodesAndRels {
+      assert(rna1.getOrganism === organism)
+    }
+  }
+
+  test("test rna getName") {
+    new TestNodesAndRels {
+      assert(rna1.getName === "5S ribosomal RNA")
+    }
+  }
+
+  test("test rna getLabels") {
+    new TestNodesAndRels {
+      assert(rna1.getLabels === List("RNA", "BioEntity", "sRNA"))
+    }
+  }
+
+  test("test rna getSource") {
+    new TestNodesAndRels {
+      assert(rna1.getSource === List("GenBank"))
+    }
+  }
+
+  test("test rna equals negative") {
+    new TestNodesAndRels {
+      assert((rna1 equals rna3) === false)
+    }
+  }
+
+  test("test rna equals positive") {
+    new TestNodesAndRels {
+      assert((rna1 equals rna1Copy) === true)
+    }
+  }
+
 }

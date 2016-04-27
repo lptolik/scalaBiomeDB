@@ -297,5 +297,10 @@ package utilFunctions {
         println("Successful disconnect.")
       }
     }
+
+  def psiExample(): Unit = {
+
   }
+  }
+
 }

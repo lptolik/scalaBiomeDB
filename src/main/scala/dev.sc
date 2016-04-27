@@ -1,18 +1,12 @@
 import java.security.MessageDigest
-
 import BioGraph._
 import org.neo4j.graphdb.DynamicLabel
 import utilFunctions._
 import sun.security.provider.MD5
-
 import scala.collection.immutable.{HashMap, HashSet}
-
-
 val genbank = new DBNode("GenBank")
-
 //val link = new linkTo(xref, uniprot)()
 //val gene = new Gene(Map("name" -> "sad", "start" -> "123", "end" -> "150", "strand" -> "reverse"))
-
 //link.endNode
 //List(link.startNode, link.endNode)
 val sl = List("some", "words").toString()
@@ -33,9 +27,9 @@ val contig = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, who
 val coordinates = new Coordinates(150, 301, Strand.reverse)
 val coordinates2 = new Coordinates(387, 780, Strand.forward)
 val coordinates3 = new Coordinates(750, 1013, Strand.reverse)
-val gene = new Gene("Super name", coordinates, plasmid, geneTerm, organism, Map("source" -> "GenBank"), nodeId = 134)
-val gene2 = new Gene("Such name", coordinates2, contig, geneTerm2, organism)
-val gene3 = new Gene("Super name", coordinates3, plasmid, geneTerm, organism, Map("source" -> "GenBank"), nodeId = 134)
+val gene = new Gene("Super name", coordinates, plasmid, List(geneTerm), organism, Map("source" -> "GenBank"), nodeId = 134)
+val gene2 = new Gene("Such name", coordinates2, contig, List(geneTerm2), organism)
+val gene3 = new Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, Map("source" -> "GenBank"), nodeId = 134)
 gene.setProperties(Map("comment" -> "new comment"))
 gene.getCoordinates.getStrand
 gene.getId
@@ -77,9 +71,9 @@ val xrefBlast3 = new XRef("EG11850", uniprot)
 val termBlast1 = new Term("L-arginine ABC transporter")
 val termBlast2 = new Term("putative Mn(2+) efflux pump, mntR-regulated")
 val termBlast3 = new Term("reduced ferredoxin")
-val polyBlast1 = new Polypeptide("Blast poly 1", xrefBlast1, sequenceBlast1, termBlast1, organismBlast)
-val polyBlast2 = new Polypeptide("Blast poly 2", xrefBlast2, sequenceBlast2, termBlast2, organismBlast)
-val polyBlast3 = new Polypeptide("Blast poly 3", xrefBlast3, sequenceBlast3, termBlast3, organismBlast)
+val polyBlast1 = new Polypeptide("Blast poly 1", List(xrefBlast1), sequenceBlast1, List(termBlast1), organismBlast)
+val polyBlast2 = new Polypeptide("Blast poly 2", List(xrefBlast2), sequenceBlast2, List(termBlast2), organismBlast)
+val polyBlast3 = new Polypeptide("Blast poly 3", List(xrefBlast3), sequenceBlast3, List(termBlast3), organismBlast)
 val seqSet: Set[Sequence] = Set(sequenceBlast1, sequenceBlast2)
 sequenceBlast1.similarities
 sequenceBlast3.similarities
@@ -93,7 +87,12 @@ tu1.consistsOf
 //val polyMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //val filtered = polyMap.filter(x => x._2.length > 1)
 //filtered.size
-
+val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
+val accessions = gb.getAccessionsFromGenBankFile
+val features = gb.getFeatures(accessions("NC_000913"))
+val l = gb.getInitialData(accessions("NC_000913"))
+l._2.getLabels
+features(1).getQualifiers.get("db_xref")
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities
 /////////////////////

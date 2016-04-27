@@ -7,7 +7,7 @@
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.11.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@36fe6750
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@51a01f70
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7
 [debug] 	found org.scala-lang#scala-library;2.11.7 in sbt-chain
 [debug] 	[2.11.7] org.scala-lang#scala-library;2.11.7
@@ -415,6 +415,78 @@
 [debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-consistency-check;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-consistency-check;2.3.1 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
+[info] Resolving org.apache.logging.log4j#log4j-core;2.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.logging.log4j#log4j-core;2.5 {compile=[default(compile)]}
+[debug] sbt-chain: module revision found in cache: org.apache.logging.log4j#log4j-core;2.5
+[debug] 	found org.apache.logging.log4j#log4j-core;2.5 in sbt-chain
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
+[info] Resolving org.biojava#biojava-core;4.2.0 ...
+[debug] sbt-chain: Checking cache for: dependency: org.biojava#biojava-core;4.2.0 {compile=[default(compile)]}
+[debug] sbt-chain: module revision found in cache: org.biojava#biojava-core;4.2.0
+[debug] 	found org.biojava#biojava-core;4.2.0 in sbt-chain
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[info] Resolving org.slf4j#slf4j-api;1.7.14 ...
+[debug] sbt-chain: Checking cache for: dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] sbt-chain: module revision found in cache: org.slf4j#slf4j-api;1.7.14
+[debug] 	found org.slf4j#slf4j-api;1.7.14 in sbt-chain
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->runtime(*)]
+[info] Resolving org.apache.logging.log4j#log4j-slf4j-impl;2.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.logging.log4j#log4j-slf4j-impl;2.5 {runtime=[compile(*), runtime(*), master(compile)]}
+[debug] sbt-chain: module revision found in cache: org.apache.logging.log4j#log4j-slf4j-impl;2.5
+[debug] 	found org.apache.logging.log4j#log4j-slf4j-impl;2.5 in sbt-chain
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->runtime(*)]
+[info] Resolving org.apache.logging.log4j#log4j-api;2.5 ...
+[debug] sbt-chain: Checking cache for: dependency: org.apache.logging.log4j#log4j-api;2.5 {runtime=[compile(*), runtime(*), master(compile)]}
+[debug] sbt-chain: module revision found in cache: org.apache.logging.log4j#log4j-api;2.5
+[debug] 	found org.apache.logging.log4j#log4j-api;2.5 in sbt-chain
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->master(compile)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] resolving dependencies for configuration 'runtime'
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [runtime]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [compile]
@@ -688,6 +760,56 @@
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->master(compile)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] resolving dependencies for configuration 'test'
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [test]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [runtime]
@@ -962,6 +1084,56 @@
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->master(compile)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->default(compile)]
 [info] Resolving org.scalatest#scalatest_2.11;2.1.7 ...
 [debug] sbt-chain: Checking cache for: dependency: org.scalatest#scalatest_2.11;2.1.7 {test=[default(compile)]}
@@ -1285,6 +1457,56 @@
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->master(compile)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [optional]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [provided]
 [debug] resolving dependencies for configuration 'runtime-internal'
@@ -1561,6 +1783,56 @@
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->master(compile)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [optional]
 [debug] resolving dependencies for configuration 'test-internal'
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [test-internal]
@@ -1837,6 +2109,56 @@
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-consistency-check;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.10 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [compile->compile(*)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->runtime(*)]
+[debug] == resolving dependencies org.apache.logging.log4j#log4j-slf4j-impl;2.5->org.slf4j#slf4j-api;1.7.14 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: org.slf4j#slf4j-api;1.7.12 {compile=[compile(*), master(compile)], runtime=[runtime(*)]} => dependency: org.slf4j#slf4j-api;1.7.14 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->master(compile)]
+[debug] dependency descriptor has been mediated: dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.12 {test=[runtime(*), master(compile)]}
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-api;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->runtime(*)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->master(compile)]
+[debug] == resolving dependencies org.biojava#biojava-core;4.2.0->org.apache.logging.log4j#log4j-core;2.5 [runtime->compile(*)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->default(compile)]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->runtime]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->compile]
@@ -1954,6 +2276,8 @@
 [debug] :: downloading artifacts ::
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-library;2.11.7!scala-library.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j;2.3.1!neo4j.jar
+[debug] 	[NOT REQUIRED] org.apache.logging.log4j#log4j-core;2.5!log4j-core.jar
+[debug] 	[NOT REQUIRED] org.biojava#biojava-core;4.2.0!biojava-core.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-kernel;2.3.1!neo4j-kernel.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-lucene-index;2.3.1!neo4j-lucene-index.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-graph-algo;2.3.1!neo4j-graph-algo.jar
@@ -1983,12 +2307,15 @@
 [debug] 	[NOT REQUIRED] org.parboiled#parboiled-core;1.1.7!parboiled-core.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-cypher-frontend-2.3;2.3.1!neo4j-cypher-frontend-2.3.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-consistency-check-legacy;2.3.1!neo4j-consistency-check-legacy.jar
+[debug] 	[NOT REQUIRED] org.slf4j#slf4j-api;1.7.14!slf4j-api.jar
+[debug] 	[NOT REQUIRED] org.apache.logging.log4j#log4j-slf4j-impl;2.5!log4j-slf4j-impl.jar
+[debug] 	[NOT REQUIRED] org.apache.logging.log4j#log4j-api;2.5!log4j-api.jar
 [debug] 	[NOT REQUIRED] org.scalatest#scalatest_2.11;2.1.7!scalatest_2.11.jar
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.1!scala-xml_2.11.jar(bundle)
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.7!scala-compiler.jar
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar
-[debug] :: resolution report :: resolve 583ms :: artifacts dl 19ms
+[debug] :: resolution report :: resolve 1491ms :: artifacts dl 36ms
 [debug] 	report for default#biograph_2.11;1.0 compile produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-compile.xml
 [debug] 	report for default#biograph_2.11;1.0 runtime produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-runtime.xml
 [debug] 	report for default#biograph_2.11;1.0 test produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-test.xml
@@ -2002,5 +2329,5 @@
 [debug] 	report for default#biograph_2.11;1.0 docs produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-docs.xml
 [debug] 	report for default#biograph_2.11;1.0 pom produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-pom.xml
 [debug] 	report for default#biograph_2.11;1.0 scala-tool produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-scala-tool.xml
-[debug] 	resolve done (583ms resolve - 19ms download)
+[debug] 	resolve done (1491ms resolve - 36ms download)
 [info] Done updating.

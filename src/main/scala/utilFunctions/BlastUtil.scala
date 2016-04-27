@@ -3,7 +3,8 @@ package utilFunctions
 import java.io.{File, PrintWriter}
 import java.util
 
-import org.neo4j.graphdb.{Relationship, ResourceIterator, DynamicLabel, Label, Node, GraphDatabaseService, Transaction}
+import org.apache.logging.log4j.LogManager
+import org.neo4j.graphdb.{ResourceIterator, DynamicLabel, Node, GraphDatabaseService}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import scala.collection.JavaConverters._
 import scala.io.Source
@@ -31,25 +32,29 @@ class WorkWithGraph(pathToDataBase: String) extends TransactionSupport {
   val dataBaseFile = new File(pathToDataBase)
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
-  def getAllNodesByLabel(label: String): ResourceIterator[Node] = transaction(graphDataBaseConnection) {
-    val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label))
-    nodes
+  def getAllNodesByLabel(requiredLabel: String): ResourceIterator[Node] = transaction(graphDataBaseConnection) {
+    val resultNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(requiredLabel))
+    resultNodes
   }
 }
 
 
 class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
-//  only works to get an iterator, after that the transaction is closed
-//  maybe is should start another transaction
+
+  val logger = LogManager.getLogger(this.getClass.getName)
+  logger.info("BlastUtil object is initialized.")
+
   def getAllSequencesNodes = getAllNodesByLabel("Sequence")
 
   def applyOperationToNodes(nodeIterator: ResourceIterator[Node])
                            (makeSomethingWithNodes: (Node) => Unit): Unit = transaction(graphDataBaseConnection){
+    logger.debug("Transaction in applyOperationToNodes")
     nodeIterator.asScala.foreach(makeSomethingWithNodes)
   }
 
   def writeNodesInfoToFile(nodeIterator: ResourceIterator[Node], filename: PrintWriter)
                            (nodesInfoWriter: (Node, PrintWriter) => Unit): Unit = transaction(graphDataBaseConnection){
+    logger.debug("Transaction in writeNodesInfoToFile")
     nodeIterator.asScala.foreach(nodesInfoWriter(_, filename))
   }
 
@@ -102,6 +107,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
 
   def createSimilarRelationshipsFromInsideBlast(blastOutputFilename: String, dropSize: Int): Int = transaction(graphDataBaseConnection){
 //    val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
+    logger.debug("Transaction in createSimilarRelationshipsFromInsideBlast")
+
     val source = Source.fromFile(blastOutputFilename)
     val fullReadFileIterator = source.getLines()
     val currentIterator = fullReadFileIterator.drop(dropSize)
@@ -126,7 +133,9 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     }
 
     def createInnerBlastSimilarRelationship(lineList: List[String]): Unit = {
+//      logger.debug("Get the node with id:" + lineList(1))
       val querySeqNode = graphDataBaseConnection.getNodeById(lineList(1).toLong)
+//      logger.debug("Get the node with id:" + lineList(4))
       val targetSeqNode = graphDataBaseConnection.getNodeById(lineList(4).toLong)
 //      println(querySeqNode.getProperty("md5"), targetSeqNode.getProperty("md5"))
       if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
@@ -142,14 +151,17 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       createInnerBlastSimilarRelationship(lineList)
     }
 
+    logger.debug("Transaction in 500000 nodes start")
     currentIterator.take(500000).foreach(createInnersBlastRelationships)
     println("Number of lines: " + dropSize)
+    logger.debug("Transaction in 500000 nodes finish")
 //    if (dropSize < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize + 500000)
     dropSize
   }
 
   def makeInnerBlast(blastOutputFilename: String, dropSize: Int): Unit = {
     val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
+    logger.debug("Number of lines: " + iteratorSize)
 //    val res = createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize)
 //    if (res < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, res)
     def loop(res: Int): Unit = {

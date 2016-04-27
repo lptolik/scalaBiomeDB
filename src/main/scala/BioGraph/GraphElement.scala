@@ -1,12 +1,6 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
-import java.io.File
-import java.security.MessageDigest
-import org.neo4j.graphdb.{RelationshipType, DynamicLabel, Transaction}
-import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import sun.awt.image.DataBufferNative
-import sun.security.provider.MD5
 import utilFunctions._
 
 /**
@@ -328,7 +322,7 @@ case class Gene(
                  name: String,
                  coordinates: Coordinates,
                  ccp: CCP,
-                 term: Term,
+                 terms: List[Term],
                  organism: Organism,
                  properties: Map[String, Any] = Map(),
                  nodeId: BigInt = -1)
@@ -344,13 +338,14 @@ case class Gene(
 
   def controlledBy = throw new Exception("Not implemented yet!")
 
-  def getStandardName = term
+  def getNames = terms
 
   override def equals(that: Any): Boolean = that match {
     case that: Gene =>
       (that canEqual this) &&
       this.getCoordinates == that.getCoordinates &&
-      this.getCCP == that.getCCP
+      this.getCCP == that.getCCP &&
+      this.getOrganism == that.getOrganism
     case _ => false
   }
 
@@ -633,6 +628,7 @@ case class Term(
 
 case class Organism(
                      name: String,
+                     source: String = "GenBank",
                      var taxon: Taxon = new Taxon("Empty", TaxonType.no_rank),
                      properties: Map[String, Any] = Map(),
                      nodeId: BigInt = -1)
@@ -656,13 +652,15 @@ case class Organism(
   def getTaxon = taxon
 
   def setTaxon(newTaxon: Taxon): Unit = taxon = newTaxon
+
+  def getSource = source
 }
 
 case class Polypeptide(
                         name: String,
-                        xRef: XRef,
+                        xRefs: List[XRef],
                         sequence: Sequence,
-                        term: Term,
+                        terms: List[Term],
                         organism: Organism,
                         properties: Map[String, Any] = Map(),
                         nodeId: Int = -1)
@@ -678,6 +676,10 @@ case class Polypeptide(
   def getOrganism = organism
 
   def getSeq = sequence
+
+  def getTerms = terms
+
+  def getXrefs = xRefs
 
   override def equals(that: Any) = that match {
     case that: Polypeptide =>
@@ -782,6 +784,36 @@ case class Compound(
   override def canEqual(that: Any) = that.isInstanceOf[Compound]
 
   override def hashCode = 41 * inchi.hashCode
+}
+
+case class RNA(
+              name: String,
+              source: List[String],
+              organism: Organism,
+              rnaType: String,
+              nodeId: BigInt = -1
+              )
+  extends Node(properties = Map(), nodeId)
+  with BioEntity{
+  def getLabels = List("RNA", "BioEntity", rnaType)
+
+  def getName = name
+
+  def getSource = source
+
+  def getOrganism = organism
+
+  override def equals(that: Any): Boolean = that match {
+    case that: RNA =>
+      (that canEqual this) &&
+        this.getOrganism == that.getOrganism &&
+        this.getName == that.getName
+    case _ => false
+  }
+
+  override def canEqual(that: Any) = that.isInstanceOf[RNA]
+
+  override def hashCode = 41 * (41 + organism.hashCode) + name.hashCode
 }
 
 //case class Enzyme(
