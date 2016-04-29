@@ -43,8 +43,8 @@ val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
 geneNew equals gene2
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
-val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid)
-val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid)
+val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid)
+val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid)
 //val operon = new Operon("Very operonious", )
 val boundaries = new Boundaries(gene, gene3)
 val operonTerm = new Term("So much very operonious term")
@@ -71,9 +71,9 @@ val xrefBlast3 = new XRef("EG11850", uniprot)
 val termBlast1 = new Term("L-arginine ABC transporter")
 val termBlast2 = new Term("putative Mn(2+) efflux pump, mntR-regulated")
 val termBlast3 = new Term("reduced ferredoxin")
-val polyBlast1 = new Polypeptide("Blast poly 1", List(xrefBlast1), sequenceBlast1, List(termBlast1), organismBlast)
-val polyBlast2 = new Polypeptide("Blast poly 2", List(xrefBlast2), sequenceBlast2, List(termBlast2), organismBlast)
-val polyBlast3 = new Polypeptide("Blast poly 3", List(xrefBlast3), sequenceBlast3, List(termBlast3), organismBlast)
+//val polyBlast1 = new Polypeptide("Blast poly 1", List(xrefBlast1), sequenceBlast1, List(termBlast1), organismBlast)
+//val polyBlast2 = new Polypeptide("Blast poly 2", List(xrefBlast2), sequenceBlast2, List(termBlast2), organismBlast)
+//val polyBlast3 = new Polypeptide("Blast poly 3", List(xrefBlast3), sequenceBlast3, List(termBlast3), organismBlast)
 val seqSet: Set[Sequence] = Set(sequenceBlast1, sequenceBlast2)
 sequenceBlast1.similarities
 sequenceBlast3.similarities
@@ -91,8 +91,8 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
-l._2.getLabels
-features(1).getQualifiers.get("db_xref")
+l
+
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities
 /////////////////////

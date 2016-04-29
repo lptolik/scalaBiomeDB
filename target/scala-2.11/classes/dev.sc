@@ -71,9 +71,9 @@ val xrefBlast3 = new XRef("EG11850", uniprot)
 val termBlast1 = new Term("L-arginine ABC transporter")
 val termBlast2 = new Term("putative Mn(2+) efflux pump, mntR-regulated")
 val termBlast3 = new Term("reduced ferredoxin")
-val polyBlast1 = new Polypeptide("Blast poly 1", xrefBlast1, sequenceBlast1, termBlast1, organismBlast)
-val polyBlast2 = new Polypeptide("Blast poly 2", xrefBlast2, sequenceBlast2, termBlast2, organismBlast)
-val polyBlast3 = new Polypeptide("Blast poly 3", xrefBlast3, sequenceBlast3, termBlast3, organismBlast)
+//val polyBlast1 = new Polypeptide("Blast poly 1", List(xrefBlast1), sequenceBlast1, List(termBlast1), organismBlast)
+//val polyBlast2 = new Polypeptide("Blast poly 2", List(xrefBlast2), sequenceBlast2, List(termBlast2), organismBlast)
+//val polyBlast3 = new Polypeptide("Blast poly 3", List(xrefBlast3), sequenceBlast3, List(termBlast3), organismBlast)
 val seqSet: Set[Sequence] = Set(sequenceBlast1, sequenceBlast2)
 sequenceBlast1.similarities
 sequenceBlast3.similarities
@@ -91,8 +91,8 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
-l._2.getLabels
-features(1).getQualifiers.get("db_xref")
+l
+features(490).getLocations
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities
 /////////////////////

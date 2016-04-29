@@ -58,8 +58,8 @@ class GraphElementsTest extends FunSuite {
 
     val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm)
     val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1)
-    val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid1)
-    val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid1)
+    val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid1)
+    val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid1)
     val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1)
 
     val boundaries1 = new Boundaries(gene1, gene2)
@@ -79,10 +79,10 @@ class GraphElementsTest extends FunSuite {
     val xref2 = new XRef("EG10995", uniprot)
     val xref3 = new XRef("EG11850", uniprot)
 
-    val poly1 = new Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), organism)
-    val poly1Copy = new Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), organism)
-    val poly2 = new Polypeptide("Test poly 2", List(xref2), sequence2, List(term2), organism)
-    val poly3 = new Polypeptide("Test poly 3", List(xref3), sequence3, List(term3), organism)
+    val poly1 = new Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), gene1, organism, List("GenBank", "MetaCyc"))
+    val poly1Copy = poly1.copy()
+    val poly2 = new Polypeptide("Test poly 2", List(xref2), sequence2, List(term2), gene2, organism)
+    val poly3 = new Polypeptide("Test poly 3", List(xref3), sequence3, List(term3), gene3, organism)
 
     val tuTerm1 = new Term("So much very transcriptional unit")
     val tuTerm2 = new Term("Much more transcriptional unit")
@@ -113,10 +113,10 @@ class GraphElementsTest extends FunSuite {
     val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
     sequence3.addSimilarity(similarity1)
 
-    val rna1 = new RNA("5S ribosomal RNA", List("GenBank"), organism, "sRNA")
+    val rna1 = new RNA("5S ribosomal RNA", gene4, organism,"sRNA")
     val rna1Copy = rna1.copy()
-    val rna2 = new RNA("16S ribosomal RNA", List("GenBank"), organism, "sRNA")
-    val rna3 = new RNA("15S ribosomal RNA", List("GenBank"), organism2, "tRNA")
+    val rna2 = new RNA("16S ribosomal RNA", gene5, organism, "sRNA")
+    val rna3 = new RNA("15S ribosomal RNA", gene4, organism2, "tRNA")
   }
 
   test("test DBNode getLabels") {
@@ -307,7 +307,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test gene getStandardName") {
     new TestNodesAndRels {
-      assert(gene1.getNames === List(geneTerm))
+      assert(gene1.getTerms === List(geneTerm))
     }
   }
 
@@ -707,16 +707,19 @@ class GraphElementsTest extends FunSuite {
 
   test("test polypeptide getGene") {
     new TestNodesAndRels {
-      val thrown = intercept[Exception] {
-        poly1.getGene
-      }
-      assert(thrown.getMessage === "Not implemented yet!")
+      assert(poly1.getGene === gene1)
     }
   }
 
   test("test polypeptide getOrganism") {
     new TestNodesAndRels {
       assert(poly1.getOrganism === organism)
+    }
+  }
+
+  test("test polypeptide getSource") {
+    new TestNodesAndRels {
+      assert(poly1.getSource === List("GenBank", "MetaCyc"))
     }
   }
 
@@ -932,6 +935,12 @@ class GraphElementsTest extends FunSuite {
   test("test rna getSource") {
     new TestNodesAndRels {
       assert(rna1.getSource === List("GenBank"))
+    }
+  }
+
+  test("test rna getGene") {
+    new TestNodesAndRels {
+      assert(rna1.getGene === gene4)
     }
   }
 

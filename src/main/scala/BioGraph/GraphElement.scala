@@ -86,6 +86,11 @@ trait DNA {
 }
 
 
+trait GeneProduct{
+
+  def getGene: Gene
+}
+
 trait CCP extends BioEntity {
 
   def getLength: Int
@@ -338,7 +343,7 @@ case class Gene(
 
   def controlledBy = throw new Exception("Not implemented yet!")
 
-  def getNames = terms
+  def getTerms = terms
 
   override def equals(that: Any): Boolean = that match {
     case that: Gene =>
@@ -392,25 +397,15 @@ case class Promoter(name: String,
   def getOrganism = organism
 }
 
-case class MiscFeature(coordinates: Coordinates,
+case class MiscFeature(miscFeatureType: String,
+                       coordinates: Coordinates,
                        ccp: CCP,
                        properties: Map[String, Any] = Map(),
                        nodeId: BigInt = -1)
   extends Feature(coordinates, properties, ccp, nodeId)
   with DNA {
 
-  override def getLabels = List("Misc_feature", "Feature", "DNA")
-}
-
-case class MiscStructure(
-                          coordinates: Coordinates,
-                          ccp: CCP,
-                          properties: Map[String, Any] = Map(),
-                          nodeId: BigInt = -1)
-  extends Feature(coordinates, properties, ccp, nodeId)
-  with DNA {
-
-  override def getLabels = List("Misc_structure", "Feature", "DNA")
+  override def getLabels = List(miscFeatureType, "Feature", "DNA")
 }
 
 case class MobileElement(
@@ -661,17 +656,19 @@ case class Polypeptide(
                         xRefs: List[XRef],
                         sequence: Sequence,
                         terms: List[Term],
+                        gene: Gene,
                         organism: Organism,
+                        source: List[String] = List("GenBank"),
                         properties: Map[String, Any] = Map(),
                         nodeId: Int = -1)
   extends Node(properties, nodeId)
-  with BioEntity {
+  with BioEntity with GeneProduct{
 
   def getName = name
 
   def getLabels = List("Polypeptide", "Peptide", "BioEntity")
 
-  def getGene = throw new Exception("Not implemented yet!")
+  def getGene = gene
 
   def getOrganism = organism
 
@@ -680,6 +677,8 @@ case class Polypeptide(
   def getTerms = terms
 
   def getXrefs = xRefs
+
+  def getSource = source
 
   override def equals(that: Any) = that match {
     case that: Polypeptide =>
@@ -788,13 +787,14 @@ case class Compound(
 
 case class RNA(
               name: String,
-              source: List[String],
+              gene: Gene,
               organism: Organism,
               rnaType: String,
+              source: List[String] = List("GenBank"),
               nodeId: BigInt = -1
               )
   extends Node(properties = Map(), nodeId)
-  with BioEntity{
+  with BioEntity with GeneProduct {
   def getLabels = List("RNA", "BioEntity", rnaType)
 
   def getName = name
@@ -802,6 +802,8 @@ case class RNA(
   def getSource = source
 
   def getOrganism = organism
+
+  def getGene = gene
 
   override def equals(that: Any): Boolean = that match {
     case that: RNA =>

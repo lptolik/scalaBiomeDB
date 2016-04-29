@@ -8,7 +8,7 @@
 [debug] == resolving dependencies for default#biograph$sources_2.11;1.0 [compile]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.11.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@ced7f27
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@14e186d0
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7
 [debug] 	found org.scala-lang#scala-library;2.11.7 in sbt-chain
 [debug] 	[2.11.7] org.scala-lang#scala-library;2.11.7
@@ -17,7 +17,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@38d4b665
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1fc6445d
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j;2.3.1
 [debug] 	found org.neo4j#neo4j;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->runtime]
@@ -25,7 +25,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-kernel;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7d13510d
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@41f21647
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-kernel;2.3.1
 [debug] 	found org.neo4j#neo4j-kernel;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
@@ -33,7 +33,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-primitive-collections;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-primitive-collections;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@6ea50db8
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@30158ffb
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-primitive-collections;2.3.1
 [debug] 	found org.neo4j#neo4j-primitive-collections;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-primitive-collections;2.3.1 [compile->runtime]
@@ -41,7 +41,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-primitive-collections;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-unsafe;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-unsafe;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4dcb436d
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@78e4303e
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-unsafe;2.3.1
 [debug] 	found org.neo4j#neo4j-unsafe;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-unsafe;2.3.1 [compile->runtime]
@@ -49,7 +49,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-unsafe;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-function;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-function;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1ea8cb35
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5c1163d0
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-function;2.3.1
 [debug] 	found org.neo4j#neo4j-function;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-function;2.3.1 [compile->runtime]
@@ -57,7 +57,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-function;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-io;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@563aec83
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@766970ad
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-io;2.3.1
 [debug] 	found org.neo4j#neo4j-io;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
@@ -65,7 +65,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.commons#commons-lang3;3.3.2 [compile->default(compile)]
 [info] Resolving org.apache.commons#commons-lang3;3.3.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@23de281d
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@413a4c67
 [debug] sbt-chain: module revision found in cache: org.apache.commons#commons-lang3;3.3.2
 [debug] 	found org.apache.commons#commons-lang3;3.3.2 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.commons#commons-lang3;3.3.2 [compile->runtime]
@@ -73,7 +73,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.commons#commons-lang3;3.3.2 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-csv;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-csv;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5616772a
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@49354b08
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-csv;2.3.1
 [debug] 	found org.neo4j#neo4j-csv;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-csv;2.3.1 [compile->runtime]
@@ -81,7 +81,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-csv;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-logging;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-logging;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@427bd2af
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1d947b20
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-logging;2.3.1
 [debug] 	found org.neo4j#neo4j-logging;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-logging;2.3.1 [compile->runtime]
@@ -89,7 +89,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-logging;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-lucene-index;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-lucene-index;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5681c731
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@21c98acf
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-lucene-index;2.3.1
 [debug] 	found org.neo4j#neo4j-lucene-index;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-lucene-index;2.3.1 [compile->runtime]
@@ -97,7 +97,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-lucene-index;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.lucene#lucene-core;3.6.2 [compile->default(compile)]
 [info] Resolving org.apache.lucene#lucene-core;3.6.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4ea694d
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1018a2ee
 [debug] sbt-chain: module revision found in cache: org.apache.lucene#lucene-core;3.6.2
 [debug] 	found org.apache.lucene#lucene-core;3.6.2 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.lucene#lucene-core;3.6.2 [compile->runtime]
@@ -105,7 +105,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.lucene#lucene-core;3.6.2 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-graph-algo;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-graph-algo;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@11d197af
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@42e95a8e
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-graph-algo;2.3.1
 [debug] 	found org.neo4j#neo4j-graph-algo;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-graph-algo;2.3.1 [compile->runtime]
@@ -113,7 +113,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-graph-algo;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-udc;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-udc;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@692dddff
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1c91a45b
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-udc;2.3.1
 [debug] 	found org.neo4j#neo4j-udc;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-udc;2.3.1 [compile->runtime]
@@ -121,7 +121,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-udc;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-graph-matching;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-graph-matching;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@59e99a43
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@465846a
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-graph-matching;2.3.1
 [debug] 	found org.neo4j#neo4j-graph-matching;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-graph-matching;2.3.1 [compile->runtime]
@@ -129,7 +129,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-graph-matching;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-cypher;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@bb9739b
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@103e776f
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-cypher;2.3.1
 [debug] 	found org.neo4j#neo4j-cypher;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher;2.3.1 [compile->runtime]
@@ -137,7 +137,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang#scala-reflect;2.11.7 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-reflect;2.11.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1ea36d5b
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@762039e0
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-reflect;2.11.7
 [debug] 	found org.scala-lang#scala-reflect;2.11.7 in sbt-chain
 [debug] 	[2.11.7] org.scala-lang#scala-reflect;2.11.7
@@ -146,7 +146,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang#scala-reflect;2.11.7 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [compile->default(compile)]
 [info] Resolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@403f9c3
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@3d0efde8
 [debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4
 [debug] 	found org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [compile->runtime]
@@ -154,7 +154,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-codegen;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-codegen;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@575d8ab6
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@19b8bdb5
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-codegen;2.3.1
 [debug] 	found org.neo4j#neo4j-codegen;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-codegen;2.3.1 [compile->runtime]
@@ -162,7 +162,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-codegen;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.ow2.asm#asm;5.0.2 [compile->default(compile)]
 [info] Resolving org.ow2.asm#asm;5.0.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@12d506b5
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@56514c6d
 [debug] sbt-chain: module revision found in cache: org.ow2.asm#asm;5.0.2
 [debug] 	found org.ow2.asm#asm;5.0.2 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.ow2.asm#asm;5.0.2 [compile->runtime]
@@ -170,7 +170,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.ow2.asm#asm;5.0.2 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-1.9_2.11;2.0.5 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-cypher-compiler-1.9_2.11;2.0.5 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1bcae1c5
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@6d8c4422
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-cypher-compiler-1.9_2.11;2.0.5
 [debug] 	found org.neo4j#neo4j-cypher-compiler-1.9_2.11;2.0.5 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-1.9_2.11;2.0.5 [compile->runtime]
@@ -178,7 +178,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-1.9_2.11;2.0.5 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-2.2_2.11;2.2.6 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-cypher-compiler-2.2_2.11;2.2.6 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@3bfa65c1
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2972b1c2
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-cypher-compiler-2.2_2.11;2.2.6
 [debug] 	found org.neo4j#neo4j-cypher-compiler-2.2_2.11;2.2.6 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-2.2_2.11;2.2.6 [compile->runtime]
@@ -186,7 +186,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-2.2_2.11;2.2.6 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.parboiled#parboiled-scala_2.11;1.1.7 [compile->default(compile)]
 [info] Resolving org.parboiled#parboiled-scala_2.11;1.1.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@518f7c45
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@605898fa
 [debug] sbt-chain: module revision found in cache: org.parboiled#parboiled-scala_2.11;1.1.7
 [debug] 	found org.parboiled#parboiled-scala_2.11;1.1.7 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.parboiled#parboiled-scala_2.11;1.1.7 [compile->runtime]
@@ -194,7 +194,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.parboiled#parboiled-scala_2.11;1.1.7 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.parboiled#parboiled-core;1.1.7 [compile->default(compile)]
 [info] Resolving org.parboiled#parboiled-core;1.1.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@66b05d33
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@45416eba
 [debug] sbt-chain: module revision found in cache: org.parboiled#parboiled-core;1.1.7
 [debug] 	found org.parboiled#parboiled-core;1.1.7 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.parboiled#parboiled-core;1.1.7 [compile->runtime]
@@ -202,7 +202,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.parboiled#parboiled-core;1.1.7 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-2.3;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-cypher-compiler-2.3;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2220d20
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4a5cf443
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-cypher-compiler-2.3;2.3.1
 [debug] 	found org.neo4j#neo4j-cypher-compiler-2.3;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-2.3;2.3.1 [compile->runtime]
@@ -210,7 +210,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-compiler-2.3;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-frontend-2.3;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-cypher-frontend-2.3;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5ecce7f7
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@55c0eb6a
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-cypher-frontend-2.3;2.3.1
 [debug] 	found org.neo4j#neo4j-cypher-frontend-2.3;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-frontend-2.3;2.3.1 [compile->runtime]
@@ -218,7 +218,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-cypher-frontend-2.3;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->net.sf.opencsv#opencsv;2.3 [compile->default(compile)]
 [info] Resolving net.sf.opencsv#opencsv;2.3 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7a4d9291
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@59a46997
 [debug] sbt-chain: module revision found in cache: net.sf.opencsv#opencsv;2.3
 [debug] 	found net.sf.opencsv#opencsv;2.3 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->net.sf.opencsv#opencsv;2.3 [compile->runtime]
@@ -226,7 +226,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->net.sf.opencsv#opencsv;2.3 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->com.googlecode.concurrentlinkedhashmap#concurrentlinkedhashmap-lru;1.4.2 [compile->default(compile)]
 [info] Resolving com.googlecode.concurrentlinkedhashmap#concurrentlinkedhashmap-lru;1.4.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1831cab1
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@47a214bb
 [debug] sbt-chain: module revision found in cache: com.googlecode.concurrentlinkedhashmap#concurrentlinkedhashmap-lru;1.4.2
 [debug] 	found com.googlecode.concurrentlinkedhashmap#concurrentlinkedhashmap-lru;1.4.2 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->com.googlecode.concurrentlinkedhashmap#concurrentlinkedhashmap-lru;1.4.2 [compile->runtime]
@@ -234,7 +234,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->com.googlecode.concurrentlinkedhashmap#concurrentlinkedhashmap-lru;1.4.2 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-jmx;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-jmx;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2e473b69
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7dffe2f
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-jmx;2.3.1
 [debug] 	found org.neo4j#neo4j-jmx;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-jmx;2.3.1 [compile->runtime]
@@ -242,7 +242,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-jmx;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-consistency-check;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-consistency-check;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7d209808
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7ded4b2d
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-consistency-check;2.3.1
 [debug] 	found org.neo4j#neo4j-consistency-check;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-consistency-check;2.3.1 [compile->runtime]
@@ -250,7 +250,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-consistency-check;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-consistency-check-legacy;2.3.1 [compile->default(compile)]
 [info] Resolving org.neo4j#neo4j-consistency-check-legacy;2.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@74704f97
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5683797e
 [debug] sbt-chain: module revision found in cache: org.neo4j#neo4j-consistency-check-legacy;2.3.1
 [debug] 	found org.neo4j#neo4j-consistency-check-legacy;2.3.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-consistency-check-legacy;2.3.1 [compile->runtime]
@@ -258,7 +258,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.neo4j#neo4j-consistency-check-legacy;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->default(compile)]
 [info] Resolving org.apache.logging.log4j#log4j-core;2.5 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@53cf0e99
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1b1a6f0a
 [debug] sbt-chain: module revision found in cache: org.apache.logging.log4j#log4j-core;2.5
 [debug] 	found org.apache.logging.log4j#log4j-core;2.5 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->runtime]
@@ -266,7 +266,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-core;2.5 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->default(compile)]
 [info] Resolving org.biojava#biojava-core;4.2.0 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5904abb
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5a38131f
 [debug] sbt-chain: module revision found in cache: org.biojava#biojava-core;4.2.0
 [debug] 	found org.biojava#biojava-core;4.2.0 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->runtime]
@@ -274,7 +274,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.biojava#biojava-core;4.2.0 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.slf4j#slf4j-api;1.7.14 [compile->default(compile)]
 [info] Resolving org.slf4j#slf4j-api;1.7.14 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@660f94e2
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@65194d29
 [debug] sbt-chain: module revision found in cache: org.slf4j#slf4j-api;1.7.14
 [debug] 	found org.slf4j#slf4j-api;1.7.14 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.slf4j#slf4j-api;1.7.14 [compile->runtime]
@@ -282,7 +282,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.slf4j#slf4j-api;1.7.14 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [compile->default(compile)]
 [info] Resolving org.apache.logging.log4j#log4j-slf4j-impl;2.5 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@dc2409a
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@6c1ee2a4
 [debug] sbt-chain: module revision found in cache: org.apache.logging.log4j#log4j-slf4j-impl;2.5
 [debug] 	found org.apache.logging.log4j#log4j-slf4j-impl;2.5 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [compile->runtime]
@@ -290,7 +290,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-slf4j-impl;2.5 [compile->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-api;2.5 [compile->default(compile)]
 [info] Resolving org.apache.logging.log4j#log4j-api;2.5 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@429d8155
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@40e2ae70
 [debug] sbt-chain: module revision found in cache: org.apache.logging.log4j#log4j-api;2.5
 [debug] 	found org.apache.logging.log4j#log4j-api;2.5 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-api;2.5 [compile->runtime]
@@ -1025,7 +1025,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.apache.logging.log4j#log4j-api;2.5 [test->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->default(compile)]
 [info] Resolving org.scalatest#scalatest_2.11;2.1.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@18116e09
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1a6d7eda
 [debug] sbt-chain: module revision found in cache: org.scalatest#scalatest_2.11;2.1.7
 [debug] 	found org.scalatest#scalatest_2.11;2.1.7 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->runtime]
@@ -1033,7 +1033,7 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->master]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.1 [test->default(compile)]
 [info] Resolving org.scala-lang.modules#scala-xml_2.11;1.0.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@47f82be0
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1d244ce5
 [debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-xml_2.11;1.0.1
 [debug] 	found org.scala-lang.modules#scala-xml_2.11;1.0.1 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.1 [test->runtime]
@@ -2499,7 +2499,7 @@
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.7!scala-compiler.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(src)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar(src)
-[debug] :: resolution report :: resolve 2285ms :: artifacts dl 102ms
+[debug] :: resolution report :: resolve 1863ms :: artifacts dl 110ms
 [debug] 	report for default#biograph$sources_2.11;1.0 compile produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-compile.xml
 [debug] 	report for default#biograph$sources_2.11;1.0 runtime produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-runtime.xml
 [debug] 	report for default#biograph$sources_2.11;1.0 test produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-test.xml
@@ -2513,4 +2513,4 @@
 [debug] 	report for default#biograph$sources_2.11;1.0 docs produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-docs.xml
 [debug] 	report for default#biograph$sources_2.11;1.0 pom produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-pom.xml
 [debug] 	report for default#biograph$sources_2.11;1.0 scala-tool produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-scala-tool.xml
-[debug] 	resolve done (2285ms resolve - 102ms download)
+[debug] 	resolve done (1863ms resolve - 110ms download)
