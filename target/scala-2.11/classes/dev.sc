@@ -1,6 +1,8 @@
+import java.io.File
 import java.security.MessageDigest
 import BioGraph._
 import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import utilFunctions._
 import sun.security.provider.MD5
 import scala.collection.immutable.{HashMap, HashSet}
@@ -94,6 +96,10 @@ val l = gb.getInitialData(accessions("NC_000913"))
 features(516)
 val rec = accessions("NC_000913")
 rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
+//val dbPathRemote = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
+//val dataBaseFile = new File(dbPathRemote)
+//val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
+//organism.upload(graphDataBaseConnection)
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities

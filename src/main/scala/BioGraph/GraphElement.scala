@@ -1,7 +1,8 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
-  import org.neo4j.graphdb.GraphDatabaseService
+  import org.neo4j.graphdb
+  import org.neo4j.graphdb.{Label, GraphDatabaseService}
   import utilFunctions._
 
 /**
@@ -630,7 +631,7 @@ case class Organism(
                      var taxon: Taxon = new Taxon("Empty", TaxonType.no_rank),
                      properties: Map[String, Any] = Map(),
                      nodeId: BigInt = -1)
-  extends Node(properties, nodeId) {
+  extends Node(properties, nodeId) with TransactionSupport {
 
   def getLabels = List("Organism")
 
@@ -653,14 +654,17 @@ case class Organism(
 
   def getSource = source
 
-//  def upload(graphDataBaseConnection: GraphDatabaseService): Unit = {
-////    val similarRelationship = querySeqNode.createRelationshipTo(targetSeqNode, BiomeDBRelations.similar)
-////    similarRelationship.setProperty("evalue", lineList(5).toDouble)
-////    similarRelationship.setProperty("identity", lineList(6).toDouble)
-//    val organismDBNode = graphDataBaseConnection.createNode
-////    this.getLabels.foreach(organismDBNode.addLabel)
-//
-//  }
+  def upload(graphDataBaseConnection: GraphDatabaseService): Unit = transaction(graphDataBaseConnection){
+    val organismDBNode = graphDataBaseConnection.createNode
+//    convert string to labels and add them to the node
+    getLabels.map(utilFunctionsObject.stringToLabel).foreach(println)
+    getLabels.map(utilFunctionsObject.stringToLabel).foreach(organismDBNode.addLabel)
+////    upload properties from the Map "properties"
+////      val fullProps =
+    (Map("source" -> "GenBank") ++ properties).foreach{case (k, v) => println(k, v)}
+    (Map("source" -> "GenBank") ++ properties).foreach{case (k, v) => organismDBNode.setProperty(k, v)}
+    println("Node created.")
+  }
 }
 
 case class Polypeptide(
@@ -894,6 +898,18 @@ case class RNA(
     def getEnd = end
 
   }
+  trait TransactionSupport {
 
+    protected def transaction[A <: Any](graphDataBaseConnection: GraphDatabaseService)(dbOperation: => A): A = {
+      val tx = graphDataBaseConnection.beginTx()
+      try {
+        val result = dbOperation
+        tx.success()
+        result
+      } finally {
+        tx.close()
+      }
+    }
+  }
 }
 

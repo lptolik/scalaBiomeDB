@@ -2,7 +2,7 @@ import BioGraph._
 package utilFunctions {
 
   import java.util
-  import org.neo4j.graphdb.{Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
+  import org.neo4j.graphdb.{Label, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
   import java.security.MessageDigest
   import java.io.File
   import org.neo4j.graphdb.factory.GraphDatabaseFactory
@@ -295,6 +295,11 @@ package utilFunctions {
         transactionToRead.close()
         gdb.shutdown()
         println("Successful disconnect.")
+      }
+    }
+    def stringToLabel(labelString: String): Label = {
+      new Label {
+        override def name(): String = labelString
       }
     }
 
