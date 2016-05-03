@@ -1,6 +1,6 @@
 package utilFunctions
 
-import org.neo4j.graphdb.RelationshipType
+import org.neo4j.graphdb.{Label, RelationshipType}
 
 /**
   * Created by artem on 14.03.16.

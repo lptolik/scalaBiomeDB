@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.biojava:bytecode:1.9.2:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.biojava/bytecode/jars/bytecode-1.9.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.biojava/bytecode/srcs/bytecode-1.9.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

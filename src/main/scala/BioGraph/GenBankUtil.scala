@@ -9,6 +9,7 @@ import org.biojava.nbio.core.sequence.features.FeatureInterface
 import org.biojava.nbio.core.sequence.template.AbstractSequence
 import org.apache.logging.log4j.LogManager
 import org.biojava.nbio.core.sequence.features.Qualifier
+import org.biojava.bio.seq.DNATools
 
 import scala.collection.immutable.{HashMap, Map}
 import scala.util.{Failure, Success, Try}
@@ -29,12 +30,11 @@ class GenBankUtil(gbFileName: String) {
     accessions
   }
 
-  def getInitialData(dnaSeq: DNASequence): (Organism, Node with CCP) = {
+  def getInitialData(dnaSeq: DNASequence): (Organism, Node with CCP, DNASequence) = {
     val accession = dnaSeq.getAccession.toString
     val dnaLength = dnaSeq.getLength.toString
     val circular = if (dnaSeq.getOriginalHeader.contains("circular")) "circular" else "linear"
     val description = dnaSeq.getDescription.toUpperCase
-    println(description)
     val ccpType =
       if (description.contains("COMPLETE GENOME") || description.contains("COMPLETE SEQUENCE")) "Chromosome"
       else if (description.contains("CONTIG")) "Contig"
@@ -51,7 +51,7 @@ class GenBankUtil(gbFileName: String) {
       case "Plasmid" => new Plasmid(name = description, organism = organism)
     }
 //    List(accession, dnaLength, circular, ccpType, organismName)
-    (organism, ccp)
+    (organism, ccp, dnaSeq)
   }
 
   def getFeatures(dnaSeq: DNASequence): List[NucleotideFeature] = {
@@ -59,8 +59,7 @@ class GenBankUtil(gbFileName: String) {
     features
   }
 
-  def processFeature(feature: NucleotideFeature,
-                     orgAndCCP: (Organism, Node with CCP)) = feature.getType match {
+  def processFeature(orgAndCCP: (Organism, Node with CCP, DNASequence))(feature: NucleotideFeature) = feature.getType match {
 //    case source => ???
 //      Set(Set(misc_feature, repeat_region, source, rRNA, mobile_element, ncRNA, tRNA, tmRNA, CDS, gene, rep_origin, STS))
 //    case "gene" => makeRNA(feature)
@@ -70,12 +69,12 @@ class GenBankUtil(gbFileName: String) {
     case "rRNA" => makeGeneAndRNA(feature, orgAndCCP, feature.getType)
     case "ncRNA" => makeGeneAndRNA(feature, orgAndCCP, feature.getType)
     case "tmRNA" => makeGeneAndRNA(feature, orgAndCCP, feature.getType)
-    case "mobile_element" => makeMiscFeature(feature, feature.getType, orgAndCCP: (Organism, Node with CCP))
-    case "rep_origin" => makeMiscFeature(feature, feature.getType, orgAndCCP: (Organism, Node with CCP))
-    case "STS" => makeMiscFeature(feature, feature.getType, orgAndCCP: (Organism, Node with CCP))
-    case "misc_feature" => makeMiscFeature(feature, feature.getType, orgAndCCP: (Organism, Node with CCP))
-    case "repeat_region" => makeMiscFeature(feature, feature.getType, orgAndCCP: (Organism, Node with CCP))
-    case _ => logger.warn("Unknown feature type:" + feature.getType, orgAndCCP: (Organism, Node with CCP))
+    case "mobile_element" => makeMiscFeature(feature, feature.getType, orgAndCCP)
+    case "rep_origin" => makeMiscFeature(feature, feature.getType, orgAndCCP)
+    case "STS" => makeMiscFeature(feature, feature.getType, orgAndCCP)
+    case "misc_feature" => makeMiscFeature(feature, feature.getType, orgAndCCP)
+    case "repeat_region" => makeMiscFeature(feature, feature.getType, orgAndCCP)
+    case _ => logger.warn("Unknown feature type:" + feature.getType, orgAndCCP)
   }
 
   def makeCCPandOrganism(miscFeature: NucleotideFeature) = {
@@ -85,14 +84,14 @@ class GenBankUtil(gbFileName: String) {
   def makeMiscFeature(
                        miscFeature: NucleotideFeature,
                        miscFeatureType: String,
-                       orgAndCCP: (Organism, Node with CCP)): Feature with DNA = {
+                       orgAndCCP: (Organism, Node with CCP, DNASequence)): Feature with DNA = {
     def getMiscFeatureAdditionalProperties: Try[String] = {
       Try(miscFeature.getQualifiers.get("note").get(0).getValue)
     }
     val note = getMiscFeatureAdditionalProperties
     val properties = note match {
-      case Success(String) => Map[String, Any]("comment" -> miscFeature.getQualifiers.get("note").get(0).getValue)
-      case Failure(Exception) => Map[String, Any]()
+      case Success(properNote) => Map[String, Any]("comment" -> properNote)
+      case Failure(except) => Map[String, Any]()
     }
 
     new MiscFeature(
@@ -108,7 +107,17 @@ class GenBankUtil(gbFileName: String) {
   private def makeGene(feature: NucleotideFeature, organism: Organism, ccp: CCP): Gene = {
 
     val locusTag = feature.getQualifiers.get("locus_tag").get(0).getValue
-    val geneName = feature.getQualifiers.get("gene").get(0).getValue
+
+    def getGeneName: String = {
+      val tryGetgeneName = Try(feature.getQualifiers.get("gene").get(0).getValue)
+      val name = tryGetgeneName match {
+        case Success(properName) => tryGetgeneName.get
+        case Failure(except) => locusTag
+      }
+      name
+    }
+
+    val geneName = getGeneName
     val geneTermList = List(new Term(geneName))
     val gene = new Gene(
       name = geneName,
@@ -120,20 +129,39 @@ class GenBankUtil(gbFileName: String) {
     gene
   }
 
-  def makeGeneAndPolypeptide(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP)): (Polypeptide, Gene) = {
-    val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
+  def makeGeneAndPolypeptide(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Polypeptide, Gene) = {
+    def makeTranslation(feature: NucleotideFeature): Sequence = {
+      val tryGetTranslation = Try(new Sequence(feature.getQualifiers.get("translation").get(0).getValue))
+      val sequence = tryGetTranslation match {
+        case Success(seq) => tryGetTranslation.get
+        case Failure(except) =>
+          val coordinates = feature.getLocations
+          val dnaSeqForTranslation = orgCCPSeq._3.getSequenceAsString(
+            coordinates.getStart.getPosition,
+            coordinates.getEnd.getPosition,
+            coordinates.getStrand)
+          val translatedAminoAcidSeq = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).toString
+          new Sequence(translatedAminoAcidSeq)
+      }
+
+      sequence
+    }
+    val gene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2)
+//    sequence =  new Sequence(feature.getQualifiers.get("translation").get(0).getValue),
+//    gene not have a transalation
+//    println(gene.getName)
     val polypeptide = new Polypeptide(
       name = gene.getName,
       xRefs = makeListOfXrefs(feature),
-      sequence =  new Sequence(feature.getQualifiers.get("translation").get(0).getValue),
+      sequence =  makeTranslation(feature),
       terms = gene.getTerms,
       gene = gene,
-      organism = orgAndCCP._1
+      organism = orgCCPSeq._1
     )
     (polypeptide, gene)
   }
 
-  def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP), rnaType: String): (RNA, Gene) = {
+  def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence), rnaType: String): (RNA, Gene) = {
     val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
     val rna = new RNA(
       name = gene.getName,
@@ -168,6 +196,11 @@ class GenBankUtil(gbFileName: String) {
   private def getProperRNAType(rnaType: String): String = {
     "To be implemented"
   }
+
+//  def readOneSequence(seqFeatures: List[NucleotideFeature], seqOrganismAndCCP: (Organism, Node with CCP)): Unit = {
+//    def processCurrentOrg = processFeature(_)(seqOrganismAndCCP)
+//    seqFeatures.map(processCurrentOrg)
+//  }
 
 
   def getUniqueFeatures(features: List[NucleotideFeature]) = {

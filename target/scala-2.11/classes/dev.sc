@@ -43,8 +43,8 @@ val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
 geneNew equals gene2
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
-val miscFeature = new MiscFeature(new Coordinates(1560, 6301, Strand.reverse), plasmid)
-val miscStructure = new MiscStructure(new Coordinates(3020, 3101, Strand.forward), plasmid)
+val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid)
+val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid)
 //val operon = new Operon("Very operonious", )
 val boundaries = new Boundaries(gene, gene3)
 val operonTerm = new Term("So much very operonious term")
@@ -91,8 +91,10 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
-l
-features(490).getLocations
+features(516)
+val rec = accessions("NC_000913")
+rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
+
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities
 /////////////////////

@@ -1,7 +1,8 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
-import utilFunctions._
+  import org.neo4j.graphdb.GraphDatabaseService
+  import utilFunctions._
 
 /**
   * created by artem on 11.02.16.
@@ -46,6 +47,8 @@ abstract class Node(
 
   //  def outgoing: List[rel]
   //  def incoming: List[rel]
+
+//  def upload: Unit
 }
 
 abstract class Rel(
@@ -649,6 +652,15 @@ case class Organism(
   def setTaxon(newTaxon: Taxon): Unit = taxon = newTaxon
 
   def getSource = source
+
+//  def upload(graphDataBaseConnection: GraphDatabaseService): Unit = {
+////    val similarRelationship = querySeqNode.createRelationshipTo(targetSeqNode, BiomeDBRelations.similar)
+////    similarRelationship.setProperty("evalue", lineList(5).toDouble)
+////    similarRelationship.setProperty("identity", lineList(6).toDouble)
+//    val organismDBNode = graphDataBaseConnection.createNode
+////    this.getLabels.foreach(organismDBNode.addLabel)
+//
+//  }
 }
 
 case class Polypeptide(

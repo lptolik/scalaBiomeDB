@@ -91,7 +91,9 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
-l
+features(516)
+val rec = accessions("NC_000913")
+rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities
