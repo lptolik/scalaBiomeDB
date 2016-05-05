@@ -93,9 +93,13 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
-features(516)
-val rec = accessions("NC_000913")
-rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
+val setOfFeatures = accessions.values.map(gb.getFeatures).iterator//.foreach(x => println(x.size))
+val setOfOrganisms = accessions.values.map(gb.getInitialData).iterator//foreach(println)
+val zp = setOfFeatures zip setOfOrganisms
+zp.next()._1.length
+//features(516)
+//val rec = accessions("NC_000913")
+//rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
 
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
