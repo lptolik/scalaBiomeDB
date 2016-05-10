@@ -29,4 +29,16 @@ object BiomeDBRelations {
   val isA = new RelationshipType {
     override def name(): String = "IS_A"
   }
+
+  val hasName = new RelationshipType {
+    override def name(): String = "HAS_NAME"
+  }
+
+  val next = new RelationshipType {
+    override def name(): String = "NEXT"
+  }
+
+  val overlap = new RelationshipType {
+    override def name(): String = "OVERLAP"
+  }
 }

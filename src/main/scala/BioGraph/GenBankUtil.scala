@@ -33,8 +33,10 @@ class GenBankUtil(gbFileName: String) {
   def getInitialData(dnaSeq: DNASequence): (Organism, Node with CCP, DNASequence) = {
     val accession = dnaSeq.getAccession.toString
     val dnaLength = dnaSeq.getLength.toString
-    val circular = if (dnaSeq.getOriginalHeader.contains("circular")) "circular" else "linear"
-    val description = dnaSeq.getDescription.toUpperCase
+    val circularOrLinear = if (dnaSeq.getOriginalHeader.contains("circular")) DNAType.circular else DNAType.linear
+    val ccpLength = dnaSeq.getLength
+    val descriptionForUpload = dnaSeq.getDescription
+    val description = descriptionForUpload.toUpperCase
     val ccpType =
       if (description.contains("COMPLETE GENOME") || description.contains("COMPLETE SEQUENCE")) "Chromosome"
       else if (description.contains("CONTIG")) "Contig"
@@ -45,12 +47,27 @@ class GenBankUtil(gbFileName: String) {
       }
     val organismName = dnaSeq.getFeatures(1).get(0).getQualifiers.get("organism").get(0).getValue
     val organism = new Organism(name = organismName, source = ReferenceSource.GenBank)
+    val length = dnaSeq.getFeatures(1).get(0).getQualifiers.get("")
     val ccp = ccpType match{
-      case "Chromosome" => new Chromosome(name = description, organism = organism)
-      case "Contig" => new Contig(name = description, organism = organism)
-      case "Plasmid" => new Plasmid(name = description, organism = organism)
+      case "Chromosome" => new Chromosome(
+        name = descriptionForUpload,
+        organism = organism,
+        dnaType = circularOrLinear,
+        source = ReferenceSource.GenBank,
+        length = ccpLength)
+      case "Contig" => new Contig(
+        name = descriptionForUpload,
+        organism = organism,
+        dnaType = circularOrLinear,
+        source = ReferenceSource.GenBank,
+        length = ccpLength)
+      case "Plasmid" => new Plasmid(
+        name = descriptionForUpload,
+        organism = organism,
+        dnaType = circularOrLinear,
+        source = ReferenceSource.GenBank,
+        length = ccpLength)
     }
-//    List(accession, dnaLength, circular, ccpType, organismName)
     (organism, ccp, dnaSeq)
   }
 
@@ -63,7 +80,7 @@ class GenBankUtil(gbFileName: String) {
     listOfFeatures.map(processFeature(orgAndCCP: (Organism, Node with CCP, DNASequence))(_))
   }
 
-  def processFeature(orgAndCCP: (Organism, Node with CCP, DNASequence))(feature: NucleotideFeature) = feature.getType match {
+  private def processFeature(orgAndCCP: (Organism, Node with CCP, DNASequence))(feature: NucleotideFeature) = feature.getType match {
 //    case source => ???
 //      Set(Set(misc_feature, repeat_region, source, rRNA, mobile_element, ncRNA, tRNA, tmRNA, CDS, gene, rep_origin, STS))
 //    case "gene" => makeRNA(feature)
@@ -73,7 +90,7 @@ class GenBankUtil(gbFileName: String) {
     case "mobile_element" | "rep_origin" | "STS" | "misc_feature" | "repeat_region" =>
       makeMiscFeature(feature, feature.getType, orgAndCCP)
     case "gene" =>
-    case "source" => makeSourceNodes(feature, orgAndCCP)
+    case "source" => //makeSourceNodes(feature, orgAndCCP)
     case _ => logger.warn("Unknown feature type: " + feature.getType + " in file " + gbFileName)
   }
 
@@ -94,6 +111,7 @@ class GenBankUtil(gbFileName: String) {
       miscFeatureType = miscFeatureType,
       coordinates = getCoordinates(miscFeature),
       ccp = orgAndCCP._2,
+      source = ReferenceSource.GenBank,
       properties = properties
     )
     misc
@@ -120,6 +138,7 @@ class GenBankUtil(gbFileName: String) {
       coordinates = getCoordinates(feature),
       organism = organism,
       ccp = ccp,
+      source = ReferenceSource.GenBank,
       properties = Map("locus_tag" -> locusTag))
     gene
   }
@@ -129,7 +148,7 @@ class GenBankUtil(gbFileName: String) {
     def makeTranslation(feature: NucleotideFeature): Sequence = {
       val tryGetTranslation = Try(new Sequence(feature.getQualifiers.get("translation").get(0).getValue))
       val sequence = tryGetTranslation match {
-        case Success(seq) => new Sequence(tryGetTranslation.get.toString)
+        case Success(seq) => tryGetTranslation.get
         case Failure(except) =>
           val coordinates = feature.getLocations
           val dnaSeqForTranslation = orgCCPSeq._3.getSequenceAsString(
@@ -137,7 +156,7 @@ class GenBankUtil(gbFileName: String) {
             coordinates.getEnd.getPosition,
             coordinates.getStrand)
           val translatedAminoAcidSeq = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).toString
-          new Sequence(translatedAminoAcidSeq)
+          new Sequence(sequence = translatedAminoAcidSeq)
       }
       sequence
     }
@@ -211,8 +230,8 @@ class GenBankUtil(gbFileName: String) {
 
   private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
     val xrefs = feature.getQualifiers.get("db_xref")
-    val resultXrefs = xrefs.asScala.toList.map(ref => (ref.getName, ref.getValue)).filter(_._1 != "GeneID")
-    resultXrefs.map(ref => new XRef(ref._2, new DBNode(ref._1)))
+    val resultXrefs = xrefs.asScala.toList.map(_.toString).filter(!_.contains("GeneID"))
+    resultXrefs.map(ref => new XRef(ref.split(":")(1), new DBNode(ref.split(":")(0))))
   }
 
   private def getProperRNAType(rnaType: String): String = {

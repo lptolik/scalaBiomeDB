@@ -1,3 +1,4 @@
+//val polysMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 import java.io.File
 import java.security.MessageDigest
 import BioGraph._
@@ -84,7 +85,6 @@ seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
 tu1.consistsOf
-//val polysMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //polys.next().getProperty("seq")
 //val polyMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //val filtered = polyMap.filter(x => x._2.length > 1)
@@ -93,13 +93,16 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
-features(516)
-val rec = accessions("NC_000913")
-rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
-//val dbPathRemote = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
-//val dataBaseFile = new File(dbPathRemote)
-//val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
-//organism.upload(graphDataBaseConnection)
+l._3.getLength
+val setOfFeatures = accessions.values.map(gb.getFeatures).iterator//.foreach(x => println(x.size))
+val setOfOrganisms = accessions.values.map(gb.getInitialData).iterator//foreach(println)
+val zp = setOfFeatures zip setOfOrganisms
+zp.next()._1.length
+features(16)
+//features(516)
+//val rec = accessions("NC_000913")
+//rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)
+
 
 //utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt").size
 //sequenceBlast2.similarities

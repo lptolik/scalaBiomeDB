@@ -2,7 +2,7 @@ import BioGraph._
 package utilFunctions {
 
   import java.util
-  import org.neo4j.graphdb.{Label, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
+  import org.neo4j.graphdb.{RelationshipType, GraphDatabaseService, Label, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
   import java.security.MessageDigest
   import java.io.File
   import org.neo4j.graphdb.factory.GraphDatabaseFactory
@@ -14,7 +14,7 @@ package utilFunctions {
   /**
     * Created by artem on 12.02.16.
     */
-  object utilFunctionsObject {
+  object utilFunctionsObject extends TransactionSupport{
     //    def getCoordinates(properties: Map[String, Any]): List[Any] = {
     //      List(properties("start"), properties("end"), properties("strand"))
     //    }
@@ -306,6 +306,26 @@ package utilFunctions {
   def psiExample(): Unit = {
 
   }
-  }
 
+  def addRelationship(
+                       graphDataBaseConnection: GraphDatabaseService,
+                       fromNode: Node,
+                       toNode: Node, relationship: RelationshipType): Unit = transaction(graphDataBaseConnection) {
+    fromNode.createRelationshipTo(toNode, relationship)
+  }
+  }
+trait TransactionSupport {
+
+  protected def transaction[A <: Any](graphDataBaseConnection: GraphDatabaseService)(dbOperation: => A): A = {
+    val tx = graphDataBaseConnection.beginTx()
+    try {
+      val result = dbOperation
+      tx.success()
+      result
+    } finally {
+      tx.close()
+    }
+  }
 }
+}
+

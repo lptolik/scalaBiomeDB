@@ -1,3 +1,4 @@
+//val polysMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 import java.io.File
 import java.security.MessageDigest
 import BioGraph._
@@ -29,13 +30,13 @@ val contig = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, who
 val coordinates = new Coordinates(150, 301, Strand.reverse)
 val coordinates2 = new Coordinates(387, 780, Strand.forward)
 val coordinates3 = new Coordinates(750, 1013, Strand.reverse)
-val gene = new Gene("Super name", coordinates, plasmid, List(geneTerm), organism, Map("source" -> "GenBank"), nodeId = 134)
-val gene2 = new Gene("Such name", coordinates2, contig, List(geneTerm2), organism)
-val gene3 = new Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, Map("source" -> "GenBank"), nodeId = 134)
+val gene = new Gene("Super name", coordinates, plasmid, List(geneTerm), organism, ReferenceSource.GenBank, Map("source" -> "GenBank"), nodeId = 134)
+val gene2 = new Gene("Such name", coordinates2, contig, List(geneTerm2), organism, ReferenceSource.GenBank)
+val gene3 = new Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, ReferenceSource.GenBank, Map("source" -> "GenBank"), nodeId = 134)
 gene.setProperties(Map("comment" -> "new comment"))
 gene.getCoordinates.getStrand
 gene.getId
-val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid, organism, 1852948, promoterTerm)
+val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid, organism, 1852948, promoterTerm, ReferenceSource.GenBank)
 promoter.getLabels
 val aaa = "AR" -> "banana"
 Coordinates(11, 12, Strand.forward)
@@ -45,8 +46,8 @@ val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
 geneNew equals gene2
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
-val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid)
-val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid)
+val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid, ReferenceSource.GenBank)
+val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid, ReferenceSource.GenBank)
 //val operon = new Operon("Very operonious", )
 val boundaries = new Boundaries(gene, gene3)
 val operonTerm = new Term("So much very operonious term")
@@ -84,7 +85,6 @@ seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
 tu1.consistsOf
-//val polysMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //polys.next().getProperty("seq")
 //val polyMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //val filtered = polyMap.filter(x => x._2.length > 1)
@@ -93,10 +93,12 @@ val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
 val l = gb.getInitialData(accessions("NC_000913"))
+l._3.getLength
 val setOfFeatures = accessions.values.map(gb.getFeatures).iterator//.foreach(x => println(x.size))
 val setOfOrganisms = accessions.values.map(gb.getInitialData).iterator//foreach(println)
 val zp = setOfFeatures zip setOfOrganisms
 zp.next()._1.length
+features(16)
 //features(516)
 //val rec = accessions("NC_000913")
 //rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)

@@ -1,11 +1,14 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
+  import org.neo4j.cypher.internal.compiler.v1_9.symbols.RelationshipType
   import org.neo4j.graphdb
-  import org.neo4j.graphdb.{Label, GraphDatabaseService}
+  import org.neo4j.graphdb.{Relationship, DynamicLabel, Label, GraphDatabaseService}
   import utilFunctions._
 
-/**
+  import scala.util.{Failure, Success, Try}
+
+  /**
   * created by artem on 11.02.16.
   */
 
@@ -36,7 +39,7 @@ abstract class Node(
 
   def getProperties = properties
 
-  def setProperties(newProperties: Map[String, Any]): Unit = properties ++ newProperties
+  def setProperties(newProperties: Map[String, Any]): Map[String, Any] = properties ++ newProperties
 
   def getLabels: List[String]
 
@@ -45,6 +48,10 @@ abstract class Node(
   def getId = id
 
   def setId(newId: BigInt): Unit = id = newId
+
+//  def addNeighbourNode(node: graphdb.Node, relationship: RelationshipType, direction: String): Unit = {
+//
+//  }
 
   //  def outgoing: List[rel]
   //  def incoming: List[rel]
@@ -55,7 +62,7 @@ abstract class Node(
     //    convert string to labels and add them to the node
     getLabels.map(utilFunctionsObject.stringToLabel).foreach(graphDBNode.addLabel)
     //    upload properties from the Map "properties"
-    properties.foreach{case (k, v) => graphDBNode.setProperty(k, v)}
+//    this.getProperties.foreach{case (k, v) => graphDBNode.setProperty(k, v)}
     graphDBNode
   }
 }
@@ -88,6 +95,10 @@ abstract class Rel(
 
 trait BioEntity {
 
+//  def addCCPNode: Unit
+//
+//  def addOrganismNode: Unit
+
   def getName: String
 }
 
@@ -103,7 +114,7 @@ trait GeneProduct{
   def getGene: Gene
 }
 
-trait CCP extends BioEntity {
+trait CCP extends Node with BioEntity {
 
   def getLength: Int
 
@@ -114,6 +125,15 @@ trait CCP extends BioEntity {
   def getChromType: DNAType.Value
 
   def getOrganism: Organism
+
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    val newProperties = this.setProperties(Map("length" -> this.getLength, "type" -> this.getChromType.toString, "name" -> this.getName))
+    val ccpNode = super.upload(graphDataBaseConnection)
+    val organismNode = this.getOrganism.upload(graphDataBaseConnection)
+    ccpNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+    newProperties.foreach{case (k, v) => ccpNode.setProperty(k, v)}
+    ccpNode
+  }
 }
 
 trait FunctionalRegion {}
@@ -281,6 +301,33 @@ case class DBNode(
   override def canEqual(that: Any) = that.isInstanceOf[DBNode]
 
   override def hashCode = 41 * name.hashCode
+
+
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+//    def getMiscFeatureAdditionalProperties: Try[String] = {
+//      Try(miscFeature.getQualifiers.get("note").get(0).getValue)
+//    }
+//    val note = getMiscFeatureAdditionalProperties
+//    val properties = note match {
+//      case Success(properNote) => Map[String, Any]("comment" -> properNote)
+//      case Failure(except) => Map[String, Any]()
+//    }
+    val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
+    if (tryToFindNode == null) {
+      val createdDbNode = super.upload(graphDataBaseConnection)
+      this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
+      createdDbNode
+    }
+    else tryToFindNode
+//    val dbNode = tryToFindNode match {
+//      case AnyRef => tryToFindNode
+//      case null =>
+//        val createdDbNode = super.upload(graphDataBaseConnection)
+//        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
+//        createdDbNode
+//    }
+//    dbNode
+  }
 }
 
 case class XRef(xrefId: String,
@@ -306,11 +353,22 @@ case class XRef(xrefId: String,
 
   override def hashCode = 41 * xrefId.toUpperCase.hashCode
 
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    val newProperties = this.setProperties(Map("id" -> this.getXRef))
+    val xrefNode = super.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
+
+    val dbNode = this.getDB.upload(graphDataBaseConnection)
+    xrefNode.createRelationshipTo(dbNode, BiomeDBRelations.linkTo)
+
+    xrefNode
+  }
 }
 
 abstract class Feature(coordinates: Coordinates,
                        properties: Map[String, Any] = Map(),
                        ccp: CCP,
+                       source: ReferenceSource.Value,
                        nodeId: BigInt = -1)
   extends Node(properties, nodeId) {
 
@@ -326,12 +384,25 @@ abstract class Feature(coordinates: Coordinates,
 
   def getCCP = ccp
 
+  def getSource = source
 
-//  override def equals(that: Any) = that match {
-//    case that: Feature => this.getCCP == that.getCCP &&
-//      this.getCoordinates == that.getCoordinates
-//    case _ => false
-//  }
+  override def equals(that: Any) = that match {
+    case that: Feature => this.getCCP == that.getCCP &&
+      this.getCoordinates == that.getCoordinates
+    case _ => false
+  }
+
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    val newProperties = this.setProperties(
+      Map(
+        "start" -> this.getCoordinates.start,
+        "end" -> this.getCoordinates.end,
+        "strand" -> this.getCoordinates.strand.toString,
+        "source" -> this.getSource.toString))
+    val featureNode = super.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => featureNode.setProperty(k, v)}
+    featureNode
+  }
 
 //  def canEqual(that: Any): Boolean
 }
@@ -342,13 +413,14 @@ case class Gene(
                  ccp: CCP,
                  terms: List[Term],
                  organism: Organism,
+                 source: ReferenceSource.Value,
                  properties: Map[String, Any] = Map(),
                  nodeId: BigInt = -1)
-  extends Feature(coordinates, properties, ccp, nodeId)
+  extends Feature(coordinates, properties, ccp, source, nodeId)
   with BioEntity
   with DNA {
 
-  override def getLabels = List("BioEntity", "Feature", "Gene")
+  override def getLabels = List("Gene", "BioEntity", "Feature", "DNA")
 
   def getName = name
 
@@ -374,22 +446,25 @@ case class Gene(
   def getOrganism = organism
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    this.setProperties(
-      Map(
-        "name" -> this.getName,
-        "start" -> this.getCoordinates.start,
-        "end" -> this.getCoordinates.end,
-        "strand" -> this.getCoordinates.strand))
-    super.upload(graphDataBaseConnection)
+    val newProperties = this.setProperties(Map("name" -> this.getName))
+//        "start" -> this.getCoordinates.start,
+//        "end" -> this.getCoordinates.end,
+//        "strand" -> this.getCoordinates.strand.toString))
+    val geneNode = super.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => geneNode.setProperty(k, v)}
+    val termNodes = this.getTerms.map(_.upload(graphDataBaseConnection))
+    termNodes.foreach(geneNode.createRelationshipTo(_, BiomeDBRelations.hasName))
+    geneNode
   }
 }
 
 case class Terminator(
                        coordinates: Coordinates,
                        ccp: CCP,
+                       source: ReferenceSource.Value,
                        properties: Map[String, Any] = Map(),
                        nodeId: BigInt = -1)
-  extends Feature(coordinates, properties, ccp, nodeId)
+  extends Feature(coordinates, properties, ccp, source, nodeId)
   with DNA {
 
   override def getLabels = List("Terminator", "Feature", "DNA")
@@ -402,9 +477,10 @@ case class Promoter(name: String,
                     organism: Organism,
                     tss: Int,
                     term: Term,
+                    source: ReferenceSource.Value,
                     properties: Map[String, Any] = Map(),
                     nodeId: BigInt = -1)
-  extends Feature(coordinates, properties, ccp, nodeId)
+  extends Feature(coordinates, properties, ccp, source, nodeId)
   with FunctionalRegion
   with DNA {
 
@@ -422,9 +498,10 @@ case class Promoter(name: String,
 case class MiscFeature(miscFeatureType: String,
                        coordinates: Coordinates,
                        ccp: CCP,
+                       source: ReferenceSource.Value,
                        properties: Map[String, Any] = Map(),
                        nodeId: BigInt = -1)
-  extends Feature(coordinates, properties, ccp, nodeId)
+  extends Feature(coordinates, properties, ccp, source, nodeId)
   with DNA {
 
   override def getLabels = List(miscFeatureType, "Feature", "DNA")
@@ -434,9 +511,10 @@ case class MobileElement(
                           name: String,
                           coordinates: Coordinates,
                           ccp: CCP,
+                          source: ReferenceSource.Value,
                           properties: Map[String, Any] = Map(),
                           nodeId: BigInt = -1)
-  extends Feature(coordinates, properties, ccp, nodeId)
+  extends Feature(coordinates, properties, ccp, source, nodeId)
   with BioEntity
   with DNA {
 
@@ -548,13 +626,14 @@ case class Chromosome(
 //                                             organismNode: graphdb.Node) = transaction(graphDataBaseConnection){
 //    val partOfRelationship = organismNode.c
 //  }
-  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    this.setProperties(Map("length" -> this.getLength, "circular" -> this.getChromType, "name" -> this.getName))
-    val chromosomeNode = super.upload(graphDataBaseConnection)
-    val organismNode = this.getOrganism.upload(graphDataBaseConnection)
-    chromosomeNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
-    chromosomeNode
-  }
+//  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+//    val newProperties = this.setProperties(Map("length" -> this.getLength, "circular" -> this.getChromType, "name" -> this.getName))
+//    val chromosomeNode = super.upload(graphDataBaseConnection)
+//    val organismNode = this.getOrganism.upload(graphDataBaseConnection)
+//    chromosomeNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+//    newProperties.foreach{case (k, v) => chromosomeNode.setProperty(k, v)}
+//    chromosomeNode
+//  }
 
 //  def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection){
 //    val chromosomeNode = graphDataBaseConnection.createNode
@@ -603,13 +682,13 @@ case class Plasmid(
 
   override def hashCode: Int = 41 * (41 + name.hashCode) + organism.hashCode
 
-  def upload(
-              graphDataBaseConnection: GraphDatabaseService,
-              organismNode: graphdb.Node): graphdb.Node = transaction(graphDataBaseConnection) {
-    val plasmidNode = super.upload(graphDataBaseConnection)
-    plasmidNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
-    plasmidNode
-  }
+//  def upload(
+//              graphDataBaseConnection: GraphDatabaseService,
+//              organismNode: graphdb.Node): graphdb.Node = transaction(graphDataBaseConnection) {
+//    val plasmidNode = super.upload(graphDataBaseConnection)
+//    plasmidNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+//    plasmidNode
+//  }
 }
 
 case class Contig(
@@ -649,13 +728,13 @@ case class Contig(
 
   override def hashCode: Int = 41 * (41 + name.hashCode) + organism.hashCode
 
-  def upload(
-              graphDataBaseConnection: GraphDatabaseService,
-              organismNode: graphdb.Node): graphdb.Node = transaction(graphDataBaseConnection) {
-    val contigNode = super.upload(graphDataBaseConnection)
-    contigNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
-    contigNode
-  }
+//  def upload(
+//              graphDataBaseConnection: GraphDatabaseService,
+//              organismNode: graphdb.Node): graphdb.Node = transaction(graphDataBaseConnection) {
+//    val contigNode = super.upload(graphDataBaseConnection)
+//    contigNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+//    contigNode
+//  }
 }
 
 case class Term(
@@ -678,6 +757,12 @@ case class Term(
 
   override def hashCode = 41 * text.hashCode
 
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    val newProperties = this.setProperties(Map("name" -> this.getText))
+    val termNode = super.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => termNode.setProperty(k, v)}
+    termNode
+    }
 }
 
 case class Organism(
@@ -710,8 +795,8 @@ case class Organism(
   def getSource = source
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    this.setProperties(Map("source" -> source))
     val organismNode = super.upload(graphDataBaseConnection)
+    this.setProperties(Map("source" -> source.toString)).foreach{case (k, v) => organismNode.setProperty(k, v)}
     organismNode
   }
 }
@@ -759,10 +844,19 @@ case class Polypeptide(
   override def hashCode = 41 * (41 * (41 + sequence.hashCode) + organism.hashCode) + name.hashCode
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    this.setProperties(Map("name" -> this.getName))
+    val newGeneAndPolypeptideProperties = this.setProperties(Map("name" -> this.getName))
     val polypeptideNode = super.upload(graphDataBaseConnection)
+    newGeneAndPolypeptideProperties.foreach{case (k, v) => polypeptideNode.setProperty(k, v)}
+
     val geneNode = this.getGene.upload(graphDataBaseConnection)
+    newGeneAndPolypeptideProperties.foreach{case (k, v) => geneNode.setProperty(k, v)}
+
     val sequenceNode = this.getSeq.upload(graphDataBaseConnection)
+
+    val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
+    xrefNodes.foreach(geneNode.createRelationshipTo(_, BiomeDBRelations.evidence))
+    xrefNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.evidence))
+
     geneNode.createRelationshipTo(polypeptideNode, BiomeDBRelations.encodes)
     polypeptideNode.createRelationshipTo(sequenceNode, BiomeDBRelations.isA)
     polypeptideNode
@@ -804,15 +898,17 @@ case class Sequence(
 
   def addSimilarity(similarity: Similarity): Unit = {
     if (!similarities.contains(similarity)) {
-      var newSimilarity = List(similarity) ::: similarities
+      val newSimilarity = List(similarity) ::: similarities
       similarities = newSimilarity
       similarity.getSequence.addSimilarity(new Similarity(this, similarity.getEvalue, similarity.getIdentity))
     }
   }
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    this.setProperties(Map("md5" -> this.getMD5))
-    super.upload(graphDataBaseConnection)
+    val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+    val sequenceNode = super.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
+    sequenceNode
   }
 
 //  override def toString = md5
@@ -896,6 +992,19 @@ case class RNA(
   override def canEqual(that: Any) = that.isInstanceOf[RNA]
 
   override def hashCode = 41 * (41 + organism.hashCode) + name.hashCode
+
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    val newProperties = this.setProperties(Map("name" -> this.getName))
+    val rnaNode = super.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => rnaNode.setProperty(k, v)}
+
+    val geneNode = this.getGene.upload(graphDataBaseConnection)
+    newProperties.foreach{case (k, v) => geneNode.setProperty(k, v)}
+
+    geneNode.createRelationshipTo(rnaNode, BiomeDBRelations.encodes)
+
+    rnaNode
+  }
 }
 
 //case class Enzyme(
@@ -961,20 +1070,6 @@ case class RNA(
 
     def getEnd = end
 
-  }
-
-  trait TransactionSupport {
-
-    protected def transaction[A <: Any](graphDataBaseConnection: GraphDatabaseService)(dbOperation: => A): A = {
-      val tx = graphDataBaseConnection.beginTx()
-      try {
-        val result = dbOperation
-        tx.success()
-        result
-      } finally {
-        tx.close()
-      }
-    }
   }
 }
 

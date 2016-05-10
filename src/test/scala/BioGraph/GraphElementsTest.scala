@@ -22,7 +22,7 @@ class GraphElementsTest extends FunSuite {
     val taxonCopy = new Taxon("Very taxonious", TaxonType.family)
     val taxon2 = new Taxon("Much more taxonious", TaxonType.genus)
 
-    val organism = new Organism("Eschrichia coli", taxon = taxon)
+    val organism = new Organism("Eschrichia coli", taxon = taxon, source = ReferenceSource.GenBank)
     val organismCopy = new Organism("Eschrichia coli", taxon = taxon)
     val organism2 = new Organism("Bacillus subtilis", taxon = taxon2)
 
@@ -48,19 +48,19 @@ class GraphElementsTest extends FunSuite {
     val coordinates4 = new Coordinates(1753, 1917, Strand.forward)
     val coordinates5 = new Coordinates(524, 729, Strand.reverse)
 
-    val gene1 = new Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, Map("source" -> "GenBank"))
-    val gene2 = new Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism)
-    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, Map("source" -> "GenBank"))
-    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, Map("source" -> "GenBank"))
-    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, Map("source" -> "GenBank"))
+    val gene1 = new Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
+    val gene2 = new Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = ReferenceSource.GenBank)
+    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
+    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
+    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
 
     val evidence = new Evidence(gene1, xref)
 
-    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm)
-    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1)
-    val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid1)
-    val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid1)
-    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1)
+    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm, source = ReferenceSource.GenBank)
+    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1,source = ReferenceSource.GenBank)
+    val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid1, source = ReferenceSource.GenBank)
+    val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = ReferenceSource.GenBank)
+    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = ReferenceSource.GenBank)
 
     val boundaries1 = new Boundaries(gene1, gene2)
     val boundaries1Copy = new Boundaries(gene1, gene2)
@@ -289,7 +289,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test gene getLabels") {
     new TestNodesAndRels {
-      assert(gene1.getLabels === List("BioEntity", "Feature", "Gene"))
+      assert(gene1.getLabels === List("Gene", "BioEntity", "Feature", "DNA"))
     }
   }
 
@@ -658,7 +658,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test organism getSource") {
     new TestNodesAndRels {
-      assert(organism.getSource === "GenBank")
+      assert(organism.getSource === ReferenceSource.GenBank)
     }
   }
 

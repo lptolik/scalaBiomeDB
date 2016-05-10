@@ -9,24 +9,10 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.sys.process.Process
-
+import utilFunctions.TransactionSupport
 /**
   * Created by artem on 27.03.16.
   */
-
-trait TransactionSupport {
-
-  protected def transaction[A <: Any](graphDataBaseConnection: GraphDatabaseService)(dbOperation: => A): A = {
-    val tx = graphDataBaseConnection.beginTx()
-    try {
-      val result = dbOperation
-      tx.success()
-      result
-    } finally {
-      tx.close()
-    }
-  }
-}
 
 class WorkWithGraph(pathToDataBase: String) extends TransactionSupport {
   val dataBaseFile = new File(pathToDataBase)
