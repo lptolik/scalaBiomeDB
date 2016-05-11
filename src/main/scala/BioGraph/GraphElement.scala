@@ -30,6 +30,7 @@ trait GraphElement {
 
 abstract class Node(
                      properties: Map[String, Any],
+//                     neighbourNodes: List[(graphdb.Node, RelationshipType, RelationshipDirection.Value)] = (),
                      var id: BigInt = -1)
   extends GraphElement with TransactionSupport  {
 
@@ -49,9 +50,10 @@ abstract class Node(
 
   def setId(newId: BigInt): Unit = id = newId
 
-//  def addNeighbourNode(node: graphdb.Node, relationship: RelationshipType, direction: String): Unit = {
+//  def getNeighbourNodes = neighbourNodes
 //
-//  }
+//  def addNeighbourNode(newNeighbours: List[(graphdb.Node, RelationshipType, RelationshipDirection.Value)]) =
+//    neighbourNodes ++ newNeighbours
 
   //  def outgoing: List[rel]
   //  def incoming: List[rel]
@@ -93,7 +95,7 @@ abstract class Rel(
   def getId = id
 }
 
-trait BioEntity {
+trait BioEntity extends TransactionSupport{
 
 //  def addCCPNode: Unit
 //
@@ -112,6 +114,7 @@ trait DNA {
 trait GeneProduct{
 
   def getGene: Gene
+
 }
 
 trait CCP extends Node with BioEntity {
@@ -120,21 +123,39 @@ trait CCP extends Node with BioEntity {
 
   def getType: CCPType.Value
 
-  def getSource: ReferenceSource.Value
+  def getSource: List[String]
 
   def getChromType: DNAType.Value
 
   def getOrganism: Organism
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    val newProperties = this.setProperties(Map("length" -> this.getLength, "type" -> this.getChromType.toString, "name" -> this.getName))
-    val ccpNode = super.upload(graphDataBaseConnection)
-    val organismNode = this.getOrganism.upload(graphDataBaseConnection)
-    ccpNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
-    newProperties.foreach{case (k, v) => ccpNode.setProperty(k, v)}
-    ccpNode
+
+    val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label(getType.toString), "name", this.getName)
+    if (tryToFindNode == null) {
+      val newProperties = this.setProperties(Map(
+        "length" -> this.getLength,
+        "type" -> this.getChromType.toString,
+        "name" -> this.getName,
+        "source" -> this.getSource.mkString(", ")))
+      val ccpNode = super.upload(graphDataBaseConnection)
+      newProperties.foreach { case (k, v) => ccpNode.setProperty(k, v) }
+      ccpNode
+    }
+    else tryToFindNode
+
   }
 }
+
+//  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+//    val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
+//    if (tryToFindNode == null) {
+//      val createdDbNode = super.upload(graphDataBaseConnection)
+//      this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
+//      createdDbNode
+//    }
+//    else tryToFindNode
+//}
 
 trait FunctionalRegion {}
 
@@ -171,6 +192,15 @@ object ReferenceSource extends Enumeration {
 
   override def toString = Value.toString
 }
+
+  object RelationshipDirection extends Enumeration {
+
+    type SourceType = Value
+
+    val to, from = Value
+
+    override def toString = Value.toString
+  }
 
 object TaxonType extends Enumeration {
 
@@ -368,7 +398,7 @@ case class XRef(xrefId: String,
 abstract class Feature(coordinates: Coordinates,
                        properties: Map[String, Any] = Map(),
                        ccp: CCP,
-                       source: ReferenceSource.Value,
+                       source: List[String],
                        nodeId: BigInt = -1)
   extends Node(properties, nodeId) {
 
@@ -398,7 +428,7 @@ abstract class Feature(coordinates: Coordinates,
         "start" -> this.getCoordinates.start,
         "end" -> this.getCoordinates.end,
         "strand" -> this.getCoordinates.strand.toString,
-        "source" -> this.getSource.toString))
+        "source" -> this.getSource.mkString(", ")))
     val featureNode = super.upload(graphDataBaseConnection)
     newProperties.foreach{case (k, v) => featureNode.setProperty(k, v)}
     featureNode
@@ -413,7 +443,7 @@ case class Gene(
                  ccp: CCP,
                  terms: List[Term],
                  organism: Organism,
-                 source: ReferenceSource.Value,
+                 source: List[String],
                  properties: Map[String, Any] = Map(),
                  nodeId: BigInt = -1)
   extends Feature(coordinates, properties, ccp, source, nodeId)
@@ -461,7 +491,7 @@ case class Gene(
 case class Terminator(
                        coordinates: Coordinates,
                        ccp: CCP,
-                       source: ReferenceSource.Value,
+                       source: List[String],
                        properties: Map[String, Any] = Map(),
                        nodeId: BigInt = -1)
   extends Feature(coordinates, properties, ccp, source, nodeId)
@@ -477,7 +507,7 @@ case class Promoter(name: String,
                     organism: Organism,
                     tss: Int,
                     term: Term,
-                    source: ReferenceSource.Value,
+                    source: List[String],
                     properties: Map[String, Any] = Map(),
                     nodeId: BigInt = -1)
   extends Feature(coordinates, properties, ccp, source, nodeId)
@@ -498,7 +528,7 @@ case class Promoter(name: String,
 case class MiscFeature(miscFeatureType: String,
                        coordinates: Coordinates,
                        ccp: CCP,
-                       source: ReferenceSource.Value,
+                       source: List[String],
                        properties: Map[String, Any] = Map(),
                        nodeId: BigInt = -1)
   extends Feature(coordinates, properties, ccp, source, nodeId)
@@ -511,7 +541,7 @@ case class MobileElement(
                           name: String,
                           coordinates: Coordinates,
                           ccp: CCP,
-                          source: ReferenceSource.Value,
+                          source: List[String],
                           properties: Map[String, Any] = Map(),
                           nodeId: BigInt = -1)
   extends Feature(coordinates, properties, ccp, source, nodeId)
@@ -586,7 +616,7 @@ case class TU(
 
 case class Chromosome(
                        name: String,
-                       source: ReferenceSource.Value = ReferenceSource.unknown,
+                       source: List[String] = List("GenBank"),
                        dnaType: DNAType.Value = DNAType.unknown,
                        organism: Organism,
                        length: Int = -1,
@@ -647,7 +677,7 @@ case class Chromosome(
 
 case class Plasmid(
                     name: String,
-                    source: ReferenceSource.Value = ReferenceSource.unknown,
+                    source: List[String] = List("GenBank"),
                     dnaType: DNAType.Value = DNAType.unknown,
                     organism: Organism,
                     length: Int = -1,
@@ -693,7 +723,7 @@ case class Plasmid(
 
 case class Contig(
                    name: String,
-                   source: ReferenceSource.Value = ReferenceSource.unknown,
+                   source: List[String] = List("GenBank"),
                    dnaType: DNAType.Value = DNAType.unknown,
                    organism: Organism,
                    length: Int = -1,
@@ -767,7 +797,7 @@ case class Term(
 
 case class Organism(
                      name: String,
-                     source: ReferenceSource.Value = ReferenceSource.unknown,
+                     source: List[String],
                      var taxon: Taxon = new Taxon("Empty", TaxonType.no_rank),
                      properties: Map[String, Any] = Map(),
                      nodeId: BigInt = -1)
@@ -796,7 +826,8 @@ case class Organism(
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
     val organismNode = super.upload(graphDataBaseConnection)
-    this.setProperties(Map("source" -> source.toString)).foreach{case (k, v) => organismNode.setProperty(k, v)}
+    this.setProperties(
+      Map("source" -> this.getSource.mkString(", "), "name" -> this.getName)).foreach{case (k, v) => organismNode.setProperty(k, v)}
     organismNode
   }
 }
@@ -810,6 +841,7 @@ case class Polypeptide(
                         organism: Organism,
                         source: List[String] = List("GenBank"),
                         properties: Map[String, Any] = Map(),
+                        var geneNode: graphdb.Node = null,
                         nodeId: Int = -1)
   extends Node(properties, nodeId)
   with BioEntity with GeneProduct{
@@ -843,8 +875,12 @@ case class Polypeptide(
 
   override def hashCode = 41 * (41 * (41 + sequence.hashCode) + organism.hashCode) + name.hashCode
 
-  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    val newGeneAndPolypeptideProperties = this.setProperties(Map("name" -> this.getName))
+  override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node =
+    transaction(graphDataBaseConnection) {
+    val newGeneAndPolypeptideProperties = this.setProperties(
+      Map(
+        "name" -> this.getName,
+        "source" -> this.getSource.mkString(", ")))
     val polypeptideNode = super.upload(graphDataBaseConnection)
     newGeneAndPolypeptideProperties.foreach{case (k, v) => polypeptideNode.setProperty(k, v)}
 
@@ -859,6 +895,9 @@ case class Polypeptide(
 
     geneNode.createRelationshipTo(polypeptideNode, BiomeDBRelations.encodes)
     polypeptideNode.createRelationshipTo(sequenceNode, BiomeDBRelations.isA)
+
+    gene.setId(geneNode.getId)
+
     polypeptideNode
   }
 }
@@ -966,6 +1005,7 @@ case class RNA(
               gene: Gene,
               organism: Organism,
               rnaType: String,
+              xRefs: List[XRef],
               source: List[String] = List("GenBank"),
               nodeId: BigInt = -1
               )
@@ -981,6 +1021,8 @@ case class RNA(
 
   def getGene = gene
 
+  def getXrefs = xRefs
+
   override def equals(that: Any): Boolean = that match {
     case that: RNA =>
       (that canEqual this) &&
@@ -994,14 +1036,19 @@ case class RNA(
   override def hashCode = 41 * (41 + organism.hashCode) + name.hashCode
 
   override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-    val newProperties = this.setProperties(Map("name" -> this.getName))
+    val newProperties = this.setProperties(Map("name" -> this.getName, "source" -> this.getSource.mkString(", ")))
     val rnaNode = super.upload(graphDataBaseConnection)
     newProperties.foreach{case (k, v) => rnaNode.setProperty(k, v)}
 
     val geneNode = this.getGene.upload(graphDataBaseConnection)
     newProperties.foreach{case (k, v) => geneNode.setProperty(k, v)}
 
+    val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
+
+    xrefNodes.foreach(geneNode.createRelationshipTo(_, BiomeDBRelations.evidence))
     geneNode.createRelationshipTo(rnaNode, BiomeDBRelations.encodes)
+
+    gene.setId(geneNode.getId)
 
     rnaNode
   }

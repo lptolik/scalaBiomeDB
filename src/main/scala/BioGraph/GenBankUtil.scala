@@ -2,6 +2,9 @@ package BioGraph
 
 import java.io.File
 import java.util
+import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
+import utilFunctions.TransactionSupport
+
 import scala.collection.JavaConverters._
 import org.biojava.nbio.core.sequence.DNASequence
 import org.biojava.nbio.core.sequence.io.GenbankReaderHelper
@@ -17,10 +20,10 @@ import scala.util.{Failure, Success, Try}
 /**
   * Created by artem on 25.04.16.
   */
-class GenBankUtil(gbFileName: String) {
+class GenBankUtil(gbFileName: String) extends TransactionSupport{
 //  val geneList = List[Gene]()
   type NucleotideFeature = FeatureInterface[AbstractSequence[_root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound], _root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound]
-
+  val genbankSourceValue = List("GenBank")
   val logger = LogManager.getLogger(this.getClass.getName)
 
   def getAccessionsFromGenBankFile: Map[String, DNASequence] = {
@@ -45,27 +48,28 @@ class GenBankUtil(gbFileName: String) {
         logger.warn("Unknown genome element")
         "Contig"
       }
-    val organismName = dnaSeq.getFeatures(1).get(0).getQualifiers.get("organism").get(0).getValue
-    val organism = new Organism(name = organismName, source = ReferenceSource.GenBank)
-    val length = dnaSeq.getFeatures(1).get(0).getQualifiers.get("")
+//    features(0).getQualifiers.get("organism").get(0).getValue
+    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
+    val organism = new Organism(name = organismName, source = genbankSourceValue)
+
     val ccp = ccpType match{
       case "Chromosome" => new Chromosome(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
-        source = ReferenceSource.GenBank,
+        source = genbankSourceValue,
         length = ccpLength)
       case "Contig" => new Contig(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
-        source = ReferenceSource.GenBank,
+        source = genbankSourceValue,
         length = ccpLength)
       case "Plasmid" => new Plasmid(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
-        source = ReferenceSource.GenBank,
+        source = genbankSourceValue,
         length = ccpLength)
     }
     (organism, ccp, dnaSeq)
@@ -86,7 +90,7 @@ class GenBankUtil(gbFileName: String) {
 //    case "gene" => makeRNA(feature)
 //    case "source" => makeCCPandOrganism(feature)
     case "CDS" => makeGenePolypeptideSequence(feature, orgAndCCP)
-    case "tRNA" | "rRNA" | "ncRNA" | "tmRNA"=> makeGeneAndRNA(feature, orgAndCCP, feature.getType)
+    case "tRNA" | "rRNA" | "ncRNA" | "tmRNA" => makeGeneAndRNA(feature, orgAndCCP, feature.getType)
     case "mobile_element" | "rep_origin" | "STS" | "misc_feature" | "repeat_region" =>
       makeMiscFeature(feature, feature.getType, orgAndCCP)
     case "gene" =>
@@ -111,7 +115,7 @@ class GenBankUtil(gbFileName: String) {
       miscFeatureType = miscFeatureType,
       coordinates = getCoordinates(miscFeature),
       ccp = orgAndCCP._2,
-      source = ReferenceSource.GenBank,
+      source = genbankSourceValue,
       properties = properties
     )
     misc
@@ -138,12 +142,12 @@ class GenBankUtil(gbFileName: String) {
       coordinates = getCoordinates(feature),
       organism = organism,
       ccp = ccp,
-      source = ReferenceSource.GenBank,
+      source = genbankSourceValue,
       properties = Map("locus_tag" -> locusTag))
     gene
   }
 
-  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): Polypeptide = {
+  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Polypeptide, Gene) = {
 
     def makeTranslation(feature: NucleotideFeature): Sequence = {
       val tryGetTranslation = Try(new Sequence(feature.getQualifiers.get("translation").get(0).getValue))
@@ -174,16 +178,22 @@ class GenBankUtil(gbFileName: String) {
       gene = gene,
       organism = orgCCPSeq._1
     )
-    polypeptide
+    (polypeptide, gene)
   }
 
   def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence), rnaType: String): (RNA, Gene) = {
+    val properRNAType = rnaType match {
+      case "ncRNA" => "sRNA"
+      case _ => rnaType
+    }
     val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
     val rna = new RNA(
       name = gene.getName,
       gene = gene,
-      orgAndCCP._1,
-      rnaType
+      organism = orgAndCCP._1,
+      rnaType = rnaType,
+      xRefs = makeListOfXrefs(feature),
+      source = genbankSourceValue
     )
     (rna, gene)
   }
@@ -191,22 +201,22 @@ class GenBankUtil(gbFileName: String) {
   def makeSourceNodes(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)): CCP = {
     val organism = new Organism(
       name = feature.getQualifiers.get("organism").get(0).getValue,
-      source = ReferenceSource.GenBank)
+      source = genbankSourceValue)
     val ccp = orgAndCCP._2.getType match {
       case CCPType.Chromosome => new Chromosome(
         name = orgAndCCP._2.getName,
         organism = organism,
-        source = ReferenceSource.GenBank,
+        source = genbankSourceValue,
         length = orgAndCCP._2.getLength)
       case CCPType.Contig => new Contig(
         name = orgAndCCP._2.getName,
         organism = organism,
-        source = ReferenceSource.GenBank,
+        source = genbankSourceValue,
         length = orgAndCCP._2.getLength)
       case CCPType.Plasmid => new Plasmid(
         name = orgAndCCP._2.getName,
         organism = organism,
-        source = ReferenceSource.GenBank,
+        source = genbankSourceValue,
         length = orgAndCCP._2.getLength
       )
     }
@@ -224,18 +234,10 @@ class GenBankUtil(gbFileName: String) {
     new Coordinates(location.getStart.getPosition, location.getEnd.getPosition, strand)
   }
 
-//  private def makePolypeptide(feature: NucletideFeature): Polypeptide ={
-//    new Polypeptide()
-//  }
-
   private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
     val xrefs = feature.getQualifiers.get("db_xref")
     val resultXrefs = xrefs.asScala.toList.map(_.toString).filter(!_.contains("GeneID"))
     resultXrefs.map(ref => new XRef(ref.split(":")(1), new DBNode(ref.split(":")(0))))
-  }
-
-  private def getProperRNAType(rnaType: String): String = {
-    "To be implemented"
   }
 
 //  def readOneSequence(seqFeatures: List[NucleotideFeature], seqOrganismAndCCP: (Organism, Node with CCP)): Unit = {
@@ -247,5 +249,26 @@ class GenBankUtil(gbFileName: String) {
   def getUniqueFeatures(features: List[NucleotideFeature]) = {
     features.map(_.getType).toSet
   }
+
+  def makeNextRelationship(
+                            graphDataBaseConnection: GraphDatabaseService,
+                            typeOfFeature: DynamicLabel): Unit =
+    transaction(graphDataBaseConnection){
+
+  }
+
+  def makeOverlapRelationship(
+                               graphDataBaseConnection: GraphDatabaseService,
+                               typeOfFeature: DynamicLabel): Unit =
+    transaction(graphDataBaseConnection){
+
+  }
+
+  private def orderFeaturesByStart(
+                                    graphDataBaseConnection: GraphDatabaseService,
+                                    typeOfFeature: DynamicLabel): Unit =
+    transaction(graphDataBaseConnection){
+      val ccps = graphDataBaseConnection.findNodes(typeOfFeature)
+    }
 
 }

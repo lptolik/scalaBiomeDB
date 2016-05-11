@@ -23,20 +23,20 @@ val organism = new Organism("Eschrichia coli")
 val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
 val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
 val xref2 = new XRef("NZ_ACKO99999999", uniprot, Map("db_id" -> "NZ_ACKO99999999_GenBank"))
-val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
+val chromosome = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", List("GenBank"), DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
 val plasmid = new Plasmid("Listeria grayi DSM 20601", organism = organism)
 val contig = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
 //    val gene = new Gene("gene name", Map())
 val coordinates = new Coordinates(150, 301, Strand.reverse)
 val coordinates2 = new Coordinates(387, 780, Strand.forward)
 val coordinates3 = new Coordinates(750, 1013, Strand.reverse)
-val gene = new Gene("Super name", coordinates, plasmid, List(geneTerm), organism, Map("source" -> "GenBank"), nodeId = 134)
-val gene2 = new Gene("Such name", coordinates2, contig, List(geneTerm2), organism)
-val gene3 = new Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, Map("source" -> "GenBank"), nodeId = 134)
+val gene = new Gene("Super name", coordinates, plasmid, List(geneTerm), organism, List("GenBank", "MetaCyc"), Map("source" -> "GenBank"), nodeId = 134)
+val gene2 = new Gene("Such name", coordinates2, contig, List(geneTerm2), organism, List("GenBank"))
+val gene3 = new Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, List("GenBank"), Map("source" -> "GenBank"), nodeId = 134)
 gene.setProperties(Map("comment" -> "new comment"))
 gene.getCoordinates.getStrand
 gene.getId
-val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid, organism, 1852948, promoterTerm)
+val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid, organism, 1852948, promoterTerm, List("GenBank"))
 promoter.getLabels
 val aaa = "AR" -> "banana"
 Coordinates(11, 12, Strand.forward)
@@ -46,8 +46,8 @@ val geneNew = gene.copy(coordinates = coordinates2, ccp = contig)
 geneNew equals gene2
 xref.equals(xref2.copy(xrefId = "NZ_ACKO02000005"))
 //check BioEntity ==-opertaror (name, organism)
-val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid)
-val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid)
+val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid, List("GenBank"))
+val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid, List("GenBank"))
 //val operon = new Operon("Very operonious", )
 val boundaries = new Boundaries(gene, gene3)
 val operonTerm = new Term("So much very operonious term")
@@ -92,13 +92,14 @@ tu1.consistsOf
 val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
-val l = gb.getInitialData(accessions("NC_000913"))
-l._3.getLength
-val setOfFeatures = accessions.values.map(gb.getFeatures).iterator//.foreach(x => println(x.size))
-val setOfOrganisms = accessions.values.map(gb.getInitialData).iterator//foreach(println)
-val zp = setOfFeatures zip setOfOrganisms
-zp.next()._1.length
-features(16)
+//val l = gb.getInitialData(accessions("NC_000913"))
+//l._3.getLength
+//val setOfFeatures = accessions.values.map(gb.getFeatures).iterator//.foreach(x => println(x.size))
+//val setOfOrganisms = accessions.values.map(gb.getInitialData).iterator//foreach(println)
+//val zp = setOfFeatures zip setOfOrganisms
+//zp.next()._1.length
+//features(0).getQualifiers.get("organism").get(0).getValue
+gene.getSource.mkString(", ")
 //features(516)
 //val rec = accessions("NC_000913")
 //rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)

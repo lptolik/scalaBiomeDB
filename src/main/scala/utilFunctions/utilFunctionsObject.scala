@@ -303,16 +303,35 @@ package utilFunctions {
       }
     }
 
-  def psiExample(): Unit = {
+    def psiExample(): Unit = {
 
-  }
+    }
 
-  def addRelationship(
-                       graphDataBaseConnection: GraphDatabaseService,
-                       fromNode: Node,
-                       toNode: Node, relationship: RelationshipType): Unit = transaction(graphDataBaseConnection) {
-    fromNode.createRelationshipTo(toNode, relationship)
-  }
+    def addRelationship(
+                         graphDataBaseConnection: GraphDatabaseService,
+                         fromNode: Node,
+                         toNode: Node, relationship: RelationshipType): Unit = transaction(graphDataBaseConnection) {
+      fromNode.createRelationshipTo(toNode, relationship)
+    }
+
+    def findNode(
+                  graphDataBaseConnection: GraphDatabaseService,
+                  label: String,
+                  propertyKey: String,
+                  propertyValue: Any
+                ): Node = transaction(graphDataBaseConnection) {
+      val foundNode = graphDataBaseConnection.findNode(DynamicLabel.label(label), propertyKey, propertyValue)
+      foundNode
+      }
+
+    def getNode(
+                  graphDataBaseConnection: GraphDatabaseService,
+                  id: Long
+                ): Node = transaction(graphDataBaseConnection) {
+      val foundNode = graphDataBaseConnection.getNodeById(id)
+      foundNode
+    }
+
   }
 trait TransactionSupport {
 

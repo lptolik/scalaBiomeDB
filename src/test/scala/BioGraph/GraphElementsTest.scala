@@ -22,18 +22,18 @@ class GraphElementsTest extends FunSuite {
     val taxonCopy = new Taxon("Very taxonious", TaxonType.family)
     val taxon2 = new Taxon("Much more taxonious", TaxonType.genus)
 
-    val organism = new Organism("Eschrichia coli", taxon = taxon, source = ReferenceSource.GenBank)
-    val organismCopy = new Organism("Eschrichia coli", taxon = taxon)
-    val organism2 = new Organism("Bacillus subtilis", taxon = taxon2)
+    val organism = new Organism("Eschrichia coli", taxon = taxon, source = List("GenBank"))
+    val organismCopy = new Organism("Eschrichia coli", List("GenBank"), taxon = taxon)
+    val organism2 = new Organism("Bacillus subtilis", List("GenBank"), taxon = taxon2)
 
     val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
     val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
     val xrefCopy = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
     val link = new LinkTo(xref, uniprot)
 
-    val chromosome1 = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
-    val chromosome1Copy = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
-    val chromosome2 = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", ReferenceSource.MetaCyc, DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
+    val chromosome1 = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", List("MetaCyc"), DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
+    val chromosome1Copy = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", List("MetaCyc"), DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
+    val chromosome2 = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", List("MetaCyc"), DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
     val plasmid1 = new Plasmid("Listeria grayi DSM 20601", organism = organism)
     val plasmid1Copy = new Plasmid("Listeria grayi DSM 20601", organism = organism)
     val plasmid2 = new Plasmid("Bacteroides fragilis 3_1_12 plasmid unnamed supercont", organism = organism)
@@ -48,19 +48,19 @@ class GraphElementsTest extends FunSuite {
     val coordinates4 = new Coordinates(1753, 1917, Strand.forward)
     val coordinates5 = new Coordinates(524, 729, Strand.reverse)
 
-    val gene1 = new Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
-    val gene2 = new Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = ReferenceSource.GenBank)
-    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
-    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
-    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = ReferenceSource.GenBank, Map("source" -> "GenBank"))
+    val gene1 = new Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene2 = new Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = List("GenBank"))
+    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
 
     val evidence = new Evidence(gene1, xref)
 
-    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm, source = ReferenceSource.GenBank)
-    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1,source = ReferenceSource.GenBank)
-    val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid1, source = ReferenceSource.GenBank)
-    val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = ReferenceSource.GenBank)
-    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = ReferenceSource.GenBank)
+    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm, source = List("GenBank"))
+    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1,source = List("GenBank"))
+    val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid1, source = List("GenBank"))
+    val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = List("GenBank"))
+    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = List("GenBank"))
 
     val boundaries1 = new Boundaries(gene1, gene2)
     val boundaries1Copy = new Boundaries(gene1, gene2)
@@ -113,10 +113,10 @@ class GraphElementsTest extends FunSuite {
     val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
     sequence3.addSimilarity(similarity1)
 
-    val rna1 = new RNA("5S ribosomal RNA", gene4, organism,"sRNA")
+    val rna1 = new RNA("5S ribosomal RNA", gene4, organism, "sRNA", List(xref1))
     val rna1Copy = rna1.copy()
-    val rna2 = new RNA("16S ribosomal RNA", gene5, organism, "sRNA")
-    val rna3 = new RNA("15S ribosomal RNA", gene4, organism2, "tRNA")
+    val rna2 = new RNA("16S ribosomal RNA", gene5, organism, "sRNA", List(xref2))
+    val rna3 = new RNA("15S ribosomal RNA", gene4, organism2, "tRNA", List(xref3))
   }
 
   test("test DBNode getLabels") {
