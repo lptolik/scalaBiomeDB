@@ -229,7 +229,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test chromosome getSource") {
     new TestNodesAndRels {
-      assert(chromosome2.getSource === ReferenceSource.MetaCyc)
+      assert(chromosome2.getSource === List("MetaCyc"))
     }
   }
 
@@ -658,7 +658,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test organism getSource") {
     new TestNodesAndRels {
-      assert(organism.getSource === ReferenceSource.GenBank)
+      assert(organism.getSource === List("GenBank"))
     }
   }
 

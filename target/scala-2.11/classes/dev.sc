@@ -19,7 +19,7 @@ sl == "List(some, words)"
 val geneTerm2 = new Term("Such standard")
 val geneTerm = new Term("Gene standard name")
 val promoterTerm = new Term("Gene standard name")
-val organism = new Organism("Eschrichia coli")
+val organism = new Organism("Eschrichia coli", List("GenBank"))
 val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
 val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
 val xref2 = new XRef("NZ_ACKO99999999", uniprot, Map("db_id" -> "NZ_ACKO99999999_GenBank"))
@@ -63,7 +63,7 @@ operon.getTUs
 val taxon1 = new Taxon("Test taxon 1", TaxonType.phylum)
 organism.setTaxon(taxon1)
 //BLAST architecture//
-val organismBlast = new Organism("BLAST organism")
+val organismBlast = new Organism("BLAST organism", List("GenBank"))
 val DBBlast = new DBNode("UniProt")
 val sequenceBlast1 = new Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
 val sequenceBlast2 = new Sequence("MNITATVLLAFGMSMDAFAASIGKGATLHKPKFSEALRTGLIFGAVETLTPLIGWGMGMLASRFVLEWNHWIAFVLLIFLGGRMIIEGFRGADDEDEEPRRRHGFWLLVTTAIATSLDAMAVGVGLAFLQVNIIATALAIGCATLIMSTLGMMVGRFIGSIIGKKAEILGGLVLIGIGVQILWTHFHG")
@@ -99,7 +99,7 @@ val features = gb.getFeatures(accessions("NC_000913"))
 //val zp = setOfFeatures zip setOfOrganisms
 //zp.next()._1.length
 //features(0).getQualifiers.get("organism").get(0).getValue
-gene.getSource.mkString(", ")
+
 //features(516)
 //val rec = accessions("NC_000913")
 //rec.getSequenceAsString(58474, 59279, features(516).getLocations.getStrand)

@@ -147,7 +147,7 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
     gene
   }
 
-  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Polypeptide, Gene) = {
+  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, Polypeptide) = {
 
     def makeTranslation(feature: NucleotideFeature): Sequence = {
       val tryGetTranslation = Try(new Sequence(feature.getQualifiers.get("translation").get(0).getValue))
@@ -178,10 +178,10 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
       gene = gene,
       organism = orgCCPSeq._1
     )
-    (polypeptide, gene)
+    (gene, polypeptide)
   }
 
-  def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence), rnaType: String): (RNA, Gene) = {
+  def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence), rnaType: String): (Gene, RNA) = {
     val properRNAType = rnaType match {
       case "ncRNA" => "sRNA"
       case _ => rnaType
@@ -195,7 +195,7 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
       xRefs = makeListOfXrefs(feature),
       source = genbankSourceValue
     )
-    (rna, gene)
+    (gene, rna)
   }
 
   def makeSourceNodes(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)): CCP = {
