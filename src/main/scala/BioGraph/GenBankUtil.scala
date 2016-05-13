@@ -25,6 +25,8 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
   type NucleotideFeature = FeatureInterface[AbstractSequence[_root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound], _root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound]
   val genbankSourceValue = List("GenBank")
   val logger = LogManager.getLogger(this.getClass.getName)
+  var sequenceCollector: Map[String, Sequence] = Map()
+  var externalDataBasesCollector: Map[String, DBNode] = Map()
 
   def getAccessionsFromGenBankFile: Map[String, DNASequence] = {
     val gbFile = new File(gbFileName)
@@ -147,11 +149,11 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
     gene
   }
 
-  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, Polypeptide) = {
+  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, Sequence, Polypeptide) = {
 
     def makeTranslation(feature: NucleotideFeature): Sequence = {
       val tryGetTranslation = Try(new Sequence(feature.getQualifiers.get("translation").get(0).getValue))
-      val sequence = tryGetTranslation match {
+      val sequenceToCheck = tryGetTranslation match {
         case Success(seq) => tryGetTranslation.get
         case Failure(except) =>
           val coordinates = feature.getLocations
@@ -162,7 +164,12 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
           val translatedAminoAcidSeq = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).toString
           new Sequence(sequence = translatedAminoAcidSeq)
       }
-      sequence
+      val md5 = sequenceToCheck.getMD5
+      if (sequenceCollector.contains(md5)) sequenceCollector(md5)
+      else {
+        sequenceCollector = sequenceCollector ++ Map(md5 -> sequenceToCheck)
+        sequenceToCheck
+      }
     }
 
     val sequence = makeTranslation(feature)
@@ -170,15 +177,17 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
 //    sequence =  new Sequence(feature.getQualifiers.get("translation").get(0).getValue),
 //    gene not have a transalation
 //    println(gene.getName)
+    val listOfXrefs = makeListOfXrefs(feature)
+
     val polypeptide = new Polypeptide(
       name = gene.getName,
-      xRefs = makeListOfXrefs(feature),
+      xRefs = listOfXrefs,
       sequence =  sequence,
       terms = gene.getTerms,
       gene = gene,
       organism = orgCCPSeq._1
     )
-    (gene, polypeptide)
+    (gene, sequence, polypeptide)
   }
 
   def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence), rnaType: String): (Gene, RNA) = {
@@ -235,9 +244,24 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
   }
 
   private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
+
+    def makeXref(ref: String): XRef = {
+      val dbName = ref.split(":")(0)
+      val xrefText = ref.split(":")(1)
+      if (externalDataBasesCollector.contains(dbName)) new XRef(xrefText, externalDataBasesCollector(dbName))
+      else {
+        val newDB = new DBNode(dbName)
+        val xrefNode = new XRef(xrefText, newDB)
+        externalDataBasesCollector = externalDataBasesCollector ++ Map(dbName -> newDB)
+        xrefNode
+      }
+    }
+
     val xrefs = feature.getQualifiers.get("db_xref")
     val resultXrefs = xrefs.asScala.toList.map(_.toString).filter(!_.contains("GeneID"))
-    resultXrefs.map(ref => new XRef(ref.split(":")(1), new DBNode(ref.split(":")(0))))
+    resultXrefs.map(ref => makeXref(ref))
+//    resultXrefs.map(ref=> new XRef(ref.split(":")(1), new DBNode(ref.split(":")(0))))
+
   }
 
 //  def readOneSequence(seqFeatures: List[NucleotideFeature], seqOrganismAndCCP: (Organism, Node with CCP)): Unit = {

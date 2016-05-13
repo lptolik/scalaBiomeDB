@@ -344,13 +344,22 @@ package BioGraph {
   //      case Success(properNote) => Map[String, Any]("comment" -> properNote)
   //      case Failure(except) => Map[String, Any]()
   //    }
-      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
-      if (tryToFindNode == null) {
-        val createdDbNode = super.upload(graphDataBaseConnection)
-        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
-        createdDbNode
+
+      if (this.getId < 0) {
+        val newProperties = this.setProperties(Map("name" -> this.getName))
+        val xrefNode = super.upload(graphDataBaseConnection)
+        newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
+        xrefNode
       }
-      else tryToFindNode
+      else graphDataBaseConnection.getNodeById(this.getId)
+
+//      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
+//      if (tryToFindNode == null) {
+//        val createdDbNode = super.upload(graphDataBaseConnection)
+//        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
+//        createdDbNode
+//      }
+//      else tryToFindNode
   //    val dbNode = tryToFindNode match {
   //      case AnyRef => tryToFindNode
   //      case null =>
@@ -888,7 +897,7 @@ package BioGraph {
       val polypeptideNode = super.upload(graphDataBaseConnection)
       newGeneAndPolypeptideProperties.foreach{case (k, v) => polypeptideNode.setProperty(k, v)}
 
-      val sequenceNode = this.getSeq.upload(graphDataBaseConnection)
+//      val sequenceNode = this.getSeq.upload(graphDataBaseConnection)
 
       val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
 
@@ -897,7 +906,7 @@ package BioGraph {
       xrefNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
       geneNode.createRelationshipTo(polypeptideNode, BiomeDBRelations.encodes)
-      polypeptideNode.createRelationshipTo(sequenceNode, BiomeDBRelations.isA)
+      polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getSeq.getId), BiomeDBRelations.isA)
 
       polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getOrganism.getId), BiomeDBRelations.partOf)
 
