@@ -290,9 +290,14 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
 
   private def orderFeaturesByStart(
                                     graphDataBaseConnection: GraphDatabaseService,
-                                    typeOfFeature: DynamicLabel): Unit =
+                                    typeOfFeature: DynamicLabel,
+                                    organismName: String,
+                                    strand: String): Unit =
     transaction(graphDataBaseConnection){
-      val ccps = graphDataBaseConnection.findNodes(typeOfFeature)
+      val cypherQuery = s"MATCH (org:Organism{name: $organismName%s})<-[:PART_OF]-(ccp:Chromosome:Plasmid:Contig) " +
+        s"RETURN ccp"
+      val cypherResult = graphDataBaseConnection.execute(cypherQuery)
+      println(cypherResult)
     }
 
 }
