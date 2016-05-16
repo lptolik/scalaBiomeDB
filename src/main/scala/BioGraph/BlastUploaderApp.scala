@@ -4,7 +4,7 @@ import utilFunctions.BlastUtil
 /**
   * Created by artem on 01.05.16.
   */
-object BlastUploaderApp {
+object BlastUploaderApp extends App{
   def main(): Unit = {
     val dbPathRemote = "/var/lib/neo4j_2.3.1_240_bacs/neo4j-community-2.3.1/data/graph.db"
     val blastTool = new BlastUtil(dbPathRemote)

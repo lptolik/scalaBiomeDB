@@ -274,30 +274,4 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
     features.map(_.getType).toSet
   }
 
-  def makeNextRelationship(
-                            graphDataBaseConnection: GraphDatabaseService,
-                            typeOfFeature: DynamicLabel): Unit =
-    transaction(graphDataBaseConnection){
-
-  }
-
-  def makeOverlapRelationship(
-                               graphDataBaseConnection: GraphDatabaseService,
-                               typeOfFeature: DynamicLabel): Unit =
-    transaction(graphDataBaseConnection){
-
-  }
-
-  private def orderFeaturesByStart(
-                                    graphDataBaseConnection: GraphDatabaseService,
-                                    typeOfFeature: DynamicLabel,
-                                    organismName: String,
-                                    strand: String): Unit =
-    transaction(graphDataBaseConnection){
-      val cypherQuery = s"MATCH (org:Organism{name: $organismName%s})<-[:PART_OF]-(ccp:Chromosome:Plasmid:Contig) " +
-        s"RETURN ccp"
-      val cypherResult = graphDataBaseConnection.execute(cypherQuery)
-      println(cypherResult)
-    }
-
 }

@@ -12,9 +12,11 @@ import utilFunctions.utilFunctionsObject._
 /**
   * Created by artem on 15.05.16.
   */
-object GenBankUploader {
+object GenBankUploader extends App{
   def main() {
+    println("Upload started")
     val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Chlamydia_trachomatis_A2497_complete_genome_ver1.gb")
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
     val accessions = gbReader.getAccessionsFromGenBankFile
     val inits = accessions.values.map(gbReader.getInitialData)
     val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
@@ -45,6 +47,8 @@ object GenBankUploader {
       }
     }
     uploader(setOfOrganismsNodes, processReadGenBankObjects)
+    println("Upload finished")
 
   }
+  main()
 }
