@@ -92,6 +92,7 @@ tu1.consistsOf
 val gb = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
 val accessions = gb.getAccessionsFromGenBankFile
 val features = gb.getFeatures(accessions("NC_000913"))
+
 //val l = gb.getInitialData(accessions("NC_000913"))
 //l._3.getLength
 //val setOfFeatures = accessions.values.map(gb.getFeatures).iterator//.foreach(x => println(x.size))

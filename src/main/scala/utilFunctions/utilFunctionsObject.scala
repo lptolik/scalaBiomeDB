@@ -336,60 +336,59 @@ package utilFunctions {
     def makeNextRelationship(
                               graphDataBaseConnection: GraphDatabaseService,
                               typeOfFeature: Label,
-                              organismName: String,
-                              strand: BioGraph.Strand.Value): Unit =
+                              organismName: String): Unit =
       transaction(graphDataBaseConnection){
         val listOfCCP = getOrganismCCP(graphDataBaseConnection, organismName)
-        listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label("Feature"), strand))
+        if (listOfCCP.nonEmpty) {
+          val strandList = List(Strand.forward, Strand.reverse)
+          val sortedFeatures = strandList.map(strand => listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label("Feature"), strand)))
+
+          def createNext(previousFeature: Node, nextFeaturePath: Path): Node = {
+            val nextFeature = nextFeaturePath.endNode()
+            previousFeature.createRelationshipTo(nextFeature, BiomeDBRelations.next)
+            nextFeature
+          }
+          //      for each strand and for each CCP create NEXT relationships
+          sortedFeatures.foreach(typeOfStrand =>
+            typeOfStrand.foreach(listOfFeatures =>
+              listOfFeatures.tail.foldLeft(listOfFeatures.head.endNode)((previousFeature, nextFeaturePath) =>
+                createNext(previousFeature: Node, nextFeaturePath: Path))))
+        }
+        else println("Empty ccp list.")
       }
 
     def makeOverlapRelationship(
                                  graphDataBaseConnection: GraphDatabaseService,
-                                 typeOfFeature: DynamicLabel): Unit =
+                                 typeOfFeature: Label,
+                                 organismName: String): Unit =
       transaction(graphDataBaseConnection){
+        val listOfCCP = getOrganismCCP(graphDataBaseConnection, organismName)
+        val sortedFeatures = listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label("Feature"), Strand.unknown))
 
+        def createOverlap(shortList: List[Path], feature: Path): List[Path] = {
+          val end = feature.endNode().getProperty("end").toString.toInt
+          val overlapingFeatures = shortList.takeWhile(_.endNode().getProperty("start").toString.toInt <= end)
+          overlapingFeatures.foreach(p => p.endNode().createRelationshipTo(feature.endNode(), BiomeDBRelations.overlap))
+          if (overlapingFeatures.isEmpty) shortList.drop(1)
+          else shortList.drop(overlapingFeatures.length)
+        }
+
+        sortedFeatures.foreach(fullList => fullList.foldLeft(fullList.drop(1))((shortList, nextFeatureNumber) => createOverlap(shortList: List[Path], nextFeatureNumber: Path)))
+
+
+//        def f(full: List[Path], short: List[Path], drop: Int): Unit = {
+//          short.foreach()
+//        }
       }
 
     private def getOrganismCCP(
                                       graphDataBaseConnection: GraphDatabaseService,
                                       organismName: String): List[Long] = {
-        val cypherQuery = f"MATCH (org:Organism{name: '$organismName%s'})<-[:PART_OF]-(ccp) " +
-          f"WHERE ccp:Chromosome or ccp:Plasmid or ccp:Contig " +
-          f"RETURN id(ccp)"
-        val cypherResult = graphDataBaseConnection.execute(cypherQuery)
-
-        def getIds(n: String) = {
-          n.drop(1).dropRight(1).toLong
-        }
-
-        if (cypherResult.hasNext) {
-          val res = cypherResult.asScala.toList
-          res.map(el => getIds(el.values().toString))
-        }
-        else {
-          println("Nothing was found")
-          List()
-        }
-      }
-
-    private def orderFeatures(graphDataBaseConnection: GraphDatabaseService,
-                              ccpID: Long,
-                              typeOfFeature: Label,
-                              strand: BioGraph.Strand.Value): Any ={
-      val cypherQueryStart = f"START ccp=node($ccpID%d) " +
-        f"MATCH (ccp)<-[:PART_OF]-(feature:$typeOfFeature%s) "
-      val cypherQueryEnd = if (strand != Strand.unknown) {
-         cypherQueryStart +
-          s"WHERE feature.strand='${strand.toString}' " +
-        "RETURN feature ORDER BY feature.start"
-      }
-      else {
-        cypherQueryStart +
-          "RETURN feature ORDER BY feature.start"
-      }
-
-      def sortByStartCoordinate(p1: Path, p2: Path): Boolean = {
-        p1.endNode().getProperty("start").toString.toInt < p2.endNode().getProperty("start").toString.toInt
+      def findCCP(p: Path): Boolean = {
+        val labels = p.endNode().getLabels.asScala.toList
+        labels.contains(DynamicLabel.label("Chromosome")) |
+          labels.contains(DynamicLabel.label("Contig")) |
+          labels.contains(DynamicLabel.label("Plasmid"))
       }
 
       val traversalResult = graphDataBaseConnection
@@ -397,20 +396,55 @@ package utilFunctions {
         .breadthFirst()
         .relationships(BiomeDBRelations.partOf, Direction.INCOMING)
         .evaluator(Evaluators.toDepth(1))
-        .traverse(graphDataBaseConnection.getNodeById(ccpID))
-      val traversedFeatures = traversalResult.asScala.toList.drop(1)
+        .traverse(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName))
+      val ccpIdList = traversalResult.asScala.toList.filter(findCCP).map(_.endNode().getId)
+      ccpIdList
+//      val l = processRes.map(_.endNode().getId)
+//      l
 
-      def createNext(previousFeature: Node, nextFeaturePath: Path): Node = {
-        val nextFeature = nextFeaturePath.endNode()
-        previousFeature.createRelationshipTo(nextFeature, BiomeDBRelations.next)
-        nextFeature
+
+//      val cypherQuery = f"MATCH (org:Organism{name: '$organismName%s'})<-[:PART_OF]-(ccp) " +
+//        f"WHERE ccp:Chromosome or ccp:Plasmid or ccp:Contig " +
+//        f"RETURN id(ccp)"
+//      val cypherResult = graphDataBaseConnection.execute(cypherQuery)
+//
+//      def getIds(n: String) = {
+//        n.drop(1).dropRight(1).toLong
+//      }
+//
+//      if (cypherResult.hasNext) {
+//        val res = cypherResult.asScala.toList
+//        res.map(el => getIds(el.values().toString))
+//      }
+//      else {
+//        println("Nothing was found")
+//        List()
+//      }
+    }
+
+    private def orderFeatures(graphDataBaseConnection: GraphDatabaseService,
+                              ccpID: Long,
+                              typeOfFeature: Label,
+                              strand: BioGraph.Strand.Value): List[Path] ={
+
+      def sortByStartCoordinate(p1: Path, p2: Path): Boolean = {
+        def getStartPosition(p: Path): Long = p.endNode().getProperty("start").toString.toInt
+        getStartPosition(p1) < getStartPosition(p2)
       }
+        val traversalResult = graphDataBaseConnection
+          .traversalDescription()
+          .breadthFirst()
+          .relationships(BiomeDBRelations.partOf, Direction.INCOMING)
+          .evaluator(Evaluators.toDepth(1))
+          .traverse(graphDataBaseConnection.getNodeById(ccpID))
+        val traversedFeatures = traversalResult.asScala.toList.drop(1)
 
       val sortedFeatures = traversedFeatures.sortWith(sortByStartCoordinate)
-      sortedFeatures
-        .tail
-        .foldLeft(sortedFeatures.head.endNode)((nextFeature, previousFeaturePath) =>
-          createNext(nextFeature: Node, previousFeaturePath: Path))
+
+      if (strand == Strand.unknown) sortedFeatures
+      else sortedFeatures.filter(_.endNode().getProperty("strand") == strand.toString)
+
+
     }
   }
 trait TransactionSupport {
