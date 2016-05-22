@@ -1,7 +1,6 @@
 import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
-  import org.neo4j.cypher.internal.compiler.v1_9.symbols.RelationshipType
   import org.neo4j.graphdb
   import org.neo4j.graphdb.{Relationship, DynamicLabel, Label, GraphDatabaseService}
   import utilFunctions._
@@ -837,11 +836,26 @@ package BioGraph {
 
     def getSource = source
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-      val organismNode = super.upload(graphDataBaseConnection)
-      this.setProperties(
-        Map("source" -> this.getSource.mkString(", "), "name" -> this.getName)).foreach{case (k, v) => organismNode.setProperty(k, v)}
-      organismNode
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node =
+      transaction(graphDataBaseConnection) {
+        val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
+        println()
+        if (findOrganismNode == null) {
+          val organismNode = super.upload(graphDataBaseConnection)
+          this.setProperties(
+            Map("source" -> this.getSource.mkString(", "), "name" -> this.getName))
+            .foreach { case (k, v) => organismNode.setProperty(k, v) }
+          organismNode
+        }
+        else findOrganismNode
+//        if (findOrganismNode.isInstanceOf[Node]) findOrganismNode
+//        else {
+//          val organismNode = super.upload(graphDataBaseConnection)
+//          this.setProperties(
+//            Map("source" -> this.getSource.mkString(", "), "name" -> this.getName))
+//            .foreach { case (k, v) => organismNode.setProperty(k, v) }
+//          organismNode
+//        }
     }
   }
 

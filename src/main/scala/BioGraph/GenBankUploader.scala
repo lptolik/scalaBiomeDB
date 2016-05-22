@@ -15,40 +15,56 @@ import utilFunctions.utilFunctionsObject._
 object GenBankUploader extends App{
   def main() {
     println("Upload started")
-    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Chlamydia_trachomatis_A2497_complete_genome_ver1.gb")
-//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
-    val accessions = gbReader.getAccessionsFromGenBankFile
-    val inits = accessions.values.map(gbReader.getInitialData)
-    val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
-    val setOfOrganismsNodes = accessions.values.map(gbReader.getInitialData)
-    val setOfInitialOrganismNodes = setOfOrganismsNodes.iterator
-    val zipFeaturesAndInitialOrganismData = setOfInitialOrganismNodes zip setOfFeatures
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Chlamydia_trachomatis_A2497_complete_genome_ver1.gb")
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Aliivibrio_salmonicida_LFI1238_chromosome_1.gb")
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Aliivibrio_salmonicida_LFI1238_chromosome_2.gb")
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000033.gb")
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000034.gb")
+//    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/"
+    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files"
+    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc"
+    val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
+    val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
-    val readGenBankObjects = zipFeaturesAndInitialOrganismData.map(pair => gbReader.processFeatures(pair._1)(pair._2))
-
-    val dbPathRemote = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
-    val dataBaseFile = new File(dbPathRemote)
+    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(localDir)
+    val dataBaseFile = new File(localDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
-    val processReadGenBankObjects = readGenBankObjects.map(_.filter((el) => el.toString != "()").flatMap{
-      case (a, b, c) => List(a, b, c)
-      case (a, b) => List (a, b)
-      case (a) => List(a)
-    })
+//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
+    def uploadOneFile(gbFile: File): Unit = {
+      println(gbFile.getName)
+      val gbReader = new GenBankUtil(gbFile)
+      val accessions = gbReader.getAccessionsFromGenBankFile
+      val inits = accessions.values.map(gbReader.getInitialData)
+      val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
+      val setOfOrganismsNodes = accessions.values.map(gbReader.getInitialData)
+      val setOfInitialOrganismNodes = setOfOrganismsNodes.iterator
+      val zipFeaturesAndInitialOrganismData = setOfInitialOrganismNodes zip setOfFeatures
+
+      val readGenBankObjects = zipFeaturesAndInitialOrganismData.map(pair => gbReader.processFeatures(pair._1)(pair._2))
 
 
-    def uploader(inits: Iterable[(Organism, Node with CCP, DNASequence)], features: Iterator[List[Any]]): Unit = {
-      if (inits.nonEmpty) {
-        val nextOrgAndCCP = inits.head
-        val organismNode = nextOrgAndCCP._1.upload(graphDataBaseConnection)
-        val ccpNode = nextOrgAndCCP._2.upload(graphDataBaseConnection)
+      val processReadGenBankObjects = readGenBankObjects.map(_.filter((el) => el.toString != "()").flatMap {
+        case (a, b, c) => List(a, b, c)
+        case (a, b) => List(a, b)
+        case (a) => List(a)
+      })
 
-        features.next().foreach({case elem: Node => elem.upload(graphDataBaseConnection)})
-        uploader(inits.tail, features)
+
+      def uploader(inits: Iterable[(Organism, Node with CCP, DNASequence)], features: Iterator[List[Any]]): Unit = {
+        if (inits.nonEmpty) {
+          val nextOrgAndCCP = inits.head
+          val organismNode = nextOrgAndCCP._1.upload(graphDataBaseConnection)
+          nextOrgAndCCP._1.setId(organismNode.getId)
+          val ccpNode = nextOrgAndCCP._2.upload(graphDataBaseConnection)
+
+          features.next().foreach({ case elem: Node => elem.upload(graphDataBaseConnection) })
+          uploader(inits.tail, features)
+        }
       }
+      uploader(setOfOrganismsNodes, processReadGenBankObjects)
     }
-    uploader(setOfOrganismsNodes, processReadGenBankObjects)
+    gbFiles.foreach(uploadOneFile)
     println("Upload finished")
-
   }
   main()
 }

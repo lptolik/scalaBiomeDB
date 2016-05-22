@@ -25,9 +25,9 @@ libraryDependencies += "org.biojava" % "sequencing" % "1.9.2"
 //sbt-assembly
 //assemblySettings
 assemblyMergeStrategy in assembly := {
-  case PathList("neo4j", xs @ _*) =>
-    MergeStrategy.last
+  case PathList("neo4j", xs @ _*)           => MergeStrategy.last
   case PathList("META-INF", "LICENSES.txt") => MergeStrategy.discard
+  case "log4j2.xml"                          => MergeStrategy.first
   case x =>
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)

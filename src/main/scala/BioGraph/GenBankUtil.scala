@@ -11,7 +11,6 @@ import org.biojava.nbio.core.sequence.io.GenbankReaderHelper
 import org.biojava.nbio.core.sequence.features.FeatureInterface
 import org.biojava.nbio.core.sequence.template.AbstractSequence
 import org.apache.logging.log4j.LogManager
-import org.biojava.nbio.core.sequence.features.Qualifier
 import org.biojava.bio.seq.DNATools
 
 import scala.collection.immutable.{HashMap, Map}
@@ -20,16 +19,16 @@ import scala.util.{Failure, Success, Try}
 /**
   * Created by artem on 25.04.16.
   */
-class GenBankUtil(gbFileName: String) extends TransactionSupport{
+class GenBankUtil(gbFile: File) extends TransactionSupport{
 //  val geneList = List[Gene]()
   type NucleotideFeature = FeatureInterface[AbstractSequence[_root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound], _root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound]
   val genbankSourceValue = List("GenBank")
   val logger = LogManager.getLogger(this.getClass.getName)
+  logger.info("Start processing " + gbFile.getName)
   var sequenceCollector: Map[String, Sequence] = Map()
   var externalDataBasesCollector: Map[String, DBNode] = Map()
 
   def getAccessionsFromGenBankFile: Map[String, DNASequence] = {
-    val gbFile = new File(gbFileName)
     val dnaSequences = GenbankReaderHelper.readGenbankDNASequence(gbFile)
     val accessions = HashMap() ++ dnaSequences.asScala
     accessions
@@ -47,11 +46,12 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
       else if (description.contains("CONTIG")) "Contig"
       else if (description.contains("PLASMID")) "Plasmid"
       else {
-        logger.warn("Unknown genome element")
+        logger.warn("Unknown CCP type")
         "Contig"
       }
 //    features(0).getQualifiers.get("organism").get(0).getValue
-    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
+    val organismName = dnaSeq.getFeaturesByType("source").get(0).getQualifiers.get("organism").get(0).getValue
+//    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
     val organism = new Organism(name = organismName, source = genbankSourceValue)
 
     val ccp = ccpType match{
@@ -95,9 +95,9 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
     case "tRNA" | "rRNA" | "ncRNA" | "tmRNA" => makeGeneAndRNA(feature, orgAndCCP, feature.getType)
     case "mobile_element" | "rep_origin" | "STS" | "misc_feature" | "repeat_region" =>
       makeMiscFeature(feature, feature.getType, orgAndCCP)
-    case "gene" =>
+    case "gene" => makePseudoGene(feature, orgAndCCP)
     case "source" => //makeSourceNodes(feature, orgAndCCP)
-    case _ => logger.warn("Unknown feature type: " + feature.getType + " in file " + gbFileName)
+    case _ => logger.warn("Unknown feature type: " + feature.getType + " in file " + gbFile.getName)
   }
 
   def makeMiscFeature(
@@ -121,6 +121,13 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
       properties = properties
     )
     misc
+  }
+
+  def makePseudoGene(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)) = {
+    if (feature.getQualifiers.containsKey("pseudo")) {
+      val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
+      gene.copy(properties = Map("comment" -> "pseudo"))
+    }
   }
 
   private def makeGene(feature: NucleotideFeature, organism: Organism, ccp: CCP): Gene = {
@@ -256,10 +263,17 @@ class GenBankUtil(gbFileName: String) extends TransactionSupport{
         xrefNode
       }
     }
+    try {
 
-    val xrefs = feature.getQualifiers.get("db_xref")
-    val resultXrefs = xrefs.asScala.toList.map(_.toString).filter(!_.contains("GeneID"))
-    resultXrefs.map(ref => makeXref(ref))
+      val xrefs = feature.getQualifiers.get("db_xref")
+      val resultXrefs = xrefs.asScala.toList.map(_.toString).filter(!_.contains("GeneID"))
+      resultXrefs.map(ref => makeXref(ref))
+    }
+    catch {
+      case except: NullPointerException =>
+        logger.warn(feature.getDescription + " has no xrefs.")
+        List()
+    }
 //    resultXrefs.map(ref=> new XRef(ref.split(":")(1), new DBNode(ref.split(":")(0))))
 
   }

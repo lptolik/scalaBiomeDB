@@ -446,6 +446,12 @@ package utilFunctions {
 
 
     }
+
+    def getGenBankFilesFromDirectory(directory: String): List[File] = {
+      val files = new java.io.File(directory).listFiles().toList
+      val gbFiles = files.filter(_.getName.endsWith(".gb"))
+      gbFiles
+    }
   }
 trait TransactionSupport {
 
