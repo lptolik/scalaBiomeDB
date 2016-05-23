@@ -2,12 +2,13 @@ package BioGraph
 
 import java.io.File
 import java.util
+import org.biojava.nbio.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
 import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
 import utilFunctions.TransactionSupport
 
 import scala.collection.JavaConverters._
 import org.biojava.nbio.core.sequence.DNASequence
-import org.biojava.nbio.core.sequence.io.GenbankReaderHelper
+import org.biojava.nbio.core.sequence.io.{DNASequenceCreator, GenericGenbankHeaderParser, GenbankReader, GenbankReaderHelper}
 import org.biojava.nbio.core.sequence.features.FeatureInterface
 import org.biojava.nbio.core.sequence.template.AbstractSequence
 import org.apache.logging.log4j.LogManager
@@ -29,7 +30,9 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   var externalDataBasesCollector: Map[String, DBNode] = Map()
 
   def getAccessionsFromGenBankFile: Map[String, DNASequence] = {
-    val dnaSequences = GenbankReaderHelper.readGenbankDNASequence(gbFile)
+    val gbr = new GenbankReader[DNASequence, NucleotideCompound](gbFile, new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](), new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet))
+    val dnaSequences = gbr.process()
+//    val dnaSequences = GenbankReaderHelper.readGenbankDNASequence(gbFile)
     val accessions = HashMap() ++ dnaSequences.asScala
     accessions
   }
@@ -126,7 +129,8 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   def makePseudoGene(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)) = {
     if (feature.getQualifiers.containsKey("pseudo")) {
       val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
-      gene.copy(properties = Map("comment" -> "pseudo"))
+      gene
+//      gene.copy(properties = Map("comment" -> "pseudo"))
     }
   }
 

@@ -26,8 +26,8 @@ object GenBankUploader extends App{
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(localDir)
-    val dataBaseFile = new File(localDB)
+    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(remoteDir)
+    val dataBaseFile = new File(remoteDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
     def uploadOneFile(gbFile: File): Unit = {
@@ -41,7 +41,6 @@ object GenBankUploader extends App{
       val zipFeaturesAndInitialOrganismData = setOfInitialOrganismNodes zip setOfFeatures
 
       val readGenBankObjects = zipFeaturesAndInitialOrganismData.map(pair => gbReader.processFeatures(pair._1)(pair._2))
-
 
       val processReadGenBankObjects = readGenBankObjects.map(_.filter((el) => el.toString != "()").flatMap {
         case (a, b, c) => List(a, b, c)
