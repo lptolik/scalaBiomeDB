@@ -1,7 +1,8 @@
 package BioGraph
 
-import java.io.File
+import java.io.{PrintWriter, File}
 import java.util
+import org.biojava.nbio.core.exceptions.ParserException
 import org.biojava.nbio.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
 import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
 import utilFunctions.TransactionSupport
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.LogManager
 import org.biojava.bio.seq.DNATools
 
 import scala.collection.immutable.{HashMap, Map}
+import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -29,12 +31,45 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   var sequenceCollector: Map[String, Sequence] = Map()
   var externalDataBasesCollector: Map[String, DBNode] = Map()
 
+  private def correctDBXrefInFile(gbFile: File): File = {
+    val outputFileName = gbFile.getAbsolutePath.split(".gb")(0) + "_corrected_dbxrefs.gb"
+    val outputFile = new PrintWriter(new File(outputFileName))
+    def rewriteWithProperXRefs(line: String): Unit = {
+      if (line.contains("/db_xref=") && line.split(":")(1).contains(" ")) outputFile.write(line.split(" ")(0) + "\"\n")
+      else outputFile.write(line + "\n")
+    }
+    val fileReader = Source.fromFile(gbFile.getAbsolutePath)
+    fileReader.getLines().foreach(rewriteWithProperXRefs)
+
+    outputFile.close()
+    fileReader.close()
+    new java.io.File(outputFileName)
+  }
+
   def getAccessionsFromGenBankFile: Map[String, DNASequence] = {
-    val gbr = new GenbankReader[DNASequence, NucleotideCompound](gbFile, new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](), new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet))
-    val dnaSequences = gbr.process()
+    val gbr = new GenbankReader[DNASequence, NucleotideCompound](
+      gbFile, new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](),
+      new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet)
+    )
+    try {
+      val dnaSequences = gbr.process()
+      val accessions = HashMap() ++ dnaSequences.asScala
+      accessions
+    }
+    catch {
+      case e: ParserException =>
+        logger.warn("Bad DBXref, rewriting the file " + gbFile.getName)
+        val correctedGbr = new GenbankReader[DNASequence, NucleotideCompound](correctDBXrefInFile(gbFile), new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](),
+          new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet)
+        )
+        val dnaSequences = correctedGbr.process()
+        val accessions = HashMap() ++ dnaSequences.asScala
+        accessions
+    }
+
 //    val dnaSequences = GenbankReaderHelper.readGenbankDNASequence(gbFile)
-    val accessions = HashMap() ++ dnaSequences.asScala
-    accessions
+//    val accessions = HashMap() ++ dnaSequences.asScala
+//    accessions
   }
 
   def getInitialData(dnaSeq: DNASequence): (Organism, Node with CCP, DNASequence) = {
