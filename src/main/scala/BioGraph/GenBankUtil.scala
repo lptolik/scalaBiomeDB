@@ -35,7 +35,13 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val outputFileName = gbFile.getAbsolutePath.split(".gb")(0) + "_corrected_dbxrefs.gb"
     val outputFile = new PrintWriter(new File(outputFileName))
     def rewriteWithProperXRefs(line: String): Unit = {
-      if (line.contains("/db_xref=") && line.split(":")(1).contains(" ")) outputFile.write(line.split(" ")(0) + "\"\n")
+      if (line.contains("/db_xref=") && line.split(":")(1).contains(" ")) {
+        //outputFile.write(line.split(" ")(0) + "\"\n")
+        val parts = line.split(":")
+        val partOne = parts(0) + ":"
+        val partTwo = parts(1).split(" ")(0) + "\"\n"
+        outputFile.write(partOne + partTwo)
+      }
       else outputFile.write(line + "\n")
     }
     val fileReader = Source.fromFile(gbFile.getAbsolutePath)
@@ -171,7 +177,17 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
   private def makeGene(feature: NucleotideFeature, organism: Organism, ccp: CCP): Gene = {
 
-    val locusTag = feature.getQualifiers.get("locus_tag").get(0).getValue
+
+    val tryGetLocusTag = Try(feature.getQualifiers.get("locus_tag").get(0).getValue)
+    val locusTag = tryGetLocusTag match {
+      case Success(properLocusTag) => tryGetLocusTag.get
+      case Failure(except) =>
+        val coord = getCoordinates(feature)
+        logger.warn("A gene without locus tag at "
+          + coord.getStart + "-" + coord.getEnd
+          + " in " + gbFile.getName)
+        "hypothetical protein"
+    }
 
     def getGeneName: String = {
       val tryGetGeneName = Try(feature.getQualifiers.get("gene").get(0).getValue)

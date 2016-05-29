@@ -14,6 +14,7 @@ import utilFunctions.utilFunctionsObject._
   */
 object GenBankUploader extends App{
   def main() {
+
     println("Upload started")
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Chlamydia_trachomatis_A2497_complete_genome_ver1.gb")
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Aliivibrio_salmonicida_LFI1238_chromosome_1.gb")
@@ -26,6 +27,16 @@ object GenBankUploader extends App{
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
+//    val db = args.nonEmpty match {
+//    case true => args(0)
+//    case _ => remoteDB
+//    }
+//
+//    val dir = args.nonEmpty match {
+//      case true => args(1)
+//      case _ => remoteDir
+//    }
+
     val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(localDir)
     val dataBaseFile = new File(localDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
@@ -34,7 +45,6 @@ object GenBankUploader extends App{
       println(gbFile.getName)
       val gbReader = new GenBankUtil(gbFile)
       val accessions = gbReader.getAccessionsFromGenBankFile
-      val inits = accessions.values.map(gbReader.getInitialData)
       val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
       val setOfOrganismsNodes = accessions.values.map(gbReader.getInitialData)
       val setOfInitialOrganismNodes = setOfOrganismsNodes.iterator
@@ -55,6 +65,7 @@ object GenBankUploader extends App{
           val organismNode = nextOrgAndCCP._1.upload(graphDataBaseConnection)
           nextOrgAndCCP._1.setId(organismNode.getId)
           val ccpNode = nextOrgAndCCP._2.upload(graphDataBaseConnection)
+          nextOrgAndCCP._2.setId(ccpNode.getId)
 
           features.next().foreach({ case elem: Node => elem.upload(graphDataBaseConnection) })
           uploader(inits.tail, features)
