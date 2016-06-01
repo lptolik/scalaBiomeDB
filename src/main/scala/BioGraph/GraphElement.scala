@@ -977,7 +977,10 @@ package BioGraph {
         newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
         sequenceNode
       }
-      else tryToFindNode
+      else {
+        this.setId(tryToFindNode.getId)
+        tryToFindNode
+      }
     }
 
   //  override def toString = md5
