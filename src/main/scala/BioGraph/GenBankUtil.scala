@@ -65,7 +65,9 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     catch {
       case e: ParserException =>
         logger.warn("Bad DBXref, rewriting the file " + gbFile.getName)
-        val correctedGbr = new GenbankReader[DNASequence, NucleotideCompound](correctDBXrefInFile(gbFile), new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](),
+        val correctedGbr = new GenbankReader[DNASequence, NucleotideCompound](
+          correctDBXrefInFile(gbFile),
+          new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](),
           new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet)
         )
         val dnaSequences = correctedGbr.process()

@@ -30,7 +30,7 @@ package BioGraph {
                        properties: Map[String, Any],
   //                     neighbourNodes: List[(graphdb.Node, RelationshipType, RelationshipDirection.Value)] = (),
                        var id: Long = -1)
-    extends GraphElement with TransactionSupport  {
+    extends GraphElement {
 
     def isNode = true
 
@@ -57,7 +57,7 @@ package BioGraph {
     //  def incoming: List[rel]
 
   //  def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node
-    def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val graphDBNode = graphDataBaseConnection.createNode
       //    convert string to labels and add them to the node
       getLabels.map(utilFunctionsObject.stringToLabel).foreach(graphDBNode.addLabel)
@@ -94,7 +94,7 @@ package BioGraph {
     def getId = id
   }
 
-  trait BioEntity extends TransactionSupport{
+  trait BioEntity {
 
   //  def addCCPNode: Unit
   //
@@ -128,7 +128,7 @@ package BioGraph {
 
     def getOrganism: Organism
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
 
       val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label(getType.toString), "name", this.getName)
       if (tryToFindNode == null) {
@@ -334,7 +334,7 @@ package BioGraph {
     override def hashCode = 41 * name.hashCode
 
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
   //    def getMiscFeatureAdditionalProperties: Try[String] = {
   //      Try(miscFeature.getQualifiers.get("note").get(0).getValue)
   //    }
@@ -344,21 +344,21 @@ package BioGraph {
   //      case Failure(except) => Map[String, Any]()
   //    }
 
-      if (this.getId < 0) {
-        val newProperties = this.setProperties(Map("name" -> this.getName))
-        val xrefNode = super.upload(graphDataBaseConnection)
-        newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
-        xrefNode
-      }
-      else graphDataBaseConnection.getNodeById(this.getId)
-
-//      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
-//      if (tryToFindNode == null) {
-//        val createdDbNode = super.upload(graphDataBaseConnection)
-//        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
-//        createdDbNode
+//      if (this.getId < 0) {
+//        val newProperties = this.setProperties(Map("name" -> this.getName))
+//        val xrefNode = super.upload(graphDataBaseConnection)
+//        newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
+//        xrefNode
 //      }
-//      else tryToFindNode
+//      else graphDataBaseConnection.getNodeById(this.getId)
+
+      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
+      if (tryToFindNode == null) {
+        val createdDbNode = super.upload(graphDataBaseConnection)
+        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
+        createdDbNode
+      }
+      else tryToFindNode
   //    val dbNode = tryToFindNode match {
   //      case AnyRef => tryToFindNode
   //      case null =>
@@ -367,6 +367,7 @@ package BioGraph {
   //        createdDbNode
   //    }
   //    dbNode
+
     }
   }
 
@@ -393,7 +394,7 @@ package BioGraph {
 
     override def hashCode = 41 * xrefId.toUpperCase.hashCode
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val newProperties = this.setProperties(Map("id" -> this.getXRef))
       val xrefNode = super.upload(graphDataBaseConnection)
       newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
@@ -432,7 +433,7 @@ package BioGraph {
       case _ => false
     }
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val newProperties = this.setProperties(
         Map(
           "start" -> this.getCoordinates.start,
@@ -485,7 +486,7 @@ package BioGraph {
 
     def getOrganism = organism
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val newProperties = this.setProperties(Map("name" -> this.getName))
   //        "start" -> this.getCoordinates.start,
   //        "end" -> this.getCoordinates.end,
@@ -799,7 +800,7 @@ package BioGraph {
 
     override def hashCode = 41 * text.hashCode
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val newProperties = this.setProperties(Map("name" -> this.getText))
       val termNode = super.upload(graphDataBaseConnection)
       newProperties.foreach{case (k, v) => termNode.setProperty(k, v)}
@@ -836,8 +837,7 @@ package BioGraph {
 
     def getSource = source
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node =
-      transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
         val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
         println()
         if (findOrganismNode == null) {
@@ -902,8 +902,7 @@ package BioGraph {
 
     override def hashCode = 41 * (41 * (41 + sequence.hashCode) + organism.hashCode) + name.hashCode
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node =
-      transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val newGeneAndPolypeptideProperties = this.setProperties(
         Map(
           "name" -> this.getName,
@@ -969,11 +968,16 @@ package BioGraph {
       }
     }
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
-      val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
-      val sequenceNode = super.upload(graphDataBaseConnection)
-      newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
-      sequenceNode
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+
+      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("Sequence"), "md5", this.getMD5)
+      if (tryToFindNode == null) {
+        val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+        val sequenceNode = super.upload(graphDataBaseConnection)
+        newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
+        sequenceNode
+      }
+      else tryToFindNode
     }
 
   //  override def toString = md5
@@ -1061,7 +1065,7 @@ package BioGraph {
 
     override def hashCode = 41 * (41 + organism.hashCode) + name.hashCode
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = transaction(graphDataBaseConnection) {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val newProperties = this.setProperties(Map("name" -> this.getName, "source" -> this.getSource.mkString(", ")))
       val rnaNode = super.upload(graphDataBaseConnection)
       newProperties.foreach{case (k, v) => rnaNode.setProperty(k, v)}

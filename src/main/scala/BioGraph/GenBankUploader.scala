@@ -6,13 +6,13 @@ import org.biojava.nbio.core.sequence.DNASequence
 import org.neo4j.graphdb
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import utilFunctions.BiomeDBRelations
+import utilFunctions.{TransactionSupport, BiomeDBRelations}
 import utilFunctions.utilFunctionsObject._
 
 /**
   * Created by artem on 15.05.16.
   */
-object GenBankUploader extends App{
+object GenBankUploader extends App with TransactionSupport{
   def main() {
 
     println("Upload started")
@@ -22,8 +22,10 @@ object GenBankUploader extends App{
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000033.gb")
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000034.gb")
 //    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/"
+//    val localDir = "/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/genbank_files_for_metacyc/"
     val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files"
-    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc"
+//    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc"
+    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc/240_bacateria"
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
@@ -41,7 +43,7 @@ object GenBankUploader extends App{
     val dataBaseFile = new File(localDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
-    def uploadOneFile(gbFile: File): Unit = {
+    def uploadOneFile(gbFile: File): Unit = transaction(graphDataBaseConnection) {
       println(gbFile.getName)
       val gbReader = new GenBankUtil(gbFile)
       val accessions = gbReader.getAccessionsFromGenBankFile
