@@ -453,6 +453,7 @@ package utilFunctions {
       gbFiles
     }
   }
+
 trait TransactionSupport {
 
   protected def transaction[A <: Any](graphDataBaseConnection: GraphDatabaseService)(dbOperation: => A): A = {
@@ -461,7 +462,16 @@ trait TransactionSupport {
       val result = dbOperation
       tx.success()
       result
-    } finally {
+    }
+
+    catch {
+      case e: Exception =>
+        println(e.getMessage)
+        tx.failure()
+        dbOperation
+    }
+
+    finally {
       tx.close()
     }
   }

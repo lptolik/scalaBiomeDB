@@ -1,10 +1,9 @@
 package BioGraph
 
 import java.io.{PrintWriter, File}
-import java.util
 import org.biojava.nbio.core.exceptions.ParserException
 import org.biojava.nbio.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
-import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
+//import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
 import utilFunctions.TransactionSupport
 
 import scala.collection.JavaConverters._
@@ -74,10 +73,6 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         val accessions = HashMap() ++ dnaSequences.asScala
         accessions
     }
-
-//    val dnaSequences = GenbankReaderHelper.readGenbankDNASequence(gbFile)
-//    val accessions = HashMap() ++ dnaSequences.asScala
-//    accessions
   }
 
   def getInitialData(dnaSeq: DNASequence): (Organism, Node with CCP, DNASequence) = {
@@ -98,7 +93,10 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 //    features(0).getQualifiers.get("organism").get(0).getValue
     val organismName = dnaSeq.getFeaturesByType("source").get(0).getQualifiers.get("organism").get(0).getValue
 //    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
-    val organism = new Organism(name = organismName, source = genbankSourceValue)
+    val organism = new Organism(
+      name = organismName,
+      source = genbankSourceValue,
+      properties = Map("accession" -> accession))
 
     val ccp = ccpType match{
       case "Chromosome" => new Chromosome(
@@ -106,19 +104,22 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
-        length = ccpLength)
+        length = ccpLength,
+        properties = Map("length" -> dnaLength))
       case "Contig" => new Contig(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
-        length = ccpLength)
+        length = ccpLength,
+        properties = Map("length" -> dnaLength))
       case "Plasmid" => new Plasmid(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
-        length = ccpLength)
+        length = ccpLength,
+        properties = Map("length" -> dnaLength))
     }
     (organism, ccp, dnaSeq)
   }
@@ -133,15 +134,11 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   }
 
   private def processFeature(orgAndCCP: (Organism, Node with CCP, DNASequence))(feature: NucleotideFeature) = feature.getType match {
-//    case source => ???
-//      Set(Set(misc_feature, repeat_region, source, rRNA, mobile_element, ncRNA, tRNA, tmRNA, CDS, gene, rep_origin, STS))
-//    case "gene" => makeRNA(feature)
-//    case "source" => makeCCPandOrganism(feature)
     case "CDS" => makeGenePolypeptideSequence(feature, orgAndCCP)
+    case "gene" => makePseudoGene(feature, orgAndCCP)
     case "tRNA" | "rRNA" | "ncRNA" | "tmRNA" => makeGeneAndRNA(feature, orgAndCCP, feature.getType)
     case "mobile_element" | "rep_origin" | "STS" | "misc_feature" | "repeat_region" =>
       makeMiscFeature(feature, feature.getType, orgAndCCP)
-    case "gene" => makePseudoGene(feature, orgAndCCP)
     case "source" => //makeSourceNodes(feature, orgAndCCP)
     case _ => logger.warn("Unknown feature type: " + feature.getType + " in file " + gbFile.getName)
   }
@@ -238,9 +235,6 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
     val sequence = makeTranslation(feature)
     val gene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2)
-//    sequence =  new Sequence(feature.getQualifiers.get("translation").get(0).getValue),
-//    gene not have a transalation
-//    println(gene.getName)
     val listOfXrefs = makeListOfXrefs(feature)
 
     val polypeptide = new Polypeptide(
@@ -264,7 +258,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       name = gene.getName,
       gene = gene,
       organism = orgAndCCP._1,
-      rnaType = rnaType,
+      rnaType = properRNAType,
       xRefs = makeListOfXrefs(feature),
       source = genbankSourceValue
     )
@@ -331,18 +325,10 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         logger.warn(feature.getDescription + " has no xrefs.")
         List()
     }
-//    resultXrefs.map(ref=> new XRef(ref.split(":")(1), new DBNode(ref.split(":")(0))))
 
   }
-
-//  def readOneSequence(seqFeatures: List[NucleotideFeature], seqOrganismAndCCP: (Organism, Node with CCP)): Unit = {
-//    def processCurrentOrg = processFeature(_)(seqOrganismAndCCP)
-//    seqFeatures.map(processCurrentOrg)
-//  }
-
 
   def getUniqueFeatures(features: List[NucleotideFeature]) = {
     features.map(_.getType).toSet
   }
-
 }

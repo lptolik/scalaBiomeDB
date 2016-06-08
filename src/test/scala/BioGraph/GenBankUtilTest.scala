@@ -10,7 +10,7 @@ import org.scalatest.FunSuite
   */
 class GenBankUtilTest extends FunSuite {
 
-  test("catch genbank filie with bad xref") {
+  test("catch genbank file with bad xref") {
     intercept[ParserException]{
       val gbReader = new GenBankUtil(new File("/home/artem/work/2016/scala_projects/BioGraph/src/test/scala/BioGraph/genbankFileWithBadXref.gb"))
       gbReader.getAccessionsFromGenBankFile
