@@ -3,12 +3,11 @@ package BioGraph
 import java.io.{PrintWriter, File}
 import org.biojava.nbio.core.exceptions.ParserException
 import org.biojava.nbio.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
-//import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
 import utilFunctions.TransactionSupport
 
 import scala.collection.JavaConverters._
 import org.biojava.nbio.core.sequence.DNASequence
-import org.biojava.nbio.core.sequence.io.{DNASequenceCreator, GenericGenbankHeaderParser, GenbankReader, GenbankReaderHelper}
+import org.biojava.nbio.core.sequence.io.{DNASequenceCreator, GenericGenbankHeaderParser, GenbankReader}
 import org.biojava.nbio.core.sequence.features.FeatureInterface
 import org.biojava.nbio.core.sequence.template.AbstractSequence
 import org.apache.logging.log4j.LogManager

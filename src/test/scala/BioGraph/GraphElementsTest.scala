@@ -471,6 +471,12 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  test("test coordinates toString") {
+    new TestNodesAndRels {
+      assert(coordinates1.toString === "(150, 301, reverse)")
+    }
+  }
+
   test("test boundaries required organism") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {

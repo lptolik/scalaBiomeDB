@@ -261,6 +261,8 @@ package BioGraph {
         (that canEqual this)
       case _ => false
     }
+
+    override def toString = "(" + this.getStart.toString + ", " + this.getEnd.toString + ", " + this.getStrand.toString + ")"
   }
 
   case class Boundaries(

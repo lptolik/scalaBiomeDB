@@ -2,7 +2,7 @@ import BioGraph._
 package utilFunctions {
 
   import java.util
-  import org.neo4j.graphdb.traversal.{Evaluators, Evaluator}
+  import org.neo4j.graphdb.traversal.Evaluators
   import org.neo4j.graphdb.{Path, RelationshipType, GraphDatabaseService, Label, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
   import java.security.MessageDigest
   import java.io.File
