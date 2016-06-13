@@ -25,6 +25,8 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
   fileReader.close()
   val accession = linesOfSeedFile(1).split("\t")(0)
 
+  var geneFunctionDictionary = Map[String, org.neo4j.graphdb.Node]()
+
   def createSeedXrefs()  = transaction(graphDataBaseConnection) {
 
     val seedDBNode = DBNode("SEED").upload(graphDataBaseConnection)
@@ -49,9 +51,19 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
         xrefNode.createRelationshipTo(seedDBNode, BiomeDBRelations.linkTo)
 
         val func = records(8).split(";Name=")(1)
-        val testingNode = graphDataBaseConnection.createNode(DynamicLabel.label("Function"))
-        testingNode.setProperty("function", func)
+
+        val testingNode = getOrCreateGeneFunctionNode(func)
         geneNode.createRelationshipTo(testingNode, BiomeDBRelations.isA)
+      }
+
+      def getOrCreateGeneFunctionNode(func: String): org.neo4j.graphdb.Node = {
+        if (geneFunctionDictionary.contains(func)) geneFunctionDictionary(func)
+        else {
+          val testingNode = graphDataBaseConnection.createNode(DynamicLabel.label("Function"))
+          testingNode.setProperty("function", func)
+          geneFunctionDictionary += (func -> testingNode)
+          testingNode
+        }
       }
 
 //      check how many gene are found
