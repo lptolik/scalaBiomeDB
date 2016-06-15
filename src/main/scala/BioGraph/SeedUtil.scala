@@ -25,9 +25,9 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
   fileReader.close()
   val accession = linesOfSeedFile(1).split("\t")(0)
 
-  var geneFunctionDictionary = Map[String, org.neo4j.graphdb.Node]()
+  var geneFunctionDictionary = getFunctionsNodesFromDB
 
-  def createSeedXrefs()  = transaction(graphDataBaseConnection) {
+  def createSeedXrefs() = transaction(graphDataBaseConnection) {
 
     val seedDBNode = DBNode("SEED").upload(graphDataBaseConnection)
     val organismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "accession", accession)
@@ -77,6 +77,12 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
 
 //    read and process each line of the SEED
     linesOfSeedFile.foreach(processOneSeedLine)
+  }
+
+  private def getFunctionsNodesFromDB: Map[String, org.neo4j.graphdb.Node] = transaction(graphDataBaseConnection) {
+    val functionNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Function"))
+    val dict = functionNodes.asScala.map{elem => elem.getProperty("function").toString -> elem}
+    dict.toMap
   }
 
   private def getStrand(record: String): Strand.Value = record match {
