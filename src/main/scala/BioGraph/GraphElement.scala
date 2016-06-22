@@ -813,6 +813,7 @@ package BioGraph {
   case class Organism(
                        name: String,
                        source: List[String],
+                       accessions: List[XRef] = List(),
                        var taxon: Taxon = new Taxon("Empty", TaxonType.no_rank),
                        properties: Map[String, Any] = Map(),
                        nodeId: Long = -1)
@@ -839,6 +840,10 @@ package BioGraph {
 
     def getSource = source
 
+    def getAccessions = accessions
+
+    def setAccessions(newAccessions: List[String]) = accessions :: newAccessions
+
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
         val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
         println()
@@ -847,9 +852,12 @@ package BioGraph {
           this.setProperties(
             Map("source" -> this.getSource.mkString(", "), "name" -> this.getName))
             .foreach { case (k, v) => organismNode.setProperty(k, v) }
+          val xrefNodes = this.getAccessions.map(_.upload(graphDataBaseConnection))
+          xrefNodes.foreach(organismNode.createRelationshipTo(_, BiomeDBRelations.evidence))
           organismNode
         }
         else findOrganismNode
+
 //        if (findOrganismNode.isInstanceOf[Node]) findOrganismNode
 //        else {
 //          val organismNode = super.upload(graphDataBaseConnection)

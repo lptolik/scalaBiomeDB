@@ -94,6 +94,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 //    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
     val organism = new Organism(
       name = organismName,
+      accessions = List(makeXref("GenBank:"  + accession)),
       source = genbankSourceValue,
       properties = Map("accession" -> accession))
 
@@ -300,19 +301,19 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     new Coordinates(location.getStart.getPosition, location.getEnd.getPosition, strand)
   }
 
-  private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
-
-    def makeXref(ref: String): XRef = {
-      val dbName = ref.split(":")(0)
-      val xrefText = ref.split(":")(1)
-      if (externalDataBasesCollector.contains(dbName)) new XRef(xrefText, externalDataBasesCollector(dbName))
-      else {
-        val newDB = new DBNode(dbName)
-        val xrefNode = new XRef(xrefText, newDB)
-        externalDataBasesCollector = externalDataBasesCollector ++ Map(dbName -> newDB)
-        xrefNode
-      }
+  private def makeXref(ref: String): XRef = {
+    val dbName = ref.split(":")(0)
+    val xrefText = ref.split(":")(1)
+    if (externalDataBasesCollector.contains(dbName)) new XRef(xrefText, externalDataBasesCollector(dbName))
+    else {
+      val newDB = new DBNode(dbName)
+      val xrefNode = new XRef(xrefText, newDB)
+      externalDataBasesCollector = externalDataBasesCollector ++ Map(dbName -> newDB)
+      xrefNode
     }
+  }
+
+  private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
     try {
 
       val xrefs = feature.getQualifiers.get("db_xref")
