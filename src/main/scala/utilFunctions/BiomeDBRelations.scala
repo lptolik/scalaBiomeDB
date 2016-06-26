@@ -41,4 +41,8 @@ object BiomeDBRelations {
   val overlap = new RelationshipType {
     override def name(): String = "OVERLAP"
   }
+
+  val participates_in = new RelationshipType {
+    override def name(): String = "PARTICIPATES_IN"
+  }
 }

@@ -25,6 +25,7 @@ object IntactUploader {
 //    foundNodes.foreach(println)
 //    println(ia.gbs)
     ia.createInteractorNodes(interactors)
+    ia.createReactionsNodes(reactions)
   }
 }
 
