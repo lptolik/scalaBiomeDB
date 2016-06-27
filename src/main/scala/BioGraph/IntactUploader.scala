@@ -21,7 +21,7 @@ object IntactUploader {
     val experiments = ia.getExperiments
     val e = experiments.map(ia.experimentInfo)
 //    e.foreach(println)
-    val foundNodes = ia.findPolypetidesInteractors(interactors)
+//    val foundNodes = ia.findPolypetidesInteractors(interactors)
 //    foundNodes.foreach(println)
 //    println(ia.gbs)
     ia.createInteractorNodes(interactors)

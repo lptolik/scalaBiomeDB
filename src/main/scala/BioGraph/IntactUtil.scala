@@ -46,7 +46,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
       case None => //println("No sequence: " + id + " " + name)
     }
 
-    def makeMapOfXrefs(refs: List[DbReference], xrefMap: Map[String, String]): Map[String, String] = {
+    def makeMapOfXrefs(refs: List[DbReference], listOfXrefMap: List[Map[String, String]]): List[Map[String, String]] = {
       if (refs.nonEmpty) {
         def makeXRef(ref: DbReference): Map[String, String] = ref.getId.contains(':') match {
           case true => Map(ref.getDb -> ref.getId.split(':')(1))
@@ -54,13 +54,13 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
             gbs.add(ref.getDb)
             Map(ref.getDb -> ref.getId)
         }
-        makeMapOfXrefs(refs.tail, xrefMap ++ makeXRef(refs.head))
+        makeMapOfXrefs(refs.tail, makeXRef(refs.head) :: listOfXrefMap)
       }
-      else xrefMap
+      else listOfXrefMap
   }
     val xrefs = interactor.getXref.getAllDbReferences.asScala.toList
 //    val x = xrefs.getAllDbReferences.asScala.foreach(makeMapOfRefs)
-    var mapOfXrefs = makeMapOfXrefs(xrefs, Map())
+    var mapOfXrefs = makeMapOfXrefs(xrefs, List())
 
     (mapOfXrefs, id, name, seq)
   }
@@ -85,21 +85,20 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
     List(expId, participantDetectionMethod, interactionDetectionMethod, expNames)
   }
 
-  def findPolypetidesInteractors(interactors: List[Interactor]) = {
+  private def findPolypetidesInteractors(interactors: List[Interactor]) = {
     val parsedInteractors = interactors.map(interactorInfo)
 
-    def findPolyNodeByXRef(xrefMap: Map[String, String]) = {
+    def findPolyNodeByXRef(xrefMap: List[Map[String, String]]) = {
       def makeQuery(db: String, id: String) = {
         val query = "MATCH (db:DB)<-[:LINK_TO]-" +
           "(:XRef{id:'" + id + "'})<-[:EVIDENCE]-" +
           "(p:Polypeptide) " +
           "WHERE db.name=~'(?i).*" + db + ".*' " +
           "RETURN ID(p)"
-//        println(query)
         val queryResults = graphDataBaseConnection.execute(query).asScala.toList
         queryResults
       }
-      val foundNodes = xrefMap.map(dbAndId => makeQuery(dbAndId._1, dbAndId._2))
+      val foundNodes = xrefMap.map(dbAndId => makeQuery(dbAndId.keys.head, dbAndId.values.head))
       foundNodes
     }
     val findExistingNodes = parsedInteractors.map(l => findPolyNodeByXRef(l._1))
@@ -117,7 +116,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
       }
       mapOfReactants += (info._2 -> reactantNode.getId)
       if (queryResult.nonEmpty) {
-        val n = queryResult.head.get("ID(p)") match {
+        queryResult.head.get("ID(p)") match {
           case Some(polyId) =>
             val polyNode = graphDataBaseConnection.getNodeById(polyId.toString.toLong)
             reactantNode.createRelationshipTo(polyNode, BiomeDBRelations.isA)
