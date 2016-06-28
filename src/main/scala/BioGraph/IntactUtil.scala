@@ -39,11 +39,12 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
     val id = interactor.getId
 //    println(id)
     val name = Option(interactor.getNames.getFullName)
+    val secondaryName = Option(interactor.getNames.getShortLabel)
 //    val geneName = interactor.getNames.getAliases
     val seq = Option(interactor.getSequence)
     val sequence = seq match {
       case Some(s) => s
-      case None => //println("No sequence: " + id + " " + name)
+      case None => ""//println("No sequence: " + id + " " + name)
     }
 
     def makeMapOfXrefs(refs: List[DbReference], listOfXrefMap: List[Map[String, String]]): List[Map[String, String]] = {
@@ -62,7 +63,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
 //    val x = xrefs.getAllDbReferences.asScala.foreach(makeMapOfRefs)
     var mapOfXrefs = makeMapOfXrefs(xrefs, List())
 
-    (mapOfXrefs, id, name, seq)
+    (mapOfXrefs, id, name, sequence, secondaryName)
   }
 
   def interactionInfo(interaction: Interaction) = {
@@ -87,7 +88,6 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
 
   private def findPolypetidesInteractors(interactors: List[Interactor]) = {
     val parsedInteractors = interactors.map(interactorInfo)
-
     def findPolyNodeByXRef(xrefMap: List[Map[String, String]]) = {
       def makeQuery(db: String, id: String) = {
         val query = "MATCH (db:DB)<-[:LINK_TO]-" +
@@ -108,28 +108,32 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
   def createInteractorNodes(interactors: List[Interactor]): Unit = transaction(graphDataBaseConnection){
     def processOneInteractor(interactor: Interactor, queryResult: List[scala.collection.mutable.Map[String, AnyRef]]): Unit = {
       val info = interactorInfo(interactor)
-      val reactantNode = graphDataBaseConnection.createNode(DynamicLabel.label("Reactant"))
-      reactantNode.setProperty("Intact id", info._2)
-      info._3 match {
-        case Some(name) => reactantNode.setProperty("name", name)
-        case _ =>
+      val reactantName = info._3 match {
+        case Some(name) => name
+        case None => info._5 match {
+          case Some(secondaryName) => secondaryName
+          case None => "unknown"
+        }
+      }
+
+      val reactantNode = queryResult.nonEmpty match {
+        case true =>
+          val reactant = new Reactant(name = reactantName)
+          val reactantNode = reactant.upload(graphDataBaseConnection)
+          queryResult.head.get("ID(p)") match {
+            case Some(polyId) =>
+              val polyNode = graphDataBaseConnection.getNodeById(polyId.toString.toLong)
+              reactantNode.createRelationshipTo(polyNode, BiomeDBRelations.isA)
+            case _ =>
+          }
+          reactantNode
+        case false =>
+          val reactant = new Reactant(name = reactantName, sequence = info._4)
+          val reactantNode = reactant.upload(graphDataBaseConnection)
+          reactantNode.addLabel(DynamicLabel.label("To_check"))
+          reactantNode
       }
       mapOfReactants += (info._2 -> reactantNode.getId)
-      if (queryResult.nonEmpty) {
-        queryResult.head.get("ID(p)") match {
-          case Some(polyId) =>
-            val polyNode = graphDataBaseConnection.getNodeById(polyId.toString.toLong)
-            reactantNode.createRelationshipTo(polyNode, BiomeDBRelations.isA)
-          case _ =>
-        }
-      }
-      else {
-        reactantNode.addLabel(DynamicLabel.label("To_check"))
-        info._4 match {
-          case Some(seq) => reactantNode.setProperty("seq", seq)
-          case _ =>
-        }
-      }
     }
 
     val foundExistingPolyNodes = findPolypetidesInteractors(interactors)

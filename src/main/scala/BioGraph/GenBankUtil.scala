@@ -157,7 +157,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     }
 
     val misc = new MiscFeature(
-      miscFeatureType = miscFeatureType,
+      miscFeatureType = miscFeatureType.capitalize,
       coordinates = getCoordinates(miscFeature),
       ccp = orgAndCCP._2,
       source = genbankSourceValue,

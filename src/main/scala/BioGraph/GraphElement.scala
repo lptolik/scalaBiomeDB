@@ -1097,6 +1097,90 @@ package BioGraph {
     }
   }
 
+  case class Reactant(
+                  name: String,
+                  sequence: String = "",
+                  polyList: List[Polypeptide] = List(),
+                  nodeId: Long = -1)
+  extends Node(properties = Map(), nodeId) {
+
+    def getLabels = this.getSequence.nonEmpty match {
+      case true => List("Reactant", "To_check")
+      case false => List("Reactant")
+    }
+
+    def getName = this.name
+
+    def getSequence = this.sequence
+
+    override def equals(that: Any): Boolean = that match {
+      case that: Reactant =>
+        (that canEqual this) &&
+          this.getName == that.getName
+      case _ => false
+    }
+
+    override def canEqual(that: Any) = that.isInstanceOf[Reactant]
+
+    override def hashCode = 41 * name.hashCode
+
+    override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
+      val newProperties = this.getSequence.nonEmpty match {
+        case true => this.setProperties(Map("name" -> this.getName, "seq" -> this.getSequence))
+        case false => this.setProperties(Map("name" -> this.getName))
+      }
+      val reactantNode = super.upload(graphDatabaseConnection)
+      newProperties.foreach{case (k, v) => reactantNode.setProperty(k, v)}
+
+      reactantNode
+    }
+
+  }
+
+  case class Reaction(
+                     name: String,
+                     reactants: List[Reactant],
+                     experiment: String = "",
+                     nodeId: Long = -1
+                     )
+  extends Node(properties = Map(), nodeId) {
+
+    def getName = this.name
+
+    def getLabels = List("Reaction")
+
+    def getExperiment = this.experiment
+
+    override def equals(that: Any): Boolean = that match {
+      case that: Reaction =>
+        (that canEqual this) &&
+          this.getName == that.getName
+      case _ => false
+    }
+
+    override def canEqual(that: Any) = that.isInstanceOf[Reaction]
+
+    override def hashCode = 41 * name.hashCode
+
+    override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
+      val newProperties = this.getExperiment.nonEmpty match {
+        case true => this.setProperties(Map("name" -> this.getName, "experiment" -> this.getExperiment))
+        case false => this.setProperties(Map("name" -> this.getName))
+      }
+      val reactionNode = super.upload(graphDatabaseConnection)
+      newProperties.foreach{case (k, v) => reactionNode.setProperty(k, v)}
+
+      def createRelationshipsToReactants(reactant: Reactant): Unit = {
+        val reactantNode = graphDatabaseConnection.getNodeById(reactant.getId)
+        reactionNode.createRelationshipTo(reactantNode, BiomeDBRelations.participates_in)
+      }
+      reactants.foreach(createRelationshipsToReactants)
+
+      reactionNode
+    }
+
+  }
+
   //case class Enzyme(
   //                   name: String,
   //                   var polypeptide: List[Polypeptide] = List(),

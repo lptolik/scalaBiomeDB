@@ -117,6 +117,14 @@ class GraphElementsTest extends FunSuite {
     val rna1Copy = rna1.copy()
     val rna2 = new RNA("16S ribosomal RNA", gene5, organism, "sRNA", List(xref2))
     val rna3 = new RNA("15S ribosomal RNA", gene4, organism2, "tRNA", List(xref3))
+
+    val intactDBNode = new DBNode("Intact")
+    val reactant1 = new Reactant("Super reactant", sequence = "MHQPQWWHP")
+    val reactant1Copy = reactant1.copy()
+    val reactant2 = new Reactant("Mega reactant")
+    val reaction1 = new Reaction("Two reactant reaction", List(reactant1, reactant2))
+    val reaction1Copy = reaction1.copy()
+    val reaction2 = new Reaction("Another two reactant reaction", List(reactant1, reactant2))
   }
 
   test("test DBNode getLabels") {
@@ -959,6 +967,42 @@ class GraphElementsTest extends FunSuite {
   test("test rna equals positive") {
     new TestNodesAndRels {
       assert((rna1 equals rna1Copy) === true)
+    }
+  }
+
+  test("test reactant getLabels 1") {
+    new TestNodesAndRels {
+      assert(reactant1.getLabels === List("Reactant", "To_check"))
+    }
+  }
+
+  test("test reactant getLabels 2") {
+    new TestNodesAndRels {
+      assert(reactant2.getLabels === List("Reactant"))
+    }
+  }
+
+  test("test reactant equals positive") {
+    new TestNodesAndRels {
+      assert((reactant1 equals reactant1Copy) === true)
+    }
+  }
+
+  test("test reactant equals negative") {
+    new TestNodesAndRels {
+      assert((reactant1 equals reactant2) === false)
+    }
+  }
+
+  test("test reaction equals positive") {
+    new TestNodesAndRels {
+      assert((reaction1 equals reaction1Copy) === true)
+    }
+  }
+
+  test("test reaction equals negative") {
+    new TestNodesAndRels {
+      assert((reaction1 equals reaction2) === false)
     }
   }
 
