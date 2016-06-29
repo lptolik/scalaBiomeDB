@@ -353,14 +353,16 @@ package BioGraph {
 //        xrefNode
 //      }
 //      else graphDataBaseConnection.getNodeById(this.getId)
-
-      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
-      if (tryToFindNode == null) {
-        val createdDbNode = super.upload(graphDataBaseConnection)
-        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
-        createdDbNode
+      if (this.getId < 0) {
+        val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
+        if (tryToFindNode == null) {
+          val createdDbNode = super.upload(graphDataBaseConnection)
+          this.setProperties(Map("name" -> this.getName)).foreach { case (k, v) => createdDbNode.setProperty(k, v) }
+          createdDbNode
+        }
+        else tryToFindNode
       }
-      else tryToFindNode
+      else graphDataBaseConnection.getNodeById(this.getId)
   //    val dbNode = tryToFindNode match {
   //      case AnyRef => tryToFindNode
   //      case null =>
@@ -1172,7 +1174,7 @@ package BioGraph {
 
       def createRelationshipsToReactants(reactant: Reactant): Unit = {
         val reactantNode = graphDatabaseConnection.getNodeById(reactant.getId)
-        reactionNode.createRelationshipTo(reactantNode, BiomeDBRelations.participates_in)
+        reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
       }
       reactants.foreach(createRelationshipsToReactants)
 

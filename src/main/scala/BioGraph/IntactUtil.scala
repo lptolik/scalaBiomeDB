@@ -21,7 +21,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
   val readResult = reader.read(fl).getEntries.asScala
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   var gbs = scala.collection.mutable.Set[String]()
-  var mapOfReactants = Map[Int, Long]()
+  var mapOfReactants = Map[Int, Reactant]()
 
   def getInteractors = {
     readResult.map(_.getInteractors.asScala).toList.flatten
@@ -116,7 +116,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
         }
       }
 
-      val reactantNode = queryResult.nonEmpty match {
+      val reactant = queryResult.nonEmpty match {
         case true =>
           val reactant = new Reactant(name = reactantName)
           val reactantNode = reactant.upload(graphDataBaseConnection)
@@ -126,14 +126,13 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
               reactantNode.createRelationshipTo(polyNode, BiomeDBRelations.isA)
             case _ =>
           }
-          reactantNode
+          reactant
         case false =>
           val reactant = new Reactant(name = reactantName, sequence = info._4)
           val reactantNode = reactant.upload(graphDataBaseConnection)
-          reactantNode.addLabel(DynamicLabel.label("To_check"))
-          reactantNode
+          reactant
       }
-      mapOfReactants += (info._2 -> reactantNode.getId)
+      mapOfReactants += (info._2 -> reactant)
     }
 
     val foundExistingPolyNodes = findPolypetidesInteractors(interactors)
@@ -144,24 +143,28 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
   def createReactionsNodes(interactions: List[Interaction]) = transaction(graphDataBaseConnection) {
     val intactDB = new DBNode("Intact")
     def processOneInteraction(interaction: Interaction): Unit = {
-      val info = interactionInfo(interaction)
-      val interactionNode = graphDataBaseConnection.createNode(DynamicLabel.label("Reaction"))
 
-      info._2 match {
-        case Some(name) => interactionNode.setProperty("name", name)
+      val info = interactionInfo(interaction)
+//      val interactionNode = graphDataBaseConnection.createNode(DynamicLabel.label("Reaction"))
+
+      val reactionName = info._2 match {
+        case Some(name) => name
         case _ => info._6 match {
-          case Some(secondaryName) => interactionNode.setProperty("name", secondaryName)
-          case _ =>
+          case Some(secondaryName) => secondaryName
+          case _ => "unknown"
         }
       }
 
-      def createRelationshipToInteractor(interactorId: Int): Unit = {
-        val interactorNode = graphDataBaseConnection.getNodeById(mapOfReactants(interactorId))
-        interactorNode.createRelationshipTo(interactionNode, BiomeDBRelations.participates_in)
-      }
-      info._4.foreach(createRelationshipToInteractor)
 
+//      def createRelationshipToInteractor(interactor: Int): Unit = {
+//        val interactorNode = graphDataBaseConnection.getNodeById(mapOfReactants(interactor))
+//        interactorNode.createRelationshipTo(interactionNode, BiomeDBRelations.participates_in)
+//      }
+//      info._4.foreach(createRelationshipToInteractor)
+      val listOfReactants = info._4.map(mapOfReactants).toList
+      val reaction = new Reaction(reactionName, listOfReactants)
       val xref = new XRef(info._3, intactDB).upload(graphDataBaseConnection)
+      val interactionNode = reaction.upload(graphDataBaseConnection)
       interactionNode.createRelationshipTo(xref, BiomeDBRelations.evidence)
     }
     interactions.foreach(processOneInteraction)
