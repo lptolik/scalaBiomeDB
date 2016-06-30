@@ -4,7 +4,7 @@
 		module="biograph_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160520174718"
+		publication="20160629171238"
 	>
 		<description>
 		BioGraph
@@ -39,5 +39,11 @@
 		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.5" conf="compile->default(compile)"/>
 		<dependency org="org.biojava" name="biojava-core" rev="4.2.0" conf="compile->default(compile)"/>
 		<dependency org="org.biojava" name="sequencing" rev="1.9.2" conf="compile->default(compile)"/>
+		<dependency org="org.neo4j" name="neo4j-kernel" rev="2.3.1" conf="compile->default(compile)">
+			<artifact name="neo4j-kernel" type="jar" ext="jar" conf="*" e:classifier="tests"/>
+		</dependency>
+		<dependency org="org.neo4j" name="neo4j-io" rev="2.3.1" conf="compile->default(compile)">
+			<artifact name="neo4j-io" type="jar" ext="jar" conf="*" e:classifier="tests"/>
+		</dependency>
 	</dependencies>
 </ivy-module>

@@ -22,6 +22,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   var gbs = scala.collection.mutable.Set[String]()
   var mapOfReactants = Map[Int, Reactant]()
+  var mapOfExperiments = Map[Int, (String, String, String)]()
 
   def getInteractors = {
     readResult.map(_.getInteractors.asScala).toList.flatten
@@ -70,10 +71,11 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
     val name = Option(interaction.getNames.getFullName)
     val secondaryName = Option(interaction.getNames.getShortLabel)
     val id = interaction.getId
+    val imexId = interaction.getImexId
     val xref = interaction.getXref.getPrimaryRef.getId
     val participants = interaction.getParticipants.asScala.map(_.getInteractor.getId)
     val experiments = interaction.getExperiments.asScala.map(_.getId).head
-    (id, name, xref, participants, experiments, secondaryName)
+    (id, name, xref, participants, experiments, secondaryName, imexId)
   }
 
   def experimentInfo(experiment: ExperimentDescription) = {
@@ -81,9 +83,8 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
     val expNames = experiment.getNames.getFullName
     val participantDetectionMethod = experiment.getParticipantIdentificationMethod.getNames.getFullName
     val interactionDetectionMethod = experiment.getInteractionDetectionMethod.getNames.getFullName
-//    val expId = experiment.getExperimentRefs
-//    val expNames = experiment.getExperiments.asScala.map(_.getNames).head
-    List(expId, participantDetectionMethod, interactionDetectionMethod, expNames)
+    (expId, (participantDetectionMethod, interactionDetectionMethod, expNames))
+//    List(expId, participantDetectionMethod, interactionDetectionMethod, expNames)
   }
 
   private def findPolypetidesInteractors(interactors: List[Interactor]) = {
@@ -142,10 +143,9 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
 
   def createReactionsNodes(interactions: List[Interaction]) = transaction(graphDataBaseConnection) {
     val intactDB = new DBNode("Intact")
+    this.getExperiments.map(experimentInfo).foreach(e => mapOfExperiments += (e._1 -> e._2))
     def processOneInteraction(interaction: Interaction): Unit = {
-
       val info = interactionInfo(interaction)
-//      val interactionNode = graphDataBaseConnection.createNode(DynamicLabel.label("Reaction"))
 
       val reactionName = info._2 match {
         case Some(name) => name
@@ -155,14 +155,8 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
         }
       }
 
-
-//      def createRelationshipToInteractor(interactor: Int): Unit = {
-//        val interactorNode = graphDataBaseConnection.getNodeById(mapOfReactants(interactor))
-//        interactorNode.createRelationshipTo(interactionNode, BiomeDBRelations.participates_in)
-//      }
-//      info._4.foreach(createRelationshipToInteractor)
       val listOfReactants = info._4.map(mapOfReactants).toList
-      val reaction = new Reaction(reactionName, listOfReactants)
+      val reaction = new Reaction(reactionName, listOfReactants, info._7, mapOfExperiments(info._5)._3)
       val xref = new XRef(info._3, intactDB).upload(graphDataBaseConnection)
       val interactionNode = reaction.upload(graphDataBaseConnection)
       interactionNode.createRelationshipTo(xref, BiomeDBRelations.evidence)

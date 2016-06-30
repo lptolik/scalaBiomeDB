@@ -22,6 +22,10 @@ libraryDependencies += "org.biojava" % "biojava-core" % "4.2.0"
 
 libraryDependencies += "org.biojava" % "sequencing" % "1.9.2"
 
+libraryDependencies += "org.neo4j" % "neo4j-kernel" % "2.3.1" classifier "tests"
+
+libraryDependencies += "org.neo4j" % "neo4j-io" % "2.3.1" classifier "tests"
+
 //sbt-assembly
 //assemblySettings
 assemblyMergeStrategy in assembly := {

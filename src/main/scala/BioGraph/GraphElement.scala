@@ -28,7 +28,6 @@ package BioGraph {
 
   abstract class Node(
                        properties: Map[String, Any],
-  //                     neighbourNodes: List[(graphdb.Node, RelationshipType, RelationshipDirection.Value)] = (),
                        var id: Long = -1)
     extends GraphElement {
 
@@ -48,15 +47,6 @@ package BioGraph {
 
     def setId(newId: Long): Unit = id = newId
 
-  //  def getNeighbourNodes = neighbourNodes
-  //
-  //  def addNeighbourNode(newNeighbours: List[(graphdb.Node, RelationshipType, RelationshipDirection.Value)]) =
-  //    neighbourNodes ++ newNeighbours
-
-    //  def outgoing: List[rel]
-    //  def incoming: List[rel]
-
-  //  def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node
     def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       val graphDBNode = graphDataBaseConnection.createNode
       //    convert string to labels and add them to the node
@@ -1142,6 +1132,7 @@ package BioGraph {
   case class Reaction(
                      name: String,
                      reactants: List[Reactant],
+                     imexId: String = "",
                      experiment: String = "",
                      nodeId: Long = -1
                      )
@@ -1152,6 +1143,8 @@ package BioGraph {
     def getLabels = List("Reaction")
 
     def getExperiment = this.experiment
+
+    def getImexId = this.imexId
 
     override def equals(that: Any): Boolean = that match {
       case that: Reaction =>
@@ -1165,12 +1158,18 @@ package BioGraph {
     override def hashCode = 41 * name.hashCode
 
     override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
-      val newProperties = this.getExperiment.nonEmpty match {
-        case true => this.setProperties(Map("name" -> this.getName, "experiment" -> this.getExperiment))
-        case false => this.setProperties(Map("name" -> this.getName))
+      val experimentInfo = this.getExperiment match {
+        case e: String => this.setProperties(Map("name" -> this.getName, "experiment" -> e))
+        case null => this.setProperties(Map("name" -> this.getName))
       }
+
+      val imexIdAndExperimentInfo = this.getImexId match {
+        case i: String => experimentInfo ++ Map("imexId" -> i)
+        case null => experimentInfo
+      }
+
       val reactionNode = super.upload(graphDatabaseConnection)
-      newProperties.foreach{case (k, v) => reactionNode.setProperty(k, v)}
+      imexIdAndExperimentInfo.foreach{case (k, v) => reactionNode.setProperty(k, v)}
 
       def createRelationshipsToReactants(reactant: Reactant): Unit = {
         val reactantNode = graphDatabaseConnection.getNodeById(reactant.getId)

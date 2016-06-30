@@ -7,7 +7,7 @@
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.11.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@6aa91520
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@e679131
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7
 [debug] 	found org.scala-lang#scala-library;2.11.7 in sbt-chain
 [debug] 	[2.11.7] org.scala-lang#scala-library;2.11.7
@@ -61,6 +61,20 @@
 [debug] sbt-chain: module revision found in cache: org.apache.commons#commons-lang3;3.3.2
 [debug] 	found org.apache.commons#commons-lang3;3.3.2 in sbt-chain
 [debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.apache.commons#commons-lang3;3.3.2 [compile->compile(*)]
+[debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->compile]
+[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->compile]
+[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->compile]
+[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-function;2.3.1 [runtime->runtime(*)]
+[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-function;2.3.1 [runtime->compile]
+[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.apache.commons#commons-lang3;3.3.2 [runtime->runtime(*)]
+[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.apache.commons#commons-lang3;3.3.2 [runtime->compile]
+[debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-csv;2.3.1 [compile->master(compile)]
 [info] Resolving org.neo4j#neo4j-csv;2.3.1 ...
 [debug] sbt-chain: Checking cache for: dependency: org.neo4j#neo4j-csv;2.3.1 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
@@ -81,18 +95,8 @@
 [debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->compile]
-[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->runtime(*)]
-[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->compile]
-[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-function;2.3.1 [runtime->runtime(*)]
-[debug] == resolving dependencies org.neo4j#neo4j-primitive-collections;2.3.1->org.neo4j#neo4j-function;2.3.1 [runtime->compile]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-io;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-io;2.3.1 [runtime->compile]
-[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->runtime(*)]
-[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-unsafe;2.3.1 [runtime->compile]
-[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->runtime(*)]
-[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->compile]
-[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.apache.commons#commons-lang3;3.3.2 [runtime->runtime(*)]
-[debug] == resolving dependencies org.neo4j#neo4j-io;2.3.1->org.apache.commons#commons-lang3;3.3.2 [runtime->compile]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-csv;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-csv;2.3.1 [runtime->compile]
 [debug] == resolving dependencies org.neo4j#neo4j-csv;2.3.1->org.neo4j#neo4j-primitive-collections;2.3.1 [runtime->runtime(*)]
@@ -101,6 +105,10 @@
 [debug] == resolving dependencies org.neo4j#neo4j-kernel;2.3.1->org.neo4j#neo4j-logging;2.3.1 [runtime->compile]
 [debug] == resolving dependencies org.neo4j#neo4j-logging;2.3.1->org.neo4j#neo4j-io;2.3.1 [runtime->runtime(*)]
 [debug] == resolving dependencies org.neo4j#neo4j-logging;2.3.1->org.neo4j#neo4j-io;2.3.1 [runtime->compile]
+[debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
 [debug] == resolving dependencies org.neo4j#neo4j;2.3.1->org.neo4j#neo4j-lucene-index;2.3.1 [compile->master(compile)]
 [info] Resolving org.neo4j#neo4j-lucene-index;2.3.1 ...
 [debug] sbt-chain: Checking cache for: dependency: org.neo4j#neo4j-lucene-index;2.3.1 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
@@ -549,6 +557,14 @@
 [debug] == resolving dependencies org.biojava#sequencing;1.9.2->org.biojava#core;1.9.2 [runtime->runtime(*)]
 [debug] == resolving dependencies org.biojava#sequencing;1.9.2->org.biojava#core;1.9.2 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#sequencing;1.9.2 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] resolving dependencies for configuration 'runtime'
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [runtime]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [compile]
@@ -906,6 +922,14 @@
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->runtime(*)]
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#sequencing;1.9.2 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] resolving dependencies for configuration 'test'
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [test]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [runtime]
@@ -1264,6 +1288,14 @@
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->runtime(*)]
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#sequencing;1.9.2 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->default(compile)]
 [info] Resolving org.scalatest#scalatest_2.11;2.1.7 ...
 [debug] sbt-chain: Checking cache for: dependency: org.scalatest#scalatest_2.11;2.1.7 {test=[default(compile)]}
@@ -1671,6 +1703,14 @@
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->runtime(*)]
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#sequencing;1.9.2 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [optional]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [provided]
 [debug] resolving dependencies for configuration 'runtime-internal'
@@ -2031,6 +2071,14 @@
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->runtime(*)]
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#sequencing;1.9.2 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [optional]
 [debug] resolving dependencies for configuration 'test-internal'
 [debug] == resolving dependencies for default#biograph_2.11;1.0 [test-internal]
@@ -2391,6 +2439,14 @@
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->runtime(*)]
 [debug] == resolving dependencies org.biojava#core;1.9.2->org.biojava#bytecode;1.9.2 [runtime->compile]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.biojava#sequencing;1.9.2 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-kernel;2.3.1 [compile->master]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->default(compile)]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->runtime]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->compile]
+[debug] == resolving dependencies default#biograph_2.11;1.0->org.neo4j#neo4j-io;2.3.1 [compile->master]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->default(compile)]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->runtime]
 [debug] == resolving dependencies default#biograph_2.11;1.0->org.scalatest#scalatest_2.11;2.1.7 [test->compile]
@@ -2511,7 +2567,22 @@
 [debug] 	[NOT REQUIRED] org.apache.logging.log4j#log4j-core;2.5!log4j-core.jar
 [debug] 	[NOT REQUIRED] org.biojava#biojava-core;4.2.0!biojava-core.jar
 [debug] 	[NOT REQUIRED] org.biojava#sequencing;1.9.2!sequencing.jar
+[debug] 		tried /home/artem/.ivy2/local/org.neo4j/neo4j-kernel/2.3.1/jars/neo4j-kernel-tests.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-kernel;2.3.1!neo4j-kernel.jar
+[debug] 		tried https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-tests.jar
+[info] downloading https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-tests.jar ...
+[debug] 	jcenter: downloading https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-tests.jar
+[debug] 	jcenter: downloading https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-tests.jar.sha1
+[debug] sha1 OK for https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-tests.jar
+[info] 	[SUCCESSFUL ] org.neo4j#neo4j-kernel;2.3.1!neo4j-kernel.jar (4131ms)
+[debug] 		tried /home/artem/.ivy2/local/org.neo4j/neo4j-io/2.3.1/jars/neo4j-io-tests.jar
+[debug] 	[NOT REQUIRED] org.neo4j#neo4j-io;2.3.1!neo4j-io.jar
+[debug] 		tried https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-tests.jar
+[info] downloading https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-tests.jar ...
+[debug] 	jcenter: downloading https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-tests.jar
+[debug] 	jcenter: downloading https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-tests.jar.sha1
+[debug] sha1 OK for https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-tests.jar
+[info] 	[SUCCESSFUL ] org.neo4j#neo4j-io;2.3.1!neo4j-io.jar (1055ms)
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-lucene-index;2.3.1!neo4j-lucene-index.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-graph-algo;2.3.1!neo4j-graph-algo.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-udc;2.3.1!neo4j-udc.jar
@@ -2520,7 +2591,6 @@
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-jmx;2.3.1!neo4j-jmx.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-consistency-check;2.3.1!neo4j-consistency-check.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-primitive-collections;2.3.1!neo4j-primitive-collections.jar
-[debug] 	[NOT REQUIRED] org.neo4j#neo4j-io;2.3.1!neo4j-io.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-csv;2.3.1!neo4j-csv.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-logging;2.3.1!neo4j-logging.jar
 [debug] 	[NOT REQUIRED] org.neo4j#neo4j-unsafe;2.3.1!neo4j-unsafe.jar
@@ -2553,7 +2623,7 @@
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.7!scala-compiler.jar
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar
-[debug] :: resolution report :: resolve 1369ms :: artifacts dl 35ms
+[debug] :: resolution report :: resolve 1060ms :: artifacts dl 5247ms
 [debug] 	report for default#biograph_2.11;1.0 compile produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-compile.xml
 [debug] 	report for default#biograph_2.11;1.0 runtime produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-runtime.xml
 [debug] 	report for default#biograph_2.11;1.0 test produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-test.xml
@@ -2567,5 +2637,5 @@
 [debug] 	report for default#biograph_2.11;1.0 docs produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-docs.xml
 [debug] 	report for default#biograph_2.11;1.0 pom produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-pom.xml
 [debug] 	report for default#biograph_2.11;1.0 scala-tool produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph_2.11-scala-tool.xml
-[debug] 	resolve done (1369ms resolve - 35ms download)
+[debug] 	resolve done (1060ms resolve - 5247ms download)
 [info] Done updating.
