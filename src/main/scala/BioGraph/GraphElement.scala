@@ -2,10 +2,10 @@ import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
   import org.neo4j.graphdb
-  import org.neo4j.graphdb.{Relationship, DynamicLabel, Label, GraphDatabaseService}
+  import org.neo4j.graphdb.{Relationship, DynamicLabel, Label, GraphDatabaseService, Direction}
   import utilFunctions._
-
   import scala.util.{Failure, Success, Try}
+  import scala.collection.JavaConverters._
 
   /**
   * created by artem on 11.02.16.
@@ -1173,7 +1173,18 @@ package BioGraph {
 
       def createRelationshipsToReactants(reactant: Reactant): Unit = {
         val reactantNode = graphDatabaseConnection.getNodeById(reactant.getId)
-        reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
+        val tryFindParticipation = reactantNode.getRelationships(BiomeDBRelations.participates_in, Direction.OUTGOING).asScala.toList
+        val zipEdgeWithReaction = tryFindParticipation.zip(tryFindParticipation.map(_.getEndNode))
+        val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != reactionNode)
+          tryToFindReaction.nonEmpty match {
+          case true =>
+//            may contain several reactions, so head is not acceptable!!!
+            val foundRelNodePair = tryToFindReaction.head
+            foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
+          case false =>
+            val participatesIn = reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
+            participatesIn.setProperty("N", 1)
+        }
       }
       reactants.foreach(createRelationshipsToReactants)
 
