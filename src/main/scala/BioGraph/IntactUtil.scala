@@ -11,6 +11,7 @@ import java.io.File
 import utilFunctions.{BiomeDBRelations, TransactionSupport}
 
 import scala.collection.JavaConverters._
+import scala.collection.immutable.HashMap
 
 /**
   * Created by artem on 16.06.16.
@@ -51,8 +52,20 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
       case None => ""//println("No sequence: " + id + " " + name)
     }
 
-//    val inchi = interactor.getAttributes.asScala.toList
-//    println(inchi)
+    val inchiFind = Option(
+      interactor.getAttributes.asScala.toList.filter(
+        e => (e.getName == "standard inchi") || (e.getName == "inchi key")
+      )
+    )
+    val inchi = inchiFind match {
+      case Some(i) => i
+      case None => Nil
+    }
+
+    val inchiMap = inchi.nonEmpty match {
+      case true => Some(inchi.map(e => e.getName -> inchiWriter(e.getValue)).toMap[String, String])
+      case false => None
+    }
 
     def makeMapOfXrefs(refs: List[DbReference], listOfXrefMap: List[Map[String, String]]): List[Map[String, String]] = {
       if (refs.nonEmpty) {
@@ -70,7 +83,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
 //    val x = xrefs.getAllDbReferences.asScala.foreach(makeMapOfRefs)
     var mapOfXrefs = makeMapOfXrefs(xrefs, List())
 
-    (mapOfXrefs, id, name, sequence, secondaryName)
+    (mapOfXrefs, id, name, sequence, secondaryName, inchiMap)
   }
 
   def interactionInfo(interaction: Interaction) = {
@@ -115,6 +128,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
   def createInteractorNodes(interactors: List[Interactor]): Unit = transaction(graphDataBaseConnection){
     def processOneInteractor(interactor: Interactor, queryResult: List[scala.collection.mutable.Map[String, AnyRef]]): Unit = {
       val info = interactorInfo(interactor)
+//      Name
       val reactantName = info._3 match {
         case Some(name) => name
         case None => info._5 match {
@@ -122,7 +136,12 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
           case None => "unknown"
         }
       }
-
+//      inchi
+      val inchiMap = info._6 match {
+        case Some(m) => m
+        case None => Map[String, String]()
+      }
+//      Try to match a polypeptide in DB to a reactant
       val reactant = queryResult.nonEmpty match {
         case true =>
           val reactant = new Reactant(name = reactantName)
@@ -135,8 +154,8 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
           }
           reactant
         case false =>
-          val reactant = new Reactant(name = reactantName, sequence = info._4)
-          val reactantNode = reactant.upload(graphDataBaseConnection)
+          val reactant = new Reactant(name = reactantName, sequence = info._4, inchi = inchiMap)
+          reactant.upload(graphDataBaseConnection)
           reactant
       }
       mapOfReactants += (info._2 -> reactant)
@@ -178,6 +197,11 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
 //      interactionNode.createRelationshipTo(xref, BiomeDBRelations.evidence)
     }
     interactions.foreach(processOneInteraction)
+  }
+
+  private def inchiWriter(inchiString: String): String = {
+    if (inchiString.contains('=')) inchiString.split('=')(1)
+    else inchiString
   }
 
   private def checkDbName(db: String) = {

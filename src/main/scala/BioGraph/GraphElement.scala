@@ -1093,6 +1093,7 @@ package BioGraph {
                   name: String,
                   sequence: String = "",
                   polyList: List[Polypeptide] = List(),
+                  inchi: Map[String, String] = Map(),
                   nodeId: Long = -1)
   extends Node(properties = Map(), nodeId) {
 
@@ -1104,6 +1105,8 @@ package BioGraph {
     def getName = this.name
 
     def getSequence = this.sequence
+
+    def getInchi = this.inchi
 
     override def equals(that: Any): Boolean = that match {
       case that: Reactant =>
@@ -1118,8 +1121,8 @@ package BioGraph {
 
     override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
       val newProperties = this.getSequence.nonEmpty match {
-        case true => this.setProperties(Map("name" -> this.getName, "seq" -> this.getSequence))
-        case false => this.setProperties(Map("name" -> this.getName))
+        case true => this.setProperties(Map("name" -> this.getName, "seq" -> this.getSequence) ++ this.getInchi)
+        case false => this.setProperties(Map("name" -> this.getName) ++ this.getInchi)
       }
       val reactantNode = super.upload(graphDatabaseConnection)
       newProperties.foreach{case (k, v) => reactantNode.setProperty(k, v)}
