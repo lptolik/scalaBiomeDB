@@ -1132,7 +1132,7 @@ package BioGraph {
   case class Reaction(
                      name: String,
                      reactants: List[Reactant],
-                     imexId: String = "",
+                     xRefs: List[XRef] = List(),
                      experiment: String = "",
                      nodeId: Long = -1
                      )
@@ -1144,7 +1144,7 @@ package BioGraph {
 
     def getExperiment = this.experiment
 
-    def getImexId = this.imexId
+    def getXrefs = this.xRefs
 
     override def equals(that: Any): Boolean = that match {
       case that: Reaction =>
@@ -1157,22 +1157,20 @@ package BioGraph {
 
     override def hashCode = 41 * name.hashCode
 
-    override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
-      val experimentInfo = this.getExperiment match {
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+      val newProperty = this.getExperiment match {
         case e: String => this.setProperties(Map("name" -> this.getName, "experiment" -> e))
         case null => this.setProperties(Map("name" -> this.getName))
       }
 
-      val imexIdAndExperimentInfo = this.getImexId match {
-        case i: String => experimentInfo ++ Map("imexId" -> i)
-        case null => experimentInfo
-      }
+      val reactionNode = super.upload(graphDataBaseConnection)
+      newProperty.foreach{case (k, v) => reactionNode.setProperty(k, v)}
 
-      val reactionNode = super.upload(graphDatabaseConnection)
-      imexIdAndExperimentInfo.foreach{case (k, v) => reactionNode.setProperty(k, v)}
+      val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
+      xrefNodes.foreach(reactionNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
       def createRelationshipsToReactants(reactant: Reactant): Unit = {
-        val reactantNode = graphDatabaseConnection.getNodeById(reactant.getId)
+        val reactantNode = graphDataBaseConnection.getNodeById(reactant.getId)
         val tryFindParticipation = reactantNode.getRelationships(BiomeDBRelations.participates_in, Direction.OUTGOING).asScala.toList
         val zipEdgeWithReaction = tryFindParticipation.zip(tryFindParticipation.map(_.getEndNode))
         val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != reactionNode)

@@ -24,6 +24,9 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
   var mapOfReactants = Map[Int, Reactant]()
   var mapOfExperiments = Map[Int, (String, String, String)]()
 
+  val intactDB = new DBNode("Intact")
+  val imexDB = new DBNode("Imex")
+
   def getInteractors = {
     readResult.map(_.getInteractors.asScala).toList.flatten
   }
@@ -48,6 +51,9 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
       case None => ""//println("No sequence: " + id + " " + name)
     }
 
+//    val inchi = interactor.getAttributes.asScala.toList
+//    println(inchi)
+
     def makeMapOfXrefs(refs: List[DbReference], listOfXrefMap: List[Map[String, String]]): List[Map[String, String]] = {
       if (refs.nonEmpty) {
         def makeXRef(ref: DbReference): Map[String, String] = ref.getId.contains(':') match {
@@ -71,7 +77,7 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
     val name = Option(interaction.getNames.getFullName)
     val secondaryName = Option(interaction.getNames.getShortLabel)
     val id = interaction.getId
-    val imexId = interaction.getImexId
+    val imexId = Option(interaction.getImexId)
     val xref = interaction.getXref.getPrimaryRef.getId
     val participants = interaction.getParticipants.asScala.map(_.getInteractor.getId)
     val experiments = interaction.getExperiments.asScala.map(_.getId).head
@@ -141,8 +147,8 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
     zipped.foreach(z => processOneInteractor(z._1, z._2))
   }
 
-  def createReactionsNodes(interactions: List[Interaction]) = transaction(graphDataBaseConnection) {
-    val intactDB = new DBNode("Intact")
+  def createReactionsNodes(interactions: List[Interaction]): Unit = transaction(graphDataBaseConnection) {
+//    make a Map of experiments by their Intact id
     this.getExperiments.map(experimentInfo).foreach(e => mapOfExperiments += (e._1 -> e._2))
     def processOneInteraction(interaction: Interaction): Unit = {
       val info = interactionInfo(interaction)
@@ -155,11 +161,21 @@ class IntactUtil(dir: String, dataBaseFile: File) extends TransactionSupport {
         }
       }
 
+      val listOfXrefs = info._7 match {
+        case Some(id) => List(new XRef(info._3, intactDB), new XRef(id, imexDB))
+        case None => List(new XRef(info._3, intactDB))
+      }
+
       val listOfReactants = info._4.map(mapOfReactants).toList
-      val reaction = new Reaction(reactionName, listOfReactants, info._7, mapOfExperiments(info._5)._3)
-      val xref = new XRef(info._3, intactDB).upload(graphDataBaseConnection)
-      val interactionNode = reaction.upload(graphDataBaseConnection)
-      interactionNode.createRelationshipTo(xref, BiomeDBRelations.evidence)
+      val reaction = new Reaction(
+        reactionName,
+        listOfReactants,
+        listOfXrefs,
+        mapOfExperiments(info._5)._3
+      )
+//      val xref = new XRef(info._3, intactDB).upload(graphDataBaseConnection)
+      reaction.upload(graphDataBaseConnection)
+//      interactionNode.createRelationshipTo(xref, BiomeDBRelations.evidence)
     }
     interactions.foreach(processOneInteraction)
   }
