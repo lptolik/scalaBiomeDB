@@ -838,7 +838,6 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
         val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
-        println()
         if (findOrganismNode == null) {
           val organismNode = super.upload(graphDataBaseConnection)
           this.setProperties(

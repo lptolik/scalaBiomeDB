@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SBT: sshtools:j2ssh-common:0.2.2:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/sshtools/j2ssh-common/jars/j2ssh-common-0.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

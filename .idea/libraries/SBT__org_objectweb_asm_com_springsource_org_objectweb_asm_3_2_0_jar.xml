@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.objectweb.asm:com.springsource.org.objectweb.asm:3.2.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.objectweb.asm/com.springsource.org.objectweb.asm/jars/com.springsource.org.objectweb.asm-3.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.objectweb.asm/com.springsource.org.objectweb.asm/srcs/com.springsource.org.objectweb.asm-3.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

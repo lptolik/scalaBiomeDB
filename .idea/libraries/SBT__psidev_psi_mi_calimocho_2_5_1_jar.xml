@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: psidev.psi.mi:calimocho:2.5.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/psidev.psi.mi/calimocho/jars/calimocho-2.5.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/psidev.psi.mi/calimocho/srcs/calimocho-2.5.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

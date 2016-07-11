@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SBT: com.ice:tar:1.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.ice/tar/jars/tar-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

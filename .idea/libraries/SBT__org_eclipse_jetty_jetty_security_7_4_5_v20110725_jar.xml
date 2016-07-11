@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.eclipse.jetty:jetty-security:7.4.5.v20110725:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-security/jars/jetty-security-7.4.5.v20110725.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-security/srcs/jetty-security-7.4.5.v20110725-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

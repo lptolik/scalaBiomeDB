@@ -4,7 +4,7 @@
 		module="biograph_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160629171238"
+		publication="20160706100951"
 	>
 		<description>
 		BioGraph
@@ -45,5 +45,8 @@
 		<dependency org="org.neo4j" name="neo4j-io" rev="2.3.1" conf="compile->default(compile)">
 			<artifact name="neo4j-io" type="jar" ext="jar" conf="*" e:classifier="tests"/>
 		</dependency>
+		<dependency org="psidev.psi.mi" name="psi25-xml" rev="1.8.4" conf="compile->default(compile)"/>
+		<dependency org="psidev.psi.mi" name="psimitab" rev="1.8.4" conf="compile->default(compile)"/>
+		<dependency org="org.hupo.psi.mi.psicquic" name="psicquic-client" rev="1.5.3" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

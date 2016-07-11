@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.apache.ws.security:wss4j:1.6.3:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ws.security/wss4j/bundles/wss4j-1.6.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ws.security/wss4j/srcs/wss4j-1.6.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

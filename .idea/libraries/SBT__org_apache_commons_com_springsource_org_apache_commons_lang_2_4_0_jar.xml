@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.apache.commons:com.springsource.org.apache.commons.lang:2.4.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/com.springsource.org.apache.commons.lang/jars/com.springsource.org.apache.commons.lang-2.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/com.springsource.org.apache.commons.lang/srcs/com.springsource.org.apache.commons.lang-2.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

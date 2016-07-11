@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.biopax.paxtools:paxtools-core:4.1.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.biopax.paxtools/paxtools-core/jars/paxtools-core-4.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.biopax.paxtools/paxtools-core/srcs/paxtools-core-4.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
