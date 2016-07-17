@@ -327,41 +327,29 @@ package BioGraph {
 
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-  //    def getMiscFeatureAdditionalProperties: Try[String] = {
-  //      Try(miscFeature.getQualifiers.get("note").get(0).getValue)
-  //    }
-  //    val note = getMiscFeatureAdditionalProperties
-  //    val properties = note match {
-  //      case Success(properNote) => Map[String, Any]("comment" -> properNote)
-  //      case Failure(except) => Map[String, Any]()
-  //    }
-
 //      if (this.getId < 0) {
-//        val newProperties = this.setProperties(Map("name" -> this.getName))
-//        val xrefNode = super.upload(graphDataBaseConnection)
-//        newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
-//        xrefNode
+//        val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
+//        if (tryToFindNode == null) {
+//          val createdDbNode = super.upload(graphDataBaseConnection)
+//          this.setProperties(Map("name" -> this.getName)).foreach { case (k, v) => createdDbNode.setProperty(k, v) }
+//          createdDbNode
+//        }
+//        else tryToFindNode
 //      }
 //      else graphDataBaseConnection.getNodeById(this.getId)
+
       if (this.getId < 0) {
-        val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
-        if (tryToFindNode == null) {
-          val createdDbNode = super.upload(graphDataBaseConnection)
-          this.setProperties(Map("name" -> this.getName)).foreach { case (k, v) => createdDbNode.setProperty(k, v) }
-          createdDbNode
+        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName))
+        val dbNode = tryToFindNode match {
+          case Some(n) => n
+          case None =>
+            val createdDBNode = super.upload(graphDataBaseConnection)
+            this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDBNode.setProperty(k, v)}
+            createdDBNode
         }
-        else tryToFindNode
+        dbNode
       }
       else graphDataBaseConnection.getNodeById(this.getId)
-  //    val dbNode = tryToFindNode match {
-  //      case AnyRef => tryToFindNode
-  //      case null =>
-  //        val createdDbNode = super.upload(graphDataBaseConnection)
-  //        this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDbNode.setProperty(k, v)}
-  //        createdDbNode
-  //    }
-  //    dbNode
-
     }
   }
 
@@ -1091,8 +1079,9 @@ package BioGraph {
   case class Reactant(
                   name: String,
                   sequence: String = "",
-                  polyList: List[Polypeptide] = List(),
                   inchi: Map[String, String] = Map(),
+                  stoichiometry: Option[Double] = None,
+                  compartment: Option[Compartment] = None,
                   nodeId: Long = -1)
   extends Node(properties = Map(), nodeId) {
 
@@ -1107,6 +1096,10 @@ package BioGraph {
 
     def getInchi = this.inchi
 
+    def getStoichiometry = this.stoichiometry
+
+    def getComparment = this.compartment
+
     override def equals(that: Any): Boolean = that match {
       case that: Reactant =>
         (that canEqual this) &&
@@ -1119,12 +1112,25 @@ package BioGraph {
     override def hashCode = 41 * name.hashCode
 
     override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
-      val newProperties = this.getSequence.nonEmpty match {
+      var newProperties = this.getSequence.nonEmpty match {
         case true => this.setProperties(Map("name" -> this.getName, "seq" -> this.getSequence) ++ this.getInchi)
         case false => this.setProperties(Map("name" -> this.getName) ++ this.getInchi)
       }
+
+      newProperties = this.getStoichiometry match {
+        case Some(stoi) => newProperties ++ Map("stoichiometric_coef" -> stoi)
+        case None => newProperties
+      }
+
       val reactantNode = super.upload(graphDatabaseConnection)
       newProperties.foreach{case (k, v) => reactantNode.setProperty(k, v)}
+
+      this.getComparment match {
+        case Some(c) =>
+          val compartmentNode = c.upload(graphDatabaseConnection)
+          reactantNode.createRelationshipTo(compartmentNode, BiomeDBRelations.locates_in)
+        case None =>
+      }
 
       reactantNode
     }
@@ -1147,6 +1153,8 @@ package BioGraph {
     def getExperiment = this.experiment
 
     def getXrefs = this.xRefs
+
+    def getReactants = this.reactants
 
     override def equals(that: Any): Boolean = that match {
       case that: Reaction =>
@@ -1178,7 +1186,8 @@ package BioGraph {
         val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != reactionNode)
           tryToFindReaction.nonEmpty match {
           case true =>
-//            may contain several reactions, so head is not acceptable!!!
+//            we can take head because this list will contain only this reaction
+//            or empty list
             val foundRelNodePair = tryToFindReaction.head
             foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
           case false =>
@@ -1193,13 +1202,40 @@ package BioGraph {
 
   }
 
+  case class Compartment(
+                        name: String,
+                        nodeId: Long = -1
+                        )
+  extends Node(Map(), nodeId) with BioEntity{
+
+    def getName = name
+
+    def getLabels = List("Compartment", "BioEntity")
+
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+      if (this.getId < 0) {
+        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Compartment"), "name", this.getName))
+        val compartmentNode = tryToFindNode match {
+          case Some(n) => n
+          case None =>
+            val createdCompartmentNode = super.upload(graphDataBaseConnection)
+            this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdCompartmentNode.setProperty(k, v)}
+            createdCompartmentNode
+        }
+        compartmentNode
+      }
+      else graphDataBaseConnection.getNodeById(this.getId)
+    }
+  }
+
+
   //case class Enzyme(
   //                   name: String,
   //                   var polypeptide: List[Polypeptide] = List(),
   //                   var complex: List[Complex] = List(),
   //                   var regulates: List[EnzymeRegulation] = List(),
   //                   var catalizes: List[Reaction] = List(),
-  //                   nodeId: BigInt = -1)
+  //                   nodeId: Long = -1)
   //  extends Node(properties = Map(), nodeId)
   //  with BioEntity{
   //

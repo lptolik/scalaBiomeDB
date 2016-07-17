@@ -7,8 +7,293 @@
 		revision="1.0"
 		conf="compile"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160706100951"/>
+		date="20160715143743"/>
 	<dependencies>
+		<module organisation="org.sbml.jsbml" name="jsbml">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510144627" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="218">
+				<metadata-artifact status="no" details="" size="8023" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml/1.2-SNAPSHOT/jsbml-1.2-20160510.114627-4.pom"/>
+				<caller organisation="default" name="biograph_2.11" conf="compile" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="jsbml" type="jar" ext="jar" status="no" details="" size="1733" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml/jars/jsbml-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml/1.2-SNAPSHOT/jsbml-1.2-20160510.114627-4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-spatial">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135417" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="239">
+				<metadata-artifact status="no" details="" size="3621" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-spatial/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-spatial/1.2-SNAPSHOT/jsbml-spatial-1.2-20160510.105417-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-spatial" type="jar" ext="jar" status="no" details="" size="166253" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-spatial/jars/jsbml-spatial-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-spatial/1.2-SNAPSHOT/jsbml-spatial-1.2-20160510.105417-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-req">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135406" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="238">
+				<metadata-artifact status="no" details="" size="3613" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-req/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-req/1.2-SNAPSHOT/jsbml-req-1.2-20160510.105406-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-req" type="jar" ext="jar" status="no" details="" size="11613" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-req/jars/jsbml-req-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-req/1.2-SNAPSHOT/jsbml-req-1.2-20160510.105406-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-render">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135402" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="237">
+				<metadata-artifact status="no" details="" size="3775" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-render/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-render/1.2-SNAPSHOT/jsbml-render-1.2-20160510.105402-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-render" type="jar" ext="jar" status="no" details="" size="108333" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-render/jars/jsbml-render-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-render/1.2-SNAPSHOT/jsbml-render-1.2-20160510.105402-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-qual">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135353" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="236">
+				<metadata-artifact status="no" details="" size="3615" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-qual/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-qual/1.2-SNAPSHOT/jsbml-qual-1.2-20160510.105353-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-qual" type="jar" ext="jar" status="no" details="" size="36694" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-qual/jars/jsbml-qual-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-qual/1.2-SNAPSHOT/jsbml-qual-1.2-20160510.105353-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-multi">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135347" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="235">
+				<metadata-artifact status="no" details="" size="3617" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-multi/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-multi/1.2-SNAPSHOT/jsbml-multi-1.2-20160510.105347-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-multi" type="jar" ext="jar" status="no" details="" size="74577" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-multi/jars/jsbml-multi-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-multi/1.2-SNAPSHOT/jsbml-multi-1.2-20160510.105347-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-layout">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135338" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="234">
+				<metadata-artifact status="no" details="" size="3675" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-layout/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-layout/1.2-SNAPSHOT/jsbml-layout-1.2-20160510.105338-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-render" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-layout" type="jar" ext="jar" status="no" details="" size="90292" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-layout/jars/jsbml-layout-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-layout/1.2-SNAPSHOT/jsbml-layout-1.2-20160510.105338-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-groups">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135326" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="233">
+				<metadata-artifact status="no" details="" size="3619" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-groups/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-groups/1.2-SNAPSHOT/jsbml-groups-1.2-20160510.105326-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-groups" type="jar" ext="jar" status="no" details="" size="27111" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-groups/jars/jsbml-groups-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-groups/1.2-SNAPSHOT/jsbml-groups-1.2-20160510.105326-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-fbc">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135321" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="232">
+				<metadata-artifact status="no" details="" size="3669" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160510.105321-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-fbc" type="jar" ext="jar" status="no" details="" size="54640" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/jars/jsbml-fbc-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160510.105321-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-dyn">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135314" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="231">
+				<metadata-artifact status="no" details="" size="3613" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-dyn/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-dyn/1.2-SNAPSHOT/jsbml-dyn-1.2-20160510.105314-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-dyn" type="jar" ext="jar" status="no" details="" size="50578" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-dyn/jars/jsbml-dyn-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-dyn/1.2-SNAPSHOT/jsbml-dyn-1.2-20160510.105314-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-distrib">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135309" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="230">
+				<metadata-artifact status="no" details="" size="3756" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-distrib/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-distrib/1.2-SNAPSHOT/jsbml-distrib-1.2-20160510.105309-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-distrib" type="jar" ext="jar" status="no" details="" size="29196" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-distrib/jars/jsbml-distrib-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-distrib/1.2-SNAPSHOT/jsbml-distrib-1.2-20160510.105309-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.modules" name="jsbml-tidy">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135250" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="240">
+				<metadata-artifact status="no" details="" size="3748" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.modules/jsbml-tidy/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/modules/jsbml-tidy/1.2-SNAPSHOT/jsbml-tidy-1.2-20160510.105250-2.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-tidy" type="jar" ext="jar" status="no" details="" size="7484" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.modules/jsbml-tidy/jars/jsbml-tidy-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/modules/jsbml-tidy/1.2-SNAPSHOT/jsbml-tidy-1.2-20160510.105250-2.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="net.sf.jtidy" name="jtidy">
+			<revision name="r938" status="release" pubdate="20100720154512" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jtidy.sourceforge.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="241">
+				<license name="Java HTML Tidy License" url="http://jtidy.svn.sourceforge.net/viewvc/jtidy/trunk/jtidy/LICENSE.txt?revision=95"/>
+				<metadata-artifact status="no" details="" size="3418" time="0" location="/home/artem/.ivy2/cache/net.sf.jtidy/jtidy/ivy-r938.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/net/sf/jtidy/jtidy/r938/jtidy-r938.pom"/>
+				<caller organisation="org.sbml.jsbml.modules" name="jsbml-tidy" conf="compile, runtime" rev="r938" rev-constraint-default="r938" rev-constraint-dynamic="r938" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jtidy" type="jar" ext="jar" status="no" details="" size="249924" time="0" location="/home/artem/.ivy2/cache/net.sf.jtidy/jtidy/jars/jtidy-r938.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/net/sf/jtidy/jtidy/r938/jtidy-r938.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-arrays">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135304" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="228">
+				<metadata-artifact status="no" details="" size="3829" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-arrays/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-arrays/1.2-SNAPSHOT/jsbml-arrays-1.2-20160510.105303-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-arrays" type="jar" ext="jar" status="no" details="" size="93228" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-arrays/jars/jsbml-arrays-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-arrays/1.2-SNAPSHOT/jsbml-arrays-1.2-20160510.105303-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml.ext" name="jsbml-comp">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135256" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="229">
+				<metadata-artifact status="no" details="" size="3615" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-comp/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-comp/1.2-SNAPSHOT/jsbml-comp-1.2-20160510.105256-1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-arrays" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-comp" type="jar" ext="jar" status="no" details="" size="44572" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-comp/jars/jsbml-comp-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-comp/1.2-SNAPSHOT/jsbml-comp-1.2-20160510.105256-1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.sbml.jsbml" name="jsbml-core">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135247" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="219">
+				<metadata-artifact status="no" details="" size="4365" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml-core/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml-core/1.2-SNAPSHOT/jsbml-core-1.2-20160510.105247-3.pom"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-fbc" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-distrib" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-multi" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-render" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-comp" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-groups" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-layout" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-req" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-arrays" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-spatial" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-qual" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.ext" name="jsbml-dyn" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.sbml.jsbml.modules" name="jsbml-tidy" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jsbml-core" type="jar" ext="jar" status="no" details="" size="1008265" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml-core/jars/jsbml-core-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml-core/1.2-SNAPSHOT/jsbml-core-1.2-20160510.105247-3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.mangosdk.spi" name="spi">
+			<revision name="0.2.4" status="release" pubdate="20150113191929" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="227">
+				<metadata-artifact status="no" details="" size="2242" time="0" location="/home/artem/.ivy2/cache/org.mangosdk.spi/spi/ivy-0.2.4.xml" searched="false" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/mangosdk/spi/spi/0.2.4/spi-0.2.4.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="0.2.4" rev-constraint-default="0.2.4" rev-constraint-dynamic="0.2.4" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="spi" type="jar" ext="jar" status="no" details="" size="23904" time="0" location="/home/artem/.ivy2/cache/org.mangosdk.spi/spi/jars/spi-0.2.4.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/mangosdk/spi/spi/0.2.4/spi-0.2.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.fasterxml.staxmate" name="staxmate">
+			<revision name="2.3.0" status="release" pubdate="20150505031300" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://staxmate.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="226">
+				<license name="BSD" url="http://www.opensource.org/licenses/bsd-license.php"/>
+				<metadata-artifact status="no" details="" size="4080" time="0" location="/home/artem/.ivy2/cache/com.fasterxml.staxmate/staxmate/ivy-2.3.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/fasterxml/staxmate/staxmate/2.3.0/staxmate-2.3.0.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="2.3.0" rev-constraint-default="2.3.0" rev-constraint-dynamic="2.3.0" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="staxmate" type="bundle" ext="jar" status="no" details="" size="82856" time="0" location="/home/artem/.ivy2/cache/com.fasterxml.staxmate/staxmate/bundles/staxmate-2.3.0.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/com/fasterxml/staxmate/staxmate/2.3.0/staxmate-2.3.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.biojava" name="biojava-ontology">
+			<revision name="4.0.0" status="release" pubdate="20150130195100" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://maven.apache.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="224">
+				<metadata-artifact status="no" details="" size="6322" time="0" location="/home/artem/.ivy2/cache/org.biojava/biojava-ontology/ivy-4.0.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/biojava/biojava-ontology/4.0.0/biojava-ontology-4.0.0.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="4.0.0" rev-constraint-default="4.0.0" rev-constraint-dynamic="4.0.0" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="biojava-ontology" type="jar" ext="jar" status="no" details="" size="68921" time="0" location="/home/artem/.ivy2/cache/org.biojava/biojava-ontology/jars/biojava-ontology-4.0.0.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/biojava/biojava-ontology/4.0.0/biojava-ontology-4.0.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.w3c.jigsaw" name="jigsaw">
+			<revision name="2.2.6" status="release" pubdate="20100802223233" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.w3.org/Jigsaw/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="223">
+				<license name="W3C Software License" url="http://www.opensource.org/licenses/W3C.php"/>
+				<metadata-artifact status="no" details="" size="2506" time="0" location="/home/artem/.ivy2/cache/org.w3c.jigsaw/jigsaw/ivy-2.2.6.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/w3c/jigsaw/jigsaw/2.2.6/jigsaw-2.2.6.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="2.2.6" rev-constraint-default="2.2.6" rev-constraint-dynamic="2.2.6" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="jigsaw" type="jar" ext="jar" status="no" details="" size="2693001" time="0" location="/home/artem/.ivy2/cache/org.w3c.jigsaw/jigsaw/jars/jigsaw-2.2.6.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/w3c/jigsaw/jigsaw/2.2.6/jigsaw-2.2.6.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.fasterxml.woodstox" name="woodstox-core">
+			<revision name="5.0.1" status="release" pubdate="20150402083000" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/FasterXML/woodstox" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="221">
+				<license name="The Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="no" details="" size="6100" time="0" location="/home/artem/.ivy2/cache/com.fasterxml.woodstox/woodstox-core/ivy-5.0.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/fasterxml/woodstox/woodstox-core/5.0.1/woodstox-core-5.0.1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="5.0.1" rev-constraint-default="5.0.1" rev-constraint-dynamic="5.0.1" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="woodstox-core" type="bundle" ext="jar" status="no" details="" size="511587" time="0" location="/home/artem/.ivy2/cache/com.fasterxml.woodstox/woodstox-core/bundles/woodstox-core-5.0.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/com/fasterxml/woodstox/woodstox-core/5.0.1/woodstox-core-5.0.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.codehaus.woodstox" name="stax2-api">
+			<revision name="3.1.4" status="release" pubdate="20140228102000" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://wiki.fasterxml.com/WoodstoxStax2" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="222">
+				<license name="The BSD License" url="http://www.opensource.org/licenses/bsd-license.php"/>
+				<metadata-artifact status="no" details="" size="3351" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/stax2-api/ivy-3.1.4.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.pom"/>
+				<caller organisation="com.fasterxml.staxmate" name="staxmate" conf="compile, runtime" rev="3.1.4" rev-constraint-default="3.1.4" rev-constraint-dynamic="3.1.4" callerrev="2.3.0"/>
+				<caller organisation="com.fasterxml.woodstox" name="woodstox-core" conf="compile, runtime" rev="3.1.4" rev-constraint-default="3.1.4" rev-constraint-dynamic="3.1.4" callerrev="5.0.1"/>
+				<caller organisation="org.codehaus.woodstox" name="woodstox-core-asl" conf="compile, runtime" rev="3.1.1" rev-constraint-default="3.1.1" rev-constraint-dynamic="3.1.1" callerrev="4.1.1"/>
+				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.1.1" rev-constraint-default="3.1.1" rev-constraint-dynamic="3.1.1" callerrev="2.4.3"/>
+				<artifacts>
+					<artifact name="stax2-api" type="bundle" ext="jar" status="no" details="" size="161867" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/stax2-api/bundles/stax2-api-3.1.4.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="3.1.1" status="release" pubdate="20110128084303" resolver="sbt-chain" artresolver="sbt-chain" evicted="latest-revision" evicted-reason="" homepage="http://woodstox.codehaus.org/StAX2" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<license name="The BSD License" url="http://www.opensource.org/licenses/bsd-license.php"/>
+				<metadata-artifact status="no" details="" size="2705" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/stax2-api/ivy-3.1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/woodstox/stax2-api/3.1.1/stax2-api-3.1.1.pom"/>
+				<evicted-by rev="3.1.4"/>
+				<caller organisation="org.codehaus.woodstox" name="woodstox-core-asl" conf="compile, runtime" rev="3.1.1" rev-constraint-default="3.1.1" rev-constraint-dynamic="3.1.1" callerrev="4.1.1"/>
+				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.1.1" rev-constraint-default="3.1.1" rev-constraint-dynamic="3.1.1" callerrev="2.4.3"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.logging.log4j" name="log4j-1.2-api">
+			<revision name="2.3" status="release" pubdate="20150511001900" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="220">
+				<metadata-artifact status="no" details="" size="23945" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-1.2-api/ivy-2.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-1.2-api/2.3/log4j-1.2-api-2.3.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="2.3" rev-constraint-default="2.3" rev-constraint-dynamic="2.3" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="log4j-1.2-api" type="bundle" ext="jar" status="no" details="" size="36875" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-1.2-api/bundles/log4j-1.2-api-2.3.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-1.2-api/2.3/log4j-1.2-api-2.3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
 		<module organisation="org.hupo.psi.mi.psicquic" name="psicquic-client">
 			<revision name="1.5.3" status="release" pubdate="20130814175413" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="68">
 				<metadata-artifact status="no" details="" size="6388" time="0" location="/home/artem/.ivy2/cache/org.hupo.psi.mi.psicquic/psicquic-client/ivy-1.5.3.xml" searched="false" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/hupo/psi/mi/psicquic/psicquic-client/1.5.3/psicquic-client-1.5.3.pom"/>
@@ -21,7 +306,7 @@
 			</revision>
 		</module>
 		<module organisation="net.sf.saxon" name="saxon-dom">
-			<revision name="8.7" status="release" pubdate="20080831154601" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://saxon.sf.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="219">
+			<revision name="8.7" status="release" pubdate="20080831154601" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://saxon.sf.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="217">
 				<license name="Mozilla Public License Version 1.0" url="http://www.mozilla.org/MPL/MPL-1.0.txt"/>
 				<metadata-artifact status="no" details="" size="2548" time="0" location="/home/artem/.ivy2/cache/net.sf.saxon/saxon-dom/ivy-8.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/net/sf/saxon/saxon-dom/8.7/saxon-dom-8.7.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="8.7" rev-constraint-default="8.7" rev-constraint-dynamic="8.7" callerrev="1.5.3"/>
@@ -33,7 +318,7 @@
 			</revision>
 		</module>
 		<module organisation="org.objectweb.asm" name="com.springsource.org.objectweb.asm">
-			<revision name="3.2.0" status="release" pubdate="20100107183131" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="217">
+			<revision name="3.2.0" status="release" pubdate="20100107183131" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="215">
 				<metadata-artifact status="no" details="" size="2246" time="0" location="/home/artem/.ivy2/cache/org.objectweb.asm/com.springsource.org.objectweb.asm/ivy-3.2.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/objectweb/asm/com.springsource.org.objectweb.asm/3.2.0/com.springsource.org.objectweb.asm-3.2.0.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="3.2.0" rev-constraint-default="3.2.0" rev-constraint-dynamic="3.2.0" callerrev="1.5.3"/>
 				<artifacts>
@@ -44,7 +329,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.xml" name="com.springsource.org.apache.xml.security">
-			<revision name="1.4.2" status="release" pubdate="20090204185630" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="210">
+			<revision name="1.4.2" status="release" pubdate="20090204185630" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="208">
 				<metadata-artifact status="no" details="" size="2930" time="0" location="/home/artem/.ivy2/cache/org.apache.xml/com.springsource.org.apache.xml.security/ivy-1.4.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/xml/com.springsource.org.apache.xml.security/1.4.2/com.springsource.org.apache.xml.security-1.4.2.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="1.4.2" rev-constraint-default="1.4.2" rev-constraint-dynamic="1.4.2" callerrev="1.5.3"/>
 				<artifacts>
@@ -55,7 +340,7 @@
 			</revision>
 		</module>
 		<module organisation="org.bouncycastle" name="com.springsource.org.bouncycastle.jce">
-			<revision name="1.39.0" status="release" pubdate="20090204183157" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="218">
+			<revision name="1.39.0" status="release" pubdate="20090204183157" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="216">
 				<metadata-artifact status="no" details="" size="2416" time="0" location="/home/artem/.ivy2/cache/org.bouncycastle/com.springsource.org.bouncycastle.jce/ivy-1.39.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/bouncycastle/com.springsource.org.bouncycastle.jce/1.39.0/com.springsource.org.bouncycastle.jce-1.39.0.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="1.39.0" rev-constraint-default="1.39.0" rev-constraint-dynamic="1.39.0" callerrev="1.5.3"/>
 				<artifacts>
@@ -66,7 +351,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.xalan" name="com.springsource.org.apache.xalan">
-			<revision name="2.7.0" status="release" pubdate="20090204163339" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="211">
+			<revision name="2.7.0" status="release" pubdate="20090204163339" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="209">
 				<metadata-artifact status="no" details="" size="2612" time="0" location="/home/artem/.ivy2/cache/org.apache.xalan/com.springsource.org.apache.xalan/ivy-2.7.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/xalan/com.springsource.org.apache.xalan/2.7.0/com.springsource.org.apache.xalan-2.7.0.pom"/>
 				<caller organisation="org.apache.xml" name="com.springsource.org.apache.xml.security" conf="compile, runtime" rev="2.7.0" rev-constraint-default="2.7.0" rev-constraint-dynamic="2.7.0" callerrev="1.4.2"/>
 				<artifacts>
@@ -77,7 +362,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.bcel" name="com.springsource.org.apache.bcel">
-			<revision name="5.1.0" status="release" pubdate="20090204180637" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="215">
+			<revision name="5.1.0" status="release" pubdate="20090204180637" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="213">
 				<metadata-artifact status="no" details="" size="2443" time="0" location="/home/artem/.ivy2/cache/org.apache.bcel/com.springsource.org.apache.bcel/ivy-5.1.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/bcel/com.springsource.org.apache.bcel/5.1.0/com.springsource.org.apache.bcel-5.1.0.pom"/>
 				<caller organisation="org.apache.xalan" name="com.springsource.org.apache.xalan" conf="compile, runtime" rev="5.1.0" rev-constraint-default="5.1.0" rev-constraint-dynamic="5.1.0" callerrev="2.7.0"/>
 				<artifacts>
@@ -88,7 +373,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.regexp" name="com.springsource.org.apache.regexp">
-			<revision name="1.5.0" status="release" pubdate="20090204180455" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="216">
+			<revision name="1.5.0" status="release" pubdate="20090204180455" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="214">
 				<metadata-artifact status="no" details="" size="2246" time="0" location="/home/artem/.ivy2/cache/org.apache.regexp/com.springsource.org.apache.regexp/ivy-1.5.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/regexp/com.springsource.org.apache.regexp/1.5.0/com.springsource.org.apache.regexp-1.5.0.pom"/>
 				<caller organisation="org.apache.bcel" name="com.springsource.org.apache.bcel" conf="compile, runtime" rev="1.5.0" rev-constraint-default="1.5.0" rev-constraint-dynamic="1.5.0" callerrev="5.1.0"/>
 				<artifacts>
@@ -99,7 +384,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.xerces" name="com.springsource.org.apache.xerces">
-			<revision name="2.8.1" status="release" pubdate="20090204161400" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="212">
+			<revision name="2.8.1" status="release" pubdate="20090204161400" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="210">
 				<metadata-artifact status="no" details="" size="2630" time="0" location="/home/artem/.ivy2/cache/org.apache.xerces/com.springsource.org.apache.xerces/ivy-2.8.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/xerces/com.springsource.org.apache.xerces/2.8.1/com.springsource.org.apache.xerces-2.8.1.pom"/>
 				<caller organisation="org.apache.xalan" name="com.springsource.org.apache.xalan" conf="compile, runtime" rev="2.8.1" rev-constraint-default="2.8.1" rev-constraint-dynamic="2.8.1" callerrev="2.7.0"/>
 				<artifacts>
@@ -110,7 +395,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.xmlcommons" name="com.springsource.org.apache.xmlcommons">
-			<revision name="1.3.3" status="release" pubdate="20090204161339" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="214">
+			<revision name="1.3.3" status="release" pubdate="20090204161339" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="212">
 				<metadata-artifact status="no" details="" size="2258" time="0" location="/home/artem/.ivy2/cache/org.apache.xmlcommons/com.springsource.org.apache.xmlcommons/ivy-1.3.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/xmlcommons/com.springsource.org.apache.xmlcommons/1.3.3/com.springsource.org.apache.xmlcommons-1.3.3.pom"/>
 				<caller organisation="org.apache.xerces" name="com.springsource.org.apache.xerces" conf="compile, runtime" rev="1.3.3" rev-constraint-default="1.3.3" rev-constraint-dynamic="1.3.3" callerrev="2.8.1"/>
 				<artifacts>
@@ -121,7 +406,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.xml" name="com.springsource.org.apache.xml.resolver">
-			<revision name="1.2.0" status="release" pubdate="20090204161313" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="213">
+			<revision name="1.2.0" status="release" pubdate="20090204161313" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="211">
 				<metadata-artifact status="no" details="" size="2255" time="0" location="/home/artem/.ivy2/cache/org.apache.xml/com.springsource.org.apache.xml.resolver/ivy-1.2.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/xml/com.springsource.org.apache.xml.resolver/1.2.0/com.springsource.org.apache.xml.resolver-1.2.0.pom"/>
 				<caller organisation="org.apache.xerces" name="com.springsource.org.apache.xerces" conf="compile, runtime" rev="1.2.0" rev-constraint-default="1.2.0" rev-constraint-dynamic="1.2.0" callerrev="2.8.1"/>
 				<artifacts>
@@ -132,7 +417,7 @@
 			</revision>
 		</module>
 		<module organisation="javax.wsdl" name="com.springsource.javax.wsdl">
-			<revision name="1.6.1" status="release" pubdate="20090204173859" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="209">
+			<revision name="1.6.1" status="release" pubdate="20090204173859" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="207">
 				<metadata-artifact status="no" details="" size="2225" time="0" location="/home/artem/.ivy2/cache/javax.wsdl/com.springsource.javax.wsdl/ivy-1.6.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/javax/wsdl/com.springsource.javax.wsdl/1.6.1/com.springsource.javax.wsdl-1.6.1.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="1.6.1" rev-constraint-default="1.6.1" rev-constraint-dynamic="1.6.1" callerrev="1.5.3"/>
 				<artifacts>
@@ -143,7 +428,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.cxf" name="cxf-bundle">
-			<revision name="2.4.3" status="release" pubdate="20111004210344" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://cxf.apache.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="158">
+			<revision name="2.4.3" status="release" pubdate="20111004210344" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://cxf.apache.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="157">
 				<metadata-artifact status="no" details="" size="70593" time="0" location="/home/artem/.ivy2/cache/org.apache.cxf/cxf-bundle/ivy-2.4.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/cxf/cxf-bundle/2.4.3/cxf-bundle-2.4.3.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="2.4.3" rev-constraint-default="2.4.3" rev-constraint-dynamic="2.4.3" callerrev="1.5.3"/>
 				<artifacts>
@@ -154,7 +439,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.ws.security" name="wss4j">
-			<revision name="1.6.3" status="release" pubdate="20111003020305" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://ws.apache.org/wss4j/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="196">
+			<revision name="1.6.3" status="release" pubdate="20111003020305" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://ws.apache.org/wss4j/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="194">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="6585" time="0" location="/home/artem/.ivy2/cache/org.apache.ws.security/wss4j/ivy-1.6.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/ws/security/wss4j/1.6.3/wss4j-1.6.3.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.6.3" rev-constraint-default="1.6.3" rev-constraint-dynamic="1.6.3" callerrev="2.4.3"/>
@@ -166,7 +451,7 @@
 			</revision>
 		</module>
 		<module organisation="org.opensaml" name="opensaml">
-			<revision name="2.5.1-1" status="release" pubdate="20110912222852" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opensaml.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="198">
+			<revision name="2.5.1-1" status="release" pubdate="20110912222852" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opensaml.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="196">
 				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="6384" time="0" location="/home/artem/.ivy2/cache/org.opensaml/opensaml/ivy-2.5.1-1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/opensaml/opensaml/2.5.1-1/opensaml-2.5.1-1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="2.5.1-1" rev-constraint-default="2.5.1-1" rev-constraint-dynamic="2.5.1-1" callerrev="2.4.3"/>
@@ -179,7 +464,7 @@
 			</revision>
 		</module>
 		<module organisation="org.opensaml" name="openws">
-			<revision name="1.4.2-1" status="release" pubdate="20110912222447" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opensaml.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="199">
+			<revision name="1.4.2-1" status="release" pubdate="20110912222447" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opensaml.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="197">
 				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="5316" time="0" location="/home/artem/.ivy2/cache/org.opensaml/openws/ivy-1.4.2-1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/opensaml/openws/1.4.2-1/openws-1.4.2-1.pom"/>
 				<caller organisation="org.opensaml" name="opensaml" conf="compile, runtime" rev="1.4.2-1" rev-constraint-default="1.4.2-1" rev-constraint-dynamic="1.4.2-1" callerrev="2.5.1-1"/>
@@ -192,7 +477,7 @@
 			</revision>
 		</module>
 		<module organisation="org.opensaml" name="xmltooling">
-			<revision name="1.3.2-1" status="release" pubdate="20110912222040" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opensaml.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="200">
+			<revision name="1.3.2-1" status="release" pubdate="20110912222040" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opensaml.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="198">
 				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="5727" time="0" location="/home/artem/.ivy2/cache/org.opensaml/xmltooling/ivy-1.3.2-1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/opensaml/xmltooling/1.3.2-1/xmltooling-1.3.2-1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.3.2-1" rev-constraint-default="1.3.2-1" rev-constraint-dynamic="1.3.2-1" callerrev="2.4.3"/>
@@ -205,7 +490,7 @@
 			</revision>
 		</module>
 		<module organisation="net.jcip" name="jcip-annotations">
-			<revision name="1.0" status="release" pubdate="20080814104805" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jcip.net/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="205">
+			<revision name="1.0" status="release" pubdate="20080814104805" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jcip.net/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="203">
 				<metadata-artifact status="no" details="" size="2215" time="0" location="/home/artem/.ivy2/cache/net.jcip/jcip-annotations/ivy-1.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/net/jcip/jcip-annotations/1.0/jcip-annotations-1.0.pom"/>
 				<caller organisation="org.opensaml" name="xmltooling" conf="compile, runtime" rev="1.0" rev-constraint-default="1.0" rev-constraint-dynamic="1.0" callerrev="1.3.2-1"/>
 				<artifacts>
@@ -216,7 +501,7 @@
 			</revision>
 		</module>
 		<module organisation="ca.juliusdavies" name="not-yet-commons-ssl">
-			<revision name="0.3.9" status="release" pubdate="20110315183911" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://juliusdavies.ca/commons-ssl" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="204">
+			<revision name="0.3.9" status="release" pubdate="20110315183911" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://juliusdavies.ca/commons-ssl" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="202">
 				<license name="Apache License v2" url="http://juliusdavies.ca/commons-ssl/LICENSE.txt"/>
 				<metadata-artifact status="no" details="" size="2702" time="0" location="/home/artem/.ivy2/cache/ca.juliusdavies/not-yet-commons-ssl/ivy-0.3.9.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/ca/juliusdavies/not-yet-commons-ssl/0.3.9/not-yet-commons-ssl-0.3.9.pom"/>
 				<caller organisation="org.opensaml" name="xmltooling" conf="compile, runtime" rev="0.3.9" rev-constraint-default="0.3.9" rev-constraint-dynamic="0.3.9" callerrev="1.3.2-1"/>
@@ -228,7 +513,7 @@
 			</revision>
 		</module>
 		<module organisation="org.bouncycastle" name="bcprov-jdk15">
-			<revision name="1.45" status="release" pubdate="20100111073027" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.bouncycastle.org/java.html" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="203">
+			<revision name="1.45" status="release" pubdate="20100111073027" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.bouncycastle.org/java.html" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="201">
 				<license name="Bouncy Castle Licence" url="http://www.bouncycastle.org/licence.html"/>
 				<metadata-artifact status="no" details="" size="2535" time="0" location="/home/artem/.ivy2/cache/org.bouncycastle/bcprov-jdk15/ivy-1.45.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/bouncycastle/bcprov-jdk15/1.45/bcprov-jdk15-1.45.pom"/>
 				<caller organisation="org.opensaml" name="xmltooling" conf="compile, runtime" rev="1.45" rev-constraint-default="1.45" rev-constraint-dynamic="1.45" callerrev="1.3.2-1"/>
@@ -240,7 +525,7 @@
 			</revision>
 		</module>
 		<module organisation="org.slf4j" name="jul-to-slf4j">
-			<revision name="1.6.1" status="release" pubdate="20100706003052" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.slf4j.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="202">
+			<revision name="1.6.1" status="release" pubdate="20100706003052" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.slf4j.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="200">
 				<metadata-artifact status="no" details="" size="4305" time="0" location="/home/artem/.ivy2/cache/org.slf4j/jul-to-slf4j/ivy-1.6.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/slf4j/jul-to-slf4j/1.6.1/jul-to-slf4j-1.6.1.pom"/>
 				<caller organisation="org.opensaml" name="xmltooling" conf="compile, runtime" rev="1.6.1" rev-constraint-default="1.6.1" rev-constraint-dynamic="1.6.1" callerrev="1.3.2-1"/>
 				<artifacts>
@@ -251,7 +536,7 @@
 			</revision>
 		</module>
 		<module organisation="org.slf4j" name="log4j-over-slf4j">
-			<revision name="1.6.1" status="release" pubdate="20100706003042" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.slf4j.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="201">
+			<revision name="1.6.1" status="release" pubdate="20100706003042" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.slf4j.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="199">
 				<license name="Apache Software Licenses" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="4414" time="0" location="/home/artem/.ivy2/cache/org.slf4j/log4j-over-slf4j/ivy-1.6.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/slf4j/log4j-over-slf4j/1.6.1/log4j-over-slf4j-1.6.1.pom"/>
 				<caller organisation="org.opensaml" name="xmltooling" conf="compile, runtime" rev="1.6.1" rev-constraint-default="1.6.1" rev-constraint-dynamic="1.6.1" callerrev="1.3.2-1"/>
@@ -263,7 +548,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.santuario" name="xmlsec">
-			<revision name="1.4.5" status="release" pubdate="20110523134945" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://santuario.apache.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="197">
+			<revision name="1.4.5" status="release" pubdate="20110523134945" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://santuario.apache.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="195">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="3971" time="0" location="/home/artem/.ivy2/cache/org.apache.santuario/xmlsec/ivy-1.4.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/santuario/xmlsec/1.4.5/xmlsec-1.4.5.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.4.5" rev-constraint-default="1.4.5" rev-constraint-dynamic="1.4.5" callerrev="2.4.3"/>
@@ -283,7 +568,7 @@
 			</revision>
 		</module>
 		<module organisation="xalan" name="xalan">
-			<revision name="2.7.1" status="release" pubdate="20080930120254" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xml.apache.org/xalan-j/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="206">
+			<revision name="2.7.1" status="release" pubdate="20080930120254" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xml.apache.org/xalan-j/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="204">
 				<metadata-artifact status="no" details="" size="2937" time="0" location="/home/artem/.ivy2/cache/xalan/xalan/ivy-2.7.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/xalan/xalan/2.7.1/xalan-2.7.1.pom"/>
 				<caller organisation="org.opensaml" name="opensaml" conf="compile, runtime" rev="2.7.1" rev-constraint-default="2.7.1" rev-constraint-dynamic="2.7.1" callerrev="2.5.1-1"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="2.7.1" rev-constraint-default="2.7.1" rev-constraint-dynamic="2.7.1" callerrev="2.4.3"/>
@@ -313,7 +598,7 @@
 			</revision>
 		</module>
 		<module organisation="xalan" name="serializer">
-			<revision name="2.7.1" status="release" pubdate="20080930120254" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xml.apache.org/xalan-j/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="207">
+			<revision name="2.7.1" status="release" pubdate="20080930120254" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xml.apache.org/xalan-j/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="205">
 				<metadata-artifact status="no" details="" size="2747" time="0" location="/home/artem/.ivy2/cache/xalan/serializer/ivy-2.7.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/xalan/serializer/2.7.1/serializer-2.7.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="2.7.1" rev-constraint-default="2.7.1" rev-constraint-dynamic="2.7.1" callerrev="2.4.3"/>
 				<caller organisation="xalan" name="xalan" conf="compile, runtime" rev="2.7.1" rev-constraint-default="2.7.1" rev-constraint-dynamic="2.7.1" callerrev="2.7.1"/>
@@ -325,7 +610,7 @@
 			</revision>
 		</module>
 		<module organisation="rhino" name="js">
-			<revision name="1.7R2" status="release" pubdate="20090821180542" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.mozilla.org/rhino/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="195">
+			<revision name="1.7R2" status="release" pubdate="20090821180542" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.mozilla.org/rhino/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="193">
 				<license name="Mozilla Public License" url="http://www.mozilla.org/MPL/MPL-1.1.html"/>
 				<metadata-artifact status="no" details="" size="2468" time="0" location="/home/artem/.ivy2/cache/rhino/js/ivy-1.7R2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/rhino/js/1.7R2/js-1.7R2.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.7R2" rev-constraint-default="1.7R2" rev-constraint-dynamic="1.7R2" callerrev="2.4.3"/>
@@ -337,7 +622,7 @@
 			</revision>
 		</module>
 		<module organisation="org.codehaus.jra" name="jra">
-			<revision name="1.0-alpha-4" status="release" pubdate="20111128095800" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jra.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="194">
+			<revision name="1.0-alpha-4" status="release" pubdate="20111128095800" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jra.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="192">
 				<license name="The Apache Software License, Version 2.0" url="http://jra.codehaus.org/License"/>
 				<metadata-artifact status="no" details="" size="2575" time="0" location="/home/artem/.ivy2/cache/org.codehaus.jra/jra/ivy-1.0-alpha-4.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/jra/jra/1.0-alpha-4/jra-1.0-alpha-4.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.0-alpha-4" rev-constraint-default="1.0-alpha-4" rev-constraint-dynamic="1.0-alpha-4" callerrev="2.4.3"/>
@@ -349,7 +634,7 @@
 			</revision>
 		</module>
 		<module organisation="org.springframework" name="spring-jms">
-			<revision name="3.0.6.RELEASE" status="release" pubdate="20110819175600" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="192">
+			<revision name="3.0.6.RELEASE" status="release" pubdate="20110819175600" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="190">
 				<metadata-artifact status="no" details="" size="7146" time="0" location="/home/artem/.ivy2/cache/org.springframework/spring-jms/ivy-3.0.6.RELEASE.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/springframework/spring-jms/3.0.6.RELEASE/spring-jms-3.0.6.RELEASE.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.0.6.RELEASE" rev-constraint-default="3.0.6.RELEASE" rev-constraint-dynamic="3.0.6.RELEASE" callerrev="2.4.3"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="3.0.6.RELEASE" rev-constraint-default="3.0.6.RELEASE" rev-constraint-dynamic="3.1.2.RELEASE" callerrev="1.5.3"/>
@@ -369,7 +654,7 @@
 			</revision>
 		</module>
 		<module organisation="org.springframework" name="spring-tx">
-			<revision name="3.0.6.RELEASE" status="release" pubdate="20110819175600" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="193">
+			<revision name="3.0.6.RELEASE" status="release" pubdate="20110819175600" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="191">
 				<metadata-artifact status="no" details="" size="7340" time="0" location="/home/artem/.ivy2/cache/org.springframework/spring-tx/ivy-3.0.6.RELEASE.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/springframework/spring-tx/3.0.6.RELEASE/spring-tx-3.0.6.RELEASE.pom"/>
 				<caller organisation="org.biopax.validator" name="obo-fetcher" conf="compile, runtime" rev="3.0.5.RELEASE" rev-constraint-default="3.0.5.RELEASE" rev-constraint-dynamic="3.0.5.RELEASE" callerrev="2.0.0"/>
 				<caller organisation="org.springframework" name="spring-jdbc" conf="compile, runtime" rev="3.1.2.RELEASE" rev-constraint-default="3.1.2.RELEASE" rev-constraint-dynamic="3.1.2.RELEASE" callerrev="3.1.2.RELEASE"/>
@@ -417,8 +702,8 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec">
-			<revision name="1.1.1" status="release" pubdate="20080831154615" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="191">
-				<metadata-artifact status="successful" details="" size="2580" time="493" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.pom"/>
+			<revision name="1.1.1" status="release" pubdate="20080831154615" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="189">
+				<metadata-artifact status="successful" details="" size="2580" time="341" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-jms_1.1_spec" type="jar" ext="jar" status="no" details="" size="32359" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/jars/geronimo-jms_1.1_spec-1.1.1.jar">
@@ -428,8 +713,8 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-servlet_2.5_spec">
-			<revision name="1.1.2" status="release" pubdate="20080831154615" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="190">
-				<metadata-artifact status="successful" details="" size="2191" time="350" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-servlet_2.5_spec/1.1.2/geronimo-servlet_2.5_spec-1.1.2.pom"/>
+			<revision name="1.1.2" status="release" pubdate="20080831154615" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="188">
+				<metadata-artifact status="successful" details="" size="2191" time="334" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-servlet_2.5_spec/1.1.2/geronimo-servlet_2.5_spec-1.1.2.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.2" rev-constraint-default="1.1.2" rev-constraint-dynamic="1.1.2" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-servlet_2.5_spec" type="jar" ext="jar" status="no" details="" size="71301" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/jars/geronimo-servlet_2.5_spec-1.1.2.jar">
@@ -439,7 +724,7 @@
 			</revision>
 		</module>
 		<module organisation="org.eclipse.jetty" name="jetty-security">
-			<revision name="7.4.5.v20110725" status="release" pubdate="20110725192413" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="189">
+			<revision name="7.4.5.v20110725" status="release" pubdate="20110725192413" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="187">
 				<metadata-artifact status="no" details="" size="6902" time="0" location="/home/artem/.ivy2/cache/org.eclipse.jetty/jetty-security/ivy-7.4.5.v20110725.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/eclipse/jetty/jetty-security/7.4.5.v20110725/jetty-security-7.4.5.v20110725.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="2.4.3"/>
 				<artifacts>
@@ -450,7 +735,7 @@
 			</revision>
 		</module>
 		<module organisation="org.eclipse.jetty" name="jetty-server">
-			<revision name="7.4.5.v20110725" status="release" pubdate="20110725192317" resolver="sbt-chain" artresolver="sbt-chain" homepage="${jetty.url}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="184">
+			<revision name="7.4.5.v20110725" status="release" pubdate="20110725192317" resolver="sbt-chain" artresolver="sbt-chain" homepage="${jetty.url}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="182">
 				<metadata-artifact status="no" details="" size="7381" time="0" location="/home/artem/.ivy2/cache/org.eclipse.jetty/jetty-server/ivy-7.4.5.v20110725.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/eclipse/jetty/jetty-server/7.4.5.v20110725/jetty-server-7.4.5.v20110725.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="2.4.3"/>
 				<caller organisation="org.eclipse.jetty" name="jetty-security" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="7.4.5.v20110725"/>
@@ -462,7 +747,7 @@
 			</revision>
 		</module>
 		<module organisation="org.eclipse.jetty" name="jetty-http">
-			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191911" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="186">
+			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191911" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="184">
 				<metadata-artifact status="no" details="" size="6930" time="0" location="/home/artem/.ivy2/cache/org.eclipse.jetty/jetty-http/ivy-7.4.5.v20110725.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/eclipse/jetty/jetty-http/7.4.5.v20110725/jetty-http-7.4.5.v20110725.pom"/>
 				<caller organisation="org.eclipse.jetty" name="jetty-server" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="7.4.5.v20110725"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="2.4.3"/>
@@ -474,7 +759,7 @@
 			</revision>
 		</module>
 		<module organisation="org.eclipse.jetty" name="jetty-io">
-			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191856" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="187">
+			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191856" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="185">
 				<metadata-artifact status="no" details="" size="6813" time="0" location="/home/artem/.ivy2/cache/org.eclipse.jetty/jetty-io/ivy-7.4.5.v20110725.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/eclipse/jetty/jetty-io/7.4.5.v20110725/jetty-io-7.4.5.v20110725.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="2.4.3"/>
 				<caller organisation="org.eclipse.jetty" name="jetty-http" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="7.4.5.v20110725"/>
@@ -486,7 +771,7 @@
 			</revision>
 		</module>
 		<module organisation="org.eclipse.jetty" name="jetty-util">
-			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191817" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="188">
+			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191817" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="186">
 				<metadata-artifact status="no" details="" size="6902" time="0" location="/home/artem/.ivy2/cache/org.eclipse.jetty/jetty-util/ivy-7.4.5.v20110725.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/eclipse/jetty/jetty-util/7.4.5.v20110725/jetty-util-7.4.5.v20110725.pom"/>
 				<caller organisation="org.eclipse.jetty" name="jetty-io" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="7.4.5.v20110725"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="2.4.3"/>
@@ -498,7 +783,7 @@
 			</revision>
 		</module>
 		<module organisation="org.eclipse.jetty" name="jetty-continuation">
-			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191922" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="185">
+			<revision name="7.4.5.v20110725" status="release" pubdate="20110725191922" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="183">
 				<metadata-artifact status="no" details="" size="6892" time="0" location="/home/artem/.ivy2/cache/org.eclipse.jetty/jetty-continuation/ivy-7.4.5.v20110725.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/eclipse/jetty/jetty-continuation/7.4.5.v20110725/jetty-continuation-7.4.5.v20110725.pom"/>
 				<caller organisation="org.eclipse.jetty" name="jetty-server" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="7.4.5.v20110725"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="7.4.5.v20110725" rev-constraint-default="7.4.5.v20110725" rev-constraint-dynamic="7.4.5.v20110725" callerrev="2.4.3"/>
@@ -510,7 +795,7 @@
 			</revision>
 		</module>
 		<module organisation="org.codehaus.jettison" name="jettison">
-			<revision name="1.3" status="release" pubdate="20110411191638" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="183">
+			<revision name="1.3" status="release" pubdate="20110411191638" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="181">
 				<metadata-artifact status="no" details="" size="3166" time="0" location="/home/artem/.ivy2/cache/org.codehaus.jettison/jettison/ivy-1.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/jettison/jettison/1.3/jettison-1.3.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.3" rev-constraint-default="1.3" rev-constraint-dynamic="1.3" callerrev="2.4.3"/>
 				<caller organisation="org.springframework.batch" name="spring-batch-core" conf="compile, runtime" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="2.1.9.RELEASE"/>
@@ -529,7 +814,7 @@
 			</revision>
 		</module>
 		<module organisation="javax.ws.rs" name="jsr311-api">
-			<revision name="1.1.1" status="release" pubdate="20091109155605" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://jsr311.dev.java.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="182">
+			<revision name="1.1.1" status="release" pubdate="20091109155605" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://jsr311.dev.java.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="180">
 				<license name="                 CDDL License             " url="http://www.opensource.org/licenses/cddl1.php"/>
 				<metadata-artifact status="no" details="" size="2792" time="0" location="/home/artem/.ivy2/cache/javax.ws.rs/jsr311-api/ivy-1.1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="2.4.3"/>
@@ -541,7 +826,7 @@
 			</revision>
 		</module>
 		<module organisation="antlr" name="antlr">
-			<revision name="2.7.7" status="release" pubdate="20080831154540" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.antlr.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="180">
+			<revision name="2.7.7" status="release" pubdate="20080831154540" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.antlr.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="178">
 				<license name="BSD License" url="http://www.antlr.org/license.html"/>
 				<metadata-artifact status="no" details="" size="2439" time="0" location="/home/artem/.ivy2/cache/antlr/antlr/ivy-2.7.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/antlr/antlr/2.7.7/antlr-2.7.7.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="2.7.7" rev-constraint-default="2.7.7" rev-constraint-dynamic="2.7.7" callerrev="2.4.3"/>
@@ -553,7 +838,7 @@
 			</revision>
 		</module>
 		<module organisation="com.sun.xml.messaging.saaj" name="saaj-impl">
-			<revision name="1.3.12" status="release" pubdate="20110818090253" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="178">
+			<revision name="1.3.12" status="release" pubdate="20110818090253" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="176">
 				<license name="             Dual license consisting of the CDDL v1.1 and GPL v2         " url="http://glassfish.java.net/public/CDDL+GPL_1_1.html"/>
 				<metadata-artifact status="no" details="" size="3268" time="0" location="/home/artem/.ivy2/cache/com.sun.xml.messaging.saaj/saaj-impl/ivy-1.3.12.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/sun/xml/messaging/saaj/saaj-impl/1.3.12/saaj-impl-1.3.12.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.3.12" rev-constraint-default="1.3.12" rev-constraint-dynamic="1.3.12" callerrev="2.4.3"/>
@@ -565,7 +850,7 @@
 			</revision>
 		</module>
 		<module organisation="org.jvnet" name="mimepull">
-			<revision name="1.4" status="release" pubdate="20110803184207" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="179">
+			<revision name="1.4" status="release" pubdate="20110803184207" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="177">
 				<license name="                 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0             " url="http://www.opensource.org/licenses/cddl1.php"/>
 				<license name="                 GPLv2 with classpath exception             " url="http://www.gnu.org/software/classpath/license.html"/>
 				<metadata-artifact status="no" details="" size="2945" time="0" location="/home/artem/.ivy2/cache/org.jvnet/mimepull/ivy-1.4.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/jvnet/mimepull/1.4/mimepull-1.4.pom"/>
@@ -579,7 +864,7 @@
 			</revision>
 		</module>
 		<module organisation="org.springframework" name="spring-web">
-			<revision name="3.0.6.RELEASE" status="release" pubdate="20110819175600" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="177">
+			<revision name="3.0.6.RELEASE" status="release" pubdate="20110819175600" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="175">
 				<metadata-artifact status="no" details="" size="9283" time="0" location="/home/artem/.ivy2/cache/org.springframework/spring-web/ivy-3.0.6.RELEASE.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/springframework/spring-web/3.0.6.RELEASE/spring-web-3.0.6.RELEASE.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.0.6.RELEASE" rev-constraint-default="3.0.6.RELEASE" rev-constraint-dynamic="3.0.6.RELEASE" callerrev="2.4.3"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="3.0.6.RELEASE" rev-constraint-default="3.0.6.RELEASE" rev-constraint-dynamic="3.1.2.RELEASE" callerrev="1.5.3"/>
@@ -599,7 +884,7 @@
 			</revision>
 		</module>
 		<module organisation="asm" name="asm">
-			<revision name="3.3" status="release" pubdate="20101006170318" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="176">
+			<revision name="3.3" status="release" pubdate="20101006170318" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="174">
 				<metadata-artifact status="no" details="" size="2800" time="0" location="/home/artem/.ivy2/cache/asm/asm/ivy-3.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/asm/asm/3.3/asm-3.3.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.3" rev-constraint-default="3.3" rev-constraint-dynamic="3.3" callerrev="2.4.3"/>
 				<artifacts>
@@ -610,7 +895,7 @@
 			</revision>
 		</module>
 		<module organisation="xml-resolver" name="xml-resolver">
-			<revision name="1.2" status="release" pubdate="20080831154501" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xml.apache.org/commons/components/resolver/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="175">
+			<revision name="1.2" status="release" pubdate="20080831154501" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xml.apache.org/commons/components/resolver/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="173">
 				<metadata-artifact status="no" details="" size="2579" time="0" location="/home/artem/.ivy2/cache/xml-resolver/xml-resolver/ivy-1.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/xml-resolver/xml-resolver/1.2/xml-resolver-1.2.pom"/>
 				<caller organisation="org.opensaml" name="opensaml" conf="compile, runtime" rev="1.2" rev-constraint-default="1.2" rev-constraint-dynamic="1.2" callerrev="2.5.1-1"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.2" rev-constraint-default="1.2" rev-constraint-dynamic="1.2" callerrev="2.4.3"/>
@@ -624,7 +909,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-jaxws_2.2_spec">
-			<revision name="1.1" status="release" pubdate="20110719182939" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="174">
+			<revision name="1.1" status="release" pubdate="20110719182939" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="172">
 				<metadata-artifact status="no" details="" size="6340" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jaxws_2.2_spec/ivy-1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-jaxws_2.2_spec/1.1/geronimo-jaxws_2.2_spec-1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="2.4.3"/>
 				<artifacts>
@@ -635,7 +920,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-ws-metadata_2.0_spec">
-			<revision name="1.1.3" status="release" pubdate="20100422155513" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="173">
+			<revision name="1.1.3" status="release" pubdate="20100422155513" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="171">
 				<metadata-artifact status="no" details="" size="5657" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-ws-metadata_2.0_spec/ivy-1.1.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-ws-metadata_2.0_spec/1.1.3/geronimo-ws-metadata_2.0_spec-1.1.3.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.3" rev-constraint-default="1.1.3" rev-constraint-dynamic="1.1.3" callerrev="2.4.3"/>
 				<artifacts>
@@ -646,7 +931,7 @@
 			</revision>
 		</module>
 		<module organisation="javax.xml.soap" name="saaj-api">
-			<revision name="1.3.4" status="release" pubdate="20110816155753" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="172">
+			<revision name="1.3.4" status="release" pubdate="20110816155753" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="170">
 				<metadata-artifact status="no" details="" size="2937" time="0" location="/home/artem/.ivy2/cache/javax.xml.soap/saaj-api/ivy-1.3.4.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/javax/xml/soap/saaj-api/1.3.4/saaj-api-1.3.4.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.3.4" rev-constraint-default="1.3.4" rev-constraint-dynamic="1.3.4" callerrev="2.4.3"/>
 				<caller organisation="com.sun.xml.messaging.saaj" name="saaj-impl" conf="compile, runtime" rev="1.3.4" rev-constraint-default="1.3.4" rev-constraint-dynamic="1.3.4" callerrev="1.3.12"/>
@@ -658,7 +943,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-javamail_1.4_spec">
-			<revision name="1.7.1" status="release" pubdate="20100611144616" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="171">
+			<revision name="1.7.1" status="release" pubdate="20100611144616" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="169">
 				<metadata-artifact status="no" details="" size="6509" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-javamail_1.4_spec/ivy-1.7.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.7.1/geronimo-javamail_1.4_spec-1.7.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.7.1" rev-constraint-default="1.7.1" rev-constraint-dynamic="1.7.1" callerrev="2.4.3"/>
 				<artifacts>
@@ -669,7 +954,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec">
-			<revision name="1.1" status="release" pubdate="20100422150015" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="170">
+			<revision name="1.1" status="release" pubdate="20100422150015" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://geronimo.apache.org/maven/${siteId}/${version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="168">
 				<metadata-artifact status="no" details="" size="6117" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.1/geronimo-activation_1.1_spec-1.1.pom"/>
 				<caller organisation="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.jaxb-impl" conf="compile, runtime" rev="1.0.2" rev-constraint-default="1.0.2" rev-constraint-dynamic="1.0.2" callerrev="2.2.4_2"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="2.4.3"/>
@@ -681,7 +966,7 @@
 				</artifacts>
 			</revision>
 			<revision name="1.0.2" status="release" pubdate="20080831154616" resolver="jcenter" artresolver="jcenter" evicted="latest-revision" evicted-reason="" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
-				<metadata-artifact status="successful" details="" size="2151" time="351" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.2/geronimo-activation_1.1_spec-1.0.2.pom"/>
+				<metadata-artifact status="successful" details="" size="2151" time="902" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.2/geronimo-activation_1.1_spec-1.0.2.pom"/>
 				<evicted-by rev="1.1"/>
 				<caller organisation="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.jaxb-impl" conf="compile, runtime" rev="1.0.2" rev-constraint-default="1.0.2" rev-constraint-dynamic="1.0.2" callerrev="2.2.4_2"/>
 				<caller organisation="org.apache.servicemix.specs" name="org.apache.servicemix.specs.jaxb-api-2.2" conf="compile, runtime" rev="1.0.2" rev-constraint-default="1.0.2" rev-constraint-dynamic="1.0.2" callerrev="2.1.0"/>
@@ -690,7 +975,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.neethi" name="neethi">
-			<revision name="3.0.1" status="release" pubdate="20110711201219" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://ws.apache.org/neethi/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="169">
+			<revision name="3.0.1" status="release" pubdate="20110711201219" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://ws.apache.org/neethi/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="167">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="5210" time="0" location="/home/artem/.ivy2/cache/org.apache.neethi/neethi/ivy-3.0.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/neethi/neethi/3.0.1/neethi-3.0.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.0.1" rev-constraint-default="3.0.1" rev-constraint-dynamic="3.0.1" callerrev="2.4.3"/>
@@ -702,7 +987,7 @@
 			</revision>
 		</module>
 		<module organisation="com.sun.xml.bind" name="jaxb-xjc">
-			<revision name="2.2.4-1" status="release" pubdate="20110609220220" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jaxb.java.net/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="167">
+			<revision name="2.2.4-1" status="release" pubdate="20110609220220" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jaxb.java.net/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="165">
 				<license name="CDDL 1.1" url="https://glassfish.java.net/public/CDDL+GPL_1_1.html"/>
 				<license name="GPL2 w/ CPE" url="https://glassfish.java.net/public/CDDL+GPL_1_1.html"/>
 				<metadata-artifact status="no" details="" size="2761" time="0" location="/home/artem/.ivy2/cache/com.sun.xml.bind/jaxb-xjc/ivy-2.2.4-1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/sun/xml/bind/jaxb-xjc/2.2.4-1/jaxb-xjc-2.2.4-1.pom"/>
@@ -715,7 +1000,7 @@
 			</revision>
 		</module>
 		<module organisation="com.sun.xml.bind" name="jaxb-impl">
-			<revision name="2.2.4-1" status="release" pubdate="20110609220200" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jaxb.java.net/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="168">
+			<revision name="2.2.4-1" status="release" pubdate="20110609220200" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jaxb.java.net/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="166">
 				<license name="CDDL 1.1" url="https://glassfish.java.net/public/CDDL+GPL_1_1.html"/>
 				<license name="GPL2 w/ CPE" url="https://glassfish.java.net/public/CDDL+GPL_1_1.html"/>
 				<metadata-artifact status="no" details="" size="2740" time="0" location="/home/artem/.ivy2/cache/com.sun.xml.bind/jaxb-impl/ivy-2.2.4-1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/sun/xml/bind/jaxb-impl/2.2.4-1/jaxb-impl-2.2.4-1.pom"/>
@@ -736,7 +1021,7 @@
 			</revision>
 		</module>
 		<module organisation="wsdl4j" name="wsdl4j">
-			<revision name="1.6.2" status="release" pubdate="20080831154606" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://sf.net/projects/wsdl4j" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="166">
+			<revision name="1.6.2" status="release" pubdate="20080831154606" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://sf.net/projects/wsdl4j" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="164">
 				<license name="CPL" url="http://www.opensource.org/licenses/cpl1.0.txt"/>
 				<metadata-artifact status="no" details="" size="2331" time="0" location="/home/artem/.ivy2/cache/wsdl4j/wsdl4j/ivy-1.6.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.6.2" rev-constraint-default="1.6.2" rev-constraint-dynamic="1.6.2" callerrev="2.4.3"/>
@@ -748,7 +1033,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.velocity" name="velocity">
-			<revision name="1.7" status="release" pubdate="20101129222814" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://velocity.apache.org/engine/devel/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="164">
+			<revision name="1.7" status="release" pubdate="20101129222814" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://velocity.apache.org/engine/devel/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="162">
 				<metadata-artifact status="no" details="" size="4552" time="0" location="/home/artem/.ivy2/cache/org.apache.velocity/velocity/ivy-1.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/velocity/velocity/1.7/velocity-1.7.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.7" rev-constraint-default="1.7" rev-constraint-dynamic="1.7" callerrev="2.4.3"/>
 				<artifacts>
@@ -759,8 +1044,8 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-annotation_1.0_spec">
-			<revision name="1.1.1" status="release" pubdate="20080831154616" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="163">
-				<metadata-artifact status="successful" details="" size="2151" time="362" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1.1/geronimo-annotation_1.0_spec-1.1.1.pom"/>
+			<revision name="1.1.1" status="release" pubdate="20080831154616" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="161">
+				<metadata-artifact status="successful" details="" size="2151" time="461" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1.1/geronimo-annotation_1.0_spec-1.1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-annotation_1.0_spec" type="jar" ext="jar" status="no" details="" size="12452" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/jars/geronimo-annotation_1.0_spec-1.1.1.jar">
@@ -770,8 +1055,8 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-stax-api_1.0_spec">
-			<revision name="1.0.1" status="release" pubdate="20080831154614" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="162">
-				<metadata-artifact status="successful" details="" size="2166" time="399" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.pom"/>
+			<revision name="1.0.1" status="release" pubdate="20080831154614" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="160">
+				<metadata-artifact status="successful" details="" size="2166" time="689" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.0.1" rev-constraint-default="1.0.1" rev-constraint-dynamic="1.0.1" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-stax-api_1.0_spec" type="bundle" ext="jar" status="no" details="" size="28804" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/bundles/geronimo-stax-api_1.0_spec-1.0.1.jar">
@@ -781,7 +1066,7 @@
 			</revision>
 		</module>
 		<module organisation="org.codehaus.woodstox" name="woodstox-core-asl">
-			<revision name="4.1.1" status="release" pubdate="20110128084236" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://woodstox.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="160">
+			<revision name="4.1.1" status="release" pubdate="20110128084236" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://woodstox.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="159">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="2791" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/woodstox-core-asl/ivy-4.1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/woodstox/woodstox-core-asl/4.1.1/woodstox-core-asl-4.1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="4.1.1" rev-constraint-default="4.1.1" rev-constraint-dynamic="4.1.1" callerrev="2.4.3"/>
@@ -792,21 +1077,8 @@
 				</artifacts>
 			</revision>
 		</module>
-		<module organisation="org.codehaus.woodstox" name="stax2-api">
-			<revision name="3.1.1" status="release" pubdate="20110128084303" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://woodstox.codehaus.org/StAX2" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="161">
-				<license name="The BSD License" url="http://www.opensource.org/licenses/bsd-license.php"/>
-				<metadata-artifact status="no" details="" size="2705" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/stax2-api/ivy-3.1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/woodstox/stax2-api/3.1.1/stax2-api-3.1.1.pom"/>
-				<caller organisation="org.codehaus.woodstox" name="woodstox-core-asl" conf="compile, runtime" rev="3.1.1" rev-constraint-default="3.1.1" rev-constraint-dynamic="3.1.1" callerrev="4.1.1"/>
-				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.1.1" rev-constraint-default="3.1.1" rev-constraint-dynamic="3.1.1" callerrev="2.4.3"/>
-				<artifacts>
-					<artifact name="stax2-api" type="jar" ext="jar" status="no" details="" size="182112" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/stax2-api/jars/stax2-api-3.1.1.jar">
-						<origin-location is-local="false" location="https://jcenter.bintray.com/org/codehaus/woodstox/stax2-api/3.1.1/stax2-api-3.1.1.jar"/>
-					</artifact>
-				</artifacts>
-			</revision>
-		</module>
 		<module organisation="org.apache.ws.xmlschema" name="xmlschema-core">
-			<revision name="2.0.1" status="release" pubdate="20110921183246" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="159">
+			<revision name="2.0.1" status="release" pubdate="20110921183246" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="158">
 				<metadata-artifact status="no" details="" size="4227" time="0" location="/home/artem/.ivy2/cache/org.apache.ws.xmlschema/xmlschema-core/ivy-2.0.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/ws/xmlschema/xmlschema-core/2.0.1/xmlschema-core-2.0.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="2.0.1" rev-constraint-default="2.0.1" rev-constraint-dynamic="2.0.1" callerrev="2.4.3"/>
 				<artifacts>
@@ -817,7 +1089,7 @@
 			</revision>
 		</module>
 		<module organisation="com.sun.xml" name="com.springsource.com.sun.xml.fastinfoset">
-			<revision name="1.2.2" status="release" pubdate="20090204172553" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="157">
+			<revision name="1.2.2" status="release" pubdate="20090204172553" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="156">
 				<metadata-artifact status="no" details="" size="2457" time="0" location="/home/artem/.ivy2/cache/com.sun.xml/com.springsource.com.sun.xml.fastinfoset/ivy-1.2.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/sun/xml/com.springsource.com.sun.xml.fastinfoset/1.2.2/com.springsource.com.sun.xml.fastinfoset-1.2.2.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="1.2.2" rev-constraint-default="1.2.2" rev-constraint-dynamic="1.2.2" callerrev="1.5.3"/>
 				<artifacts>
@@ -828,7 +1100,7 @@
 			</revision>
 		</module>
 		<module organisation="org.springframework" name="spring-aspects">
-			<revision name="3.1.2.RELEASE" status="release" pubdate="20120708024400" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="154">
+			<revision name="3.1.2.RELEASE" status="release" pubdate="20120708024400" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="153">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="7126" time="0" location="/home/artem/.ivy2/cache/org.springframework/spring-aspects/ivy-3.1.2.RELEASE.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/springframework/spring-aspects/3.1.2.RELEASE/spring-aspects-3.1.2.RELEASE.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="3.1.2.RELEASE" rev-constraint-default="3.1.2.RELEASE" rev-constraint-dynamic="3.1.2.RELEASE" callerrev="1.5.3"/>
@@ -847,7 +1119,7 @@
 			</revision>
 		</module>
 		<module organisation="org.springframework" name="spring-context-support">
-			<revision name="3.1.2.RELEASE" status="release" pubdate="20120708024400" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="155">
+			<revision name="3.1.2.RELEASE" status="release" pubdate="20120708024400" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="154">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="8603" time="0" location="/home/artem/.ivy2/cache/org.springframework/spring-context-support/ivy-3.1.2.RELEASE.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/springframework/spring-context-support/3.1.2.RELEASE/spring-context-support-3.1.2.RELEASE.pom"/>
 				<caller organisation="org.biopax.validator" name="obo-fetcher" conf="compile, runtime" rev="3.0.5.RELEASE" rev-constraint-default="3.0.5.RELEASE" rev-constraint-dynamic="3.0.5.RELEASE" callerrev="2.0.0"/>
@@ -871,7 +1143,7 @@
 			</revision>
 		</module>
 		<module organisation="org.springframework" name="spring-oxm">
-			<revision name="3.1.2.RELEASE" status="release" pubdate="20120708024300" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="156">
+			<revision name="3.1.2.RELEASE" status="release" pubdate="20120708024300" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="155">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="7546" time="0" location="/home/artem/.ivy2/cache/org.springframework/spring-oxm/ivy-3.1.2.RELEASE.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/springframework/spring-oxm/3.1.2.RELEASE/spring-oxm-3.1.2.RELEASE.pom"/>
 				<caller organisation="org.biopax.validator" name="obo-fetcher" conf="compile, runtime" rev="3.0.5.RELEASE" rev-constraint-default="3.0.5.RELEASE" rev-constraint-dynamic="3.0.5.RELEASE" callerrev="2.0.0"/>
@@ -894,7 +1166,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.xmlbeans" name="xmlbeans">
-			<revision name="2.4.0" status="release" pubdate="20080710000503" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xmlbeans.apache.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="181">
+			<revision name="2.4.0" status="release" pubdate="20080710000503" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://xmlbeans.apache.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="179">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="2536" time="0" location="/home/artem/.ivy2/cache/org.apache.xmlbeans/xmlbeans/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/xmlbeans/xmlbeans/2.4.0/xmlbeans-2.4.0.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="2.4.3"/>
@@ -902,6 +1174,25 @@
 					<artifact name="xmlbeans" type="jar" ext="jar" status="no" details="" size="2694049" time="0" location="/home/artem/.ivy2/cache/org.apache.xmlbeans/xmlbeans/jars/xmlbeans-2.4.0.jar">
 						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/xmlbeans/xmlbeans/2.4.0/xmlbeans-2.4.0.jar"/>
 					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.thoughtworks.xstream" name="xstream">
+			<revision name="1.3.1" status="release" pubdate="20081206185015" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="225">
+				<metadata-artifact status="no" details="" size="9276" time="0" location="/home/artem/.ivy2/cache/com.thoughtworks.xstream/xstream/ivy-1.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/thoughtworks/xstream/xstream/1.3.1/xstream-1.3.1.pom"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="1.3.1" rev-constraint-default="1.3.1" rev-constraint-dynamic="1.3.1" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="org.springframework.batch" name="spring-batch-core" conf="compile, runtime" rev="1.3" rev-constraint-default="1.3" rev-constraint-dynamic="1.3" callerrev="2.1.9.RELEASE"/>
+				<artifacts>
+					<artifact name="xstream" type="jar" ext="jar" status="no" details="" size="431406" time="0" location="/home/artem/.ivy2/cache/com.thoughtworks.xstream/xstream/jars/xstream-1.3.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/com/thoughtworks/xstream/xstream/1.3.1/xstream-1.3.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="1.3" status="release" pubdate="20080831154554" resolver="sbt-chain" artresolver="sbt-chain" evicted="latest-revision" evicted-reason="" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<metadata-artifact status="no" details="" size="9330" time="0" location="/home/artem/.ivy2/cache/com.thoughtworks.xstream/xstream/ivy-1.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/thoughtworks/xstream/xstream/1.3/xstream-1.3.pom"/>
+				<evicted-by rev="1.3.1"/>
+				<caller organisation="org.springframework.batch" name="spring-batch-core" conf="compile, runtime" rev="1.3" rev-constraint-default="1.3" rev-constraint-dynamic="1.3" callerrev="2.1.9.RELEASE"/>
+				<artifacts>
 				</artifacts>
 			</revision>
 		</module>
@@ -917,7 +1208,7 @@
 			</revision>
 		</module>
 		<module organisation="xerces" name="xercesImpl">
-			<revision name="2.9.1" status="release" pubdate="20080831154455" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="151">
+			<revision name="2.9.1" status="release" pubdate="20080831154455" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="150">
 				<metadata-artifact status="no" details="" size="2223" time="0" location="/home/artem/.ivy2/cache/xerces/xercesImpl/ivy-2.9.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/xerces/xercesImpl/2.9.1/xercesImpl-2.9.1.pom"/>
 				<caller organisation="com.hp.hpl.jena" name="jena" conf="compile, runtime" rev="2.7.1" rev-constraint-default="2.7.1" rev-constraint-dynamic="2.7.1" callerrev="2.6.4"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-solr" conf="compile, runtime" rev="2.9.1" rev-constraint-default="2.9.1" rev-constraint-dynamic="2.9.1" callerrev="1.2.2"/>
@@ -943,7 +1234,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.httpcomponents" name="httpmime">
-			<revision name="4.2.1" status="release" pubdate="20120630005434" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://hc.apache.org/httpcomponents-client" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="150">
+			<revision name="4.2.1" status="release" pubdate="20120630005434" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://hc.apache.org/httpcomponents-client" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="149">
 				<metadata-artifact status="no" details="" size="8747" time="0" location="/home/artem/.ivy2/cache/org.apache.httpcomponents/httpmime/ivy-4.2.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/httpcomponents/httpmime/4.2.1/httpmime-4.2.1.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-solr" conf="compile, runtime" rev="4.2.1" rev-constraint-default="4.2.1" rev-constraint-dynamic="4.2.1" callerrev="1.2.2"/>
 				<artifacts>
@@ -954,7 +1245,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.httpcomponents" name="httpclient">
-			<revision name="4.2.1" status="release" pubdate="20120630005423" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://hc.apache.org/httpcomponents-client" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="148">
+			<revision name="4.2.1" status="release" pubdate="20120630005423" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://hc.apache.org/httpcomponents-client" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="147">
 				<metadata-artifact status="no" details="" size="9179" time="0" location="/home/artem/.ivy2/cache/org.apache.httpcomponents/httpclient/ivy-4.2.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/httpcomponents/httpclient/4.2.1/httpclient-4.2.1.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-solr" conf="compile, runtime" rev="4.2.1" rev-constraint-default="4.2.1" rev-constraint-dynamic="4.2.1" callerrev="1.2.2"/>
 				<artifacts>
@@ -965,7 +1256,7 @@
 			</revision>
 		</module>
 		<module organisation="org.apache.httpcomponents" name="httpcore">
-			<revision name="4.2.1" status="release" pubdate="20120610191325" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://hc.apache.org/httpcomponents-core-ga" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="149">
+			<revision name="4.2.1" status="release" pubdate="20120610191325" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://hc.apache.org/httpcomponents-core-ga" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="148">
 				<metadata-artifact status="no" details="" size="6614" time="0" location="/home/artem/.ivy2/cache/org.apache.httpcomponents/httpcore/ivy-4.2.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1.pom"/>
 				<caller organisation="org.apache.httpcomponents" name="httpclient" conf="compile, runtime" rev="4.2.1" rev-constraint-default="4.2.1" rev-constraint-dynamic="4.2.1" callerrev="4.2.1"/>
 				<caller organisation="org.apache.httpcomponents" name="httpmime" conf="compile, runtime" rev="4.2.1" rev-constraint-default="4.2.1" rev-constraint-dynamic="4.2.1" callerrev="4.2.1"/>
@@ -977,7 +1268,7 @@
 			</revision>
 		</module>
 		<module organisation="org.json" name="json">
-			<revision name="20090211" status="release" pubdate="20090226213142" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.json.org/java/index.html" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="147">
+			<revision name="20090211" status="release" pubdate="20090226213142" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.json.org/java/index.html" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="146">
 				<license name="provided without support or warranty" url="http://www.json.org/license.html"/>
 				<metadata-artifact status="no" details="" size="2908" time="0" location="/home/artem/.ivy2/cache/org.json/json/ivy-20090211.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/json/json/20090211/json-20090211.pom"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-solr" conf="compile, runtime" rev="20090211" rev-constraint-default="20090211" rev-constraint-dynamic="20090211" callerrev="1.2.2"/>
@@ -999,23 +1290,13 @@
 				</artifacts>
 			</revision>
 		</module>
-		<module organisation="com.thoughtworks.xstream" name="xstream">
-			<revision name="1.3" status="release" pubdate="20080831154554" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="145">
-				<metadata-artifact status="no" details="" size="9330" time="0" location="/home/artem/.ivy2/cache/com.thoughtworks.xstream/xstream/ivy-1.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/thoughtworks/xstream/xstream/1.3/xstream-1.3.pom"/>
-				<caller organisation="org.springframework.batch" name="spring-batch-core" conf="compile, runtime" rev="1.3" rev-constraint-default="1.3" rev-constraint-dynamic="1.3" callerrev="2.1.9.RELEASE"/>
-				<artifacts>
-					<artifact name="xstream" type="jar" ext="jar" status="no" details="" size="411090" time="0" location="/home/artem/.ivy2/cache/com.thoughtworks.xstream/xstream/jars/xstream-1.3.jar">
-						<origin-location is-local="false" location="https://jcenter.bintray.com/com/thoughtworks/xstream/xstream/1.3/xstream-1.3.jar"/>
-					</artifact>
-				</artifacts>
-			</revision>
-		</module>
 		<module organisation="xpp3" name="xpp3_min">
-			<revision name="1.1.4c" status="release" pubdate="20080831154522" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="146">
+			<revision name="1.1.4c" status="release" pubdate="20080831154522" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="145">
 				<license name="Indiana University Extreme! Lab Software License, vesion 1.1.1" url="http://www.extreme.indiana.edu/viewcvs/~checkout~/XPP3/java/LICENSE.txt"/>
 				<license name="Public Domain" url="http://creativecommons.org/licenses/publicdomain"/>
 				<metadata-artifact status="no" details="" size="2709" time="0" location="/home/artem/.ivy2/cache/xpp3/xpp3_min/ivy-1.1.4c.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.pom"/>
 				<caller organisation="com.thoughtworks.xstream" name="xstream" conf="compile, runtime" rev="1.1.4c" rev-constraint-default="1.1.4c" rev-constraint-dynamic="1.1.4c" callerrev="1.3"/>
+				<caller organisation="com.thoughtworks.xstream" name="xstream" conf="compile, runtime" rev="1.1.4c" rev-constraint-default="1.1.4c" rev-constraint-dynamic="1.1.4c" callerrev="1.3.1"/>
 				<artifacts>
 					<artifact name="xpp3_min" type="jar" ext="jar" status="no" details="" size="24956" time="0" location="/home/artem/.ivy2/cache/xpp3/xpp3_min/jars/xpp3_min-1.1.4c.jar">
 						<origin-location is-local="false" location="https://jcenter.bintray.com/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar"/>
@@ -1428,7 +1709,7 @@
 				<artifacts>
 				</artifacts>
 			</revision>
-			<revision name="2.5" status="release" pubdate="20080831154538" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="208">
+			<revision name="2.5" status="release" pubdate="20080831154538" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="206">
 				<metadata-artifact status="no" details="" size="2194" time="0" location="/home/artem/.ivy2/cache/javax.servlet/servlet-api/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/javax/servlet/servlet-api/2.5/servlet-api-2.5.pom"/>
 				<caller organisation="org.eclipse.jetty" name="jetty-server" conf="compile, runtime" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="7.4.5.v20110725"/>
 				<caller organisation="org.apache.solr" name="solr-core" conf="compile, runtime" rev="2.4" rev-constraint-default="2.4" rev-constraint-dynamic="2.4" callerrev="3.6.2"/>
@@ -1691,7 +1972,7 @@
 			</revision>
 		</module>
 		<module organisation="commons-collections" name="commons-collections">
-			<revision name="3.2.1" status="release" pubdate="20080831154528" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/collections/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="165">
+			<revision name="3.2.1" status="release" pubdate="20080831154528" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/collections/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="163">
 				<metadata-artifact status="no" details="" size="4590" time="0" location="/home/artem/.ivy2/cache/commons-collections/commons-collections/ivy-3.2.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.pom"/>
 				<caller organisation="org.opensaml" name="opensaml" conf="compile, runtime" rev="3.1" rev-constraint-default="3.1" rev-constraint-dynamic="3.1" callerrev="2.5.1-1"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="3.2.1" rev-constraint-default="3.2.1" rev-constraint-dynamic="3.2.1" callerrev="2.4.3"/>
@@ -2096,7 +2377,7 @@
 			</revision>
 		</module>
 		<module organisation="mysql" name="mysql-connector-java">
-			<revision name="5.1.6" status="release" pubdate="20080831154841" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://dev.mysql.com/usingmysql/java/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="152">
+			<revision name="5.1.6" status="release" pubdate="20080831154841" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://dev.mysql.com/usingmysql/java/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="151">
 				<license name="The GNU General Public License, Version 2" url="http://www.gnu.org/licenses/gpl.txt"/>
 				<metadata-artifact status="no" details="" size="2386" time="0" location="/home/artem/.ivy2/cache/mysql/mysql-connector-java/ivy-5.1.6.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.pom"/>
 				<caller organisation="uk.ac.ebi" name="ols" conf="compile, runtime" rev="5.1.6" rev-constraint-default="5.1.6" rev-constraint-dynamic="5.1.6" callerrev="1.18"/>
@@ -2203,7 +2484,7 @@
 			</revision>
 		</module>
 		<module organisation="org.codehaus.woodstox" name="wstx-asl">
-			<revision name="3.2.7" status="release" pubdate="20080903103303" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://woodstox.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="153">
+			<revision name="3.2.7" status="release" pubdate="20080903103303" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://woodstox.codehaus.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="152">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
 				<metadata-artifact status="no" details="" size="2602" time="0" location="/home/artem/.ivy2/cache/org.codehaus.woodstox/wstx-asl/ivy-3.2.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/codehaus/woodstox/wstx-asl/3.2.7/wstx-asl-3.2.7.pom"/>
 				<caller organisation="org.apache.solr" name="solr-solrj" conf="compile, runtime" rev="3.2.7" rev-constraint-default="3.2.7" rev-constraint-dynamic="3.2.7" callerrev="3.6.2"/>
@@ -2811,10 +3092,17 @@
 			<revision name="2.5" status="release" pubdate="20151210133637" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="34">
 				<metadata-artifact status="no" details="" size="24771" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-slf4j-impl/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-slf4j-impl/2.5/log4j-slf4j-impl-2.5.pom"/>
 				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="4.2.0"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="4.0.0"/>
 				<artifacts>
 					<artifact name="log4j-slf4j-impl" type="jar" ext="jar" status="no" details="" size="22935" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-slf4j-impl/jars/log4j-slf4j-impl-2.5.jar">
 						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-slf4j-impl/2.5/log4j-slf4j-impl-2.5.jar"/>
 					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="2.1" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<evicted-by rev="2.5"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="4.0.0"/>
+				<artifacts>
 				</artifacts>
 			</revision>
 		</module>
@@ -2823,6 +3111,7 @@
 				<metadata-artifact status="no" details="" size="5289" time="0" location="/home/artem/.ivy2/cache/org.slf4j/slf4j-api/ivy-1.7.14.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.14/slf4j-api-1.7.14.pom"/>
 				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="1.7.14" rev-constraint-default="1.7.14" rev-constraint-dynamic="1.7.14" callerrev="4.2.0"/>
 				<caller organisation="org.apache.logging.log4j" name="log4j-slf4j-impl" conf="compile, runtime" rev="1.7.14" rev-constraint-default="1.7.14" rev-constraint-dynamic="1.7.12" callerrev="2.5"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="1.7.10" rev-constraint-default="1.7.10" rev-constraint-dynamic="1.7.10" callerrev="4.0.0"/>
 				<caller organisation="org.slf4j" name="jcl-over-slf4j" conf="compile, runtime" rev="1.6.1" rev-constraint-default="1.6.1" rev-constraint-dynamic="1.6.1" callerrev="1.6.1"/>
 				<caller organisation="org.hupo.psi.mi.psicquic" name="psicquic-client" conf="default, compile, runtime, master" rev="1.6.6" rev-constraint-default="1.6.6" rev-constraint-dynamic="1.6.6" callerrev="1.5.3"/>
 				<caller organisation="org.apache.solr" name="solr-solrj" conf="compile, runtime" rev="1.6.1" rev-constraint-default="1.6.1" rev-constraint-dynamic="1.6.1" callerrev="3.6.2"/>
@@ -2838,6 +3127,12 @@
 					<artifact name="slf4j-api" type="jar" ext="jar" status="no" details="" size="33562" time="0" location="/home/artem/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.14.jar">
 						<origin-location is-local="false" location="https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.14/slf4j-api-1.7.14.jar"/>
 					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="1.7.10" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<evicted-by rev="1.7.14"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="1.7.10" rev-constraint-default="1.7.10" rev-constraint-dynamic="1.7.10" callerrev="4.0.0"/>
+				<artifacts>
 				</artifacts>
 			</revision>
 			<revision name="1.6.2" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
@@ -2892,6 +3187,8 @@
 			<revision name="2.5" status="release" pubdate="20151210133639" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="31">
 				<metadata-artifact status="no" details="" size="28967" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-core/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-core/2.5/log4j-core-2.5.pom"/>
 				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="4.2.0"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="4.0.0"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="2.3" rev-constraint-default="2.3" rev-constraint-dynamic="2.3" callerrev="1.2-SNAPSHOT"/>
 				<caller organisation="default" name="biograph_2.11" conf="compile" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="1.0"/>
 				<artifacts>
 					<artifact name="log4j-core" type="jar" ext="jar" status="no" details="" size="1106090" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-core/jars/log4j-core-2.5.jar">
@@ -2899,15 +3196,35 @@
 					</artifact>
 				</artifacts>
 			</revision>
+			<revision name="2.1" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<evicted-by rev="2.5"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="4.0.0"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.3" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+			<revision name="2.3" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<evicted-by rev="2.1"/>
+				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="2.3" rev-constraint-default="2.3" rev-constraint-dynamic="2.3" callerrev="1.2-SNAPSHOT"/>
+				<artifacts>
+				</artifacts>
+			</revision>
 		</module>
 		<module organisation="org.apache.logging.log4j" name="log4j-api">
 			<revision name="2.5" status="release" pubdate="20151210133636" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="35">
 				<metadata-artifact status="no" details="" size="30413" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-api/ivy-2.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-api/2.5/log4j-api-2.5.pom"/>
 				<caller organisation="org.biojava" name="biojava-core" conf="default, compile, runtime, master" rev="2.5" rev-constraint-default="2.5" rev-constraint-dynamic="2.5" callerrev="4.2.0"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="4.0.0"/>
 				<artifacts>
 					<artifact name="log4j-api" type="jar" ext="jar" status="no" details="" size="146761" time="0" location="/home/artem/.ivy2/cache/org.apache.logging.log4j/log4j-api/jars/log4j-api-2.5.jar">
 						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/logging/log4j/log4j-api/2.5/log4j-api-2.5.jar"/>
 					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="2.1" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
+				<evicted-by rev="2.5"/>
+				<caller organisation="org.biojava" name="biojava-ontology" conf="compile, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="4.0.0"/>
+				<artifacts>
 				</artifacts>
 			</revision>
 		</module>

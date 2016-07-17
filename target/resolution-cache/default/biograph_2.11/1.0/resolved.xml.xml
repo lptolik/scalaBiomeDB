@@ -4,7 +4,7 @@
 		module="biograph_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160706100951"
+		publication="20160715143743"
 	>
 		<description>
 		BioGraph
@@ -48,5 +48,6 @@
 		<dependency org="psidev.psi.mi" name="psi25-xml" rev="1.8.4" conf="compile->default(compile)"/>
 		<dependency org="psidev.psi.mi" name="psimitab" rev="1.8.4" conf="compile->default(compile)"/>
 		<dependency org="org.hupo.psi.mi.psicquic" name="psicquic-client" rev="1.5.3" conf="compile->default(compile)"/>
+		<dependency org="org.sbml.jsbml" name="jsbml" rev="1.2-SNAPSHOT" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

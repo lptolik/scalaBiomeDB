@@ -7,12 +7,17 @@ version := "1.0"
 scalaVersion := "2.11.7"
 
 resolvers += "European Bioinformatics Institute" at "http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public"
+//http://www.ebi.ac.uk/~maven/m2repo/org/sbml/jsbml/jsbml/
+//http://www.ebi.ac.uk/~maven/m2repo
+//resolvers += "The EBI repository" at "http://www.ebi.ac.uk/~maven/m2repo/org/sbml/"
+
+//resolvers += "Biojava3" at "http://www.biojava.org/download/maven"
+
+resolvers += "The JSBML repository" at "http://jsbml.sourceforge.net/m2repo_snapshots"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.1.7" % "test"
 
 libraryDependencies += "org.neo4j" % "neo4j" % "2.3.1"
-
-//libraryDependencies += "ch.qos.logback" %  "logback-classic" % "1.1.7"
 
 //libraryDependencies += "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.1.0"
 
@@ -33,6 +38,12 @@ libraryDependencies += "psidev.psi.mi" % "psi25-xml" % "1.8.4"
 libraryDependencies += "psidev.psi.mi" % "psimitab" % "1.8.4"
 
 libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3"
+
+//libraryDependencies += "org.sbml.jsbml.modules" % "jsbml-tidy" % "1.1-b1"
+
+//libraryDependencies += "org.biojava" % "biojava-ontology" % "4.0.0"
+
+libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
 
 //sbt-assembly
 //assemblySettings

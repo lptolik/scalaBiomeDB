@@ -45,4 +45,8 @@ object BiomeDBRelations {
   val participates_in = new RelationshipType {
     override def name(): String = "PARTICIPATES_IN"
   }
+
+  val locates_in = new RelationshipType {
+    override def name(): String = "LOCATES_IN"
+  }
 }

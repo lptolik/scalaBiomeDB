@@ -5,6 +5,7 @@ import java.io.File
 import org.hupo.psi.mi.psicquic.wsclient.UniversalPsicquicClient
 import org.hupo.psi.mi.psicquic.wsclient.result.MitabSearchResult
 import org.neo4j.graphdb.DynamicLabel
+
 import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml
 import psidev.psi.mi.xml.model.{EntrySet, Entry}
 import utilFunctions.BiomeDBRelations

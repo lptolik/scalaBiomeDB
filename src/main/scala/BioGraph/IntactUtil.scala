@@ -19,7 +19,7 @@ import scala.collection.immutable.HashMap
 class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends TransactionSupport {
 
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
-  var gbs = scala.collection.mutable.Set[String]()
+//  var gbs = scala.collection.mutable.Set[String]()
   var mapOfReactants = Map[Int, Reactant]()
   var mapOfExperiments = Map[Int, ExperimentInfo]()
 
@@ -40,23 +40,20 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
 
   def interactorInfo(interactor: Interactor): InteractorInfo = {
     val id = interactor.getId
-//    println(id)
     val name = Option(interactor.getNames.getFullName)
     val secondaryName = Option(interactor.getNames.getShortLabel)
-//    val geneName = interactor.getNames.getAliases
-    val seq = Option(interactor.getSequence)
-    val sequence = seq match {
+    val sequence = Option(interactor.getSequence) match {
       case Some(s) => s
-      case None => ""//println("No sequence: " + id + " " + name)
+      case None => ""
     }
 //    process inchi
     val inchiFind = Option(
       interactor.getAttributes.asScala.toList.filter(
-        e => (e.getName == "standard inchi") || (e.getName == "inchi key")
+        elem => (elem.getName == "standard inchi") || (elem.getName == "inchi key")
       )
     )
     val inchiMap = inchiFind match {
-      case Some(i) => i.map(e => e.getName -> inchiWriter(e.getValue)).toMap[String, String]
+      case Some(i) => i.map(elem => elem.getName -> inchiWriter(elem.getValue)).toMap[String, String]
       case None => Map[String, String]()
     }
 
@@ -65,7 +62,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
         def makeXRef(ref: DbReference): Map[String, String] = ref.getId.contains(':') match {
           case true => Map(ref.getDb -> ref.getId.split(':')(1))
           case _ =>
-            gbs.add(ref.getDb)
+//            gbs.add(ref.getDb)
             Map(ref.getDb -> ref.getId)
         }
         makeMapOfXrefs(refs.tail, makeXRef(refs.head) :: listOfXrefMap)
@@ -73,7 +70,6 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
       else listOfXrefMap
   }
     val xrefs = interactor.getXref.getAllDbReferences.asScala.toList
-//    val x = xrefs.getAllDbReferences.asScala.foreach(makeMapOfRefs)
     var mapOfXrefs = makeMapOfXrefs(xrefs, List())
     val reactant = new InteractorInfo(id, name, secondaryName, mapOfXrefs, sequence, inchiMap)
     reactant

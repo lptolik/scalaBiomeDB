@@ -28,8 +28,8 @@ object PSICQUICApp {
     val mitab = psicquic.sendQuery("P76458", 0, 300)
     val xml = psicquic.convertQueryResult(mitab)
     val xmlRead = xml.getEntries.asScala
-
-    val intactUtilObject = new IntactUtil(xmlRead, dataBaseFile)
+//
+//    val intactUtilObject = new IntactUtil(xmlRead, dataBaseFile)
 //    val interactors = intactUtilObject.getInteractors
 //    val reactions = intactUtilObject.getInteractions
 //    reactions.foreach(println)
@@ -37,6 +37,7 @@ object PSICQUICApp {
     val output = new File("/home/artem/work/reps/GenBank/scalaUploadTest/iteractions.xml")
     val writer = new PsimiXmlWriter
     writer.write(xml, output)
+
 
   }
 }
