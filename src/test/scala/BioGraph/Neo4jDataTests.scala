@@ -41,4 +41,5 @@ class Neo4jDataTests extends FunSuite with TransactionSupport{
   }
 
   graphDataBaseConnection.shutdown()
+
 }

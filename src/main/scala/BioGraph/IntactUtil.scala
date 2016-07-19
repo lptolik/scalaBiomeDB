@@ -1,17 +1,14 @@
 package BioGraph
 
-import org.neo4j.graphdb.DynamicLabel
+
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import psidev.psi.mi.xml.io.impl.PsimiXmlReader253
 import psidev.psi.mi.xml.model.{DbReference, ExperimentDescription, ExperimentalInteractor, Interaction, Interactor, Entry}
-import psidev.psi.mi.xml.{PsimiXmlWriter, PsimiXmlReader, PsimiXmlLightweightReader}
-import psidev.psi.mi.xml.xmlindex.impl.PsimiXmlPullParser253
 
 import java.io.File
 import utilFunctions.{BiomeDBRelations, TransactionSupport}
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable.HashMap
+
 
 /**
   * Created by artem on 16.06.16.
@@ -19,7 +16,7 @@ import scala.collection.immutable.HashMap
 class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends TransactionSupport {
 
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
-//  var gbs = scala.collection.mutable.Set[String]()
+  //  var gbs = scala.collection.mutable.Set[String]()
   var mapOfReactants = Map[Int, Reactant]()
   var mapOfExperiments = Map[Int, ExperimentInfo]()
 
@@ -46,7 +43,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
       case Some(s) => s
       case None => ""
     }
-//    process inchi
+    //    process inchi
     val inchiFind = Option(
       interactor.getAttributes.asScala.toList.filter(
         elem => (elem.getName == "standard inchi") || (elem.getName == "inchi key")
@@ -62,18 +59,17 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
         def makeXRef(ref: DbReference): Map[String, String] = ref.getId.contains(':') match {
           case true => Map(ref.getDb -> ref.getId.split(':')(1))
           case _ =>
-//            gbs.add(ref.getDb)
+            //            gbs.add(ref.getDb)
             Map(ref.getDb -> ref.getId)
         }
         makeMapOfXrefs(refs.tail, makeXRef(refs.head) :: listOfXrefMap)
       }
       else listOfXrefMap
-  }
+    }
     val xrefs = interactor.getXref.getAllDbReferences.asScala.toList
     var mapOfXrefs = makeMapOfXrefs(xrefs, List())
     val reactant = new InteractorInfo(id, name, secondaryName, mapOfXrefs, sequence, inchiMap)
     reactant
-//    (mapOfXrefs, id, name, sequence, secondaryName, inchiMap)
   }
 
   def interactionInfo(interaction: Interaction) = {
@@ -86,7 +82,6 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
     val experiments = interaction.getExperiments.asScala.map(_.getId).head
     val interactionInfo = new InteractionInfo(id, name, secondaryName, xref, participants, experiments, imexId)
     interactionInfo
-//    (id, name, xref, participants, experiments, secondaryName, imexId)
   }
 
   def experimentInfo(experiment: ExperimentDescription) = {
@@ -95,9 +90,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
     val participantDetectionMethod = experiment.getParticipantIdentificationMethod.getNames.getFullName
     val interactionDetectionMethod = experiment.getInteractionDetectionMethod.getNames.getFullName
     val experimentInfo = new ExperimentInfo(expId, participantDetectionMethod, interactionDetectionMethod, fullName)
-//    (expId, (participantDetectionMethod, interactionDetectionMethod, fullName))
     experimentInfo
-//    List(expId, participantDetectionMethod, interactionDetectionMethod, fullName)
   }
 
   private def findPolypetidesInteractors(parsedInteractors: List[InteractorInfo]) = {
@@ -118,15 +111,15 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
     findExistingNodes.flatten.map(_.map(_.asScala))
   }
 
-  def createInteractorNodes(interactors: List[Interactor]): Unit = transaction(graphDataBaseConnection){
+  def createInteractorNodes(interactors: List[Interactor]): Unit = transaction(graphDataBaseConnection) {
     def processOneInteractor(parsedInteractor: InteractorInfo, queryResult: List[scala.collection.mutable.Map[String, AnyRef]]): Unit = {
-//      Name
+      //      Name
       val reactantName = parsedInteractor.getName
 
-//      inchi
+      //      inchi
       val inchiMap = parsedInteractor.getInchi
 
-//      Try to match a polypeptide in DB to a reactant
+      //      Try to match a polypeptide in DB to a reactant
       val reactant = queryResult.nonEmpty match {
         case true =>
           val reactant = new Reactant(name = reactantName)
@@ -152,11 +145,11 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
   }
 
   def createReactionsNodes(interactions: List[Interaction]): Unit = transaction(graphDataBaseConnection) {
-//    make a Map of experiments by their Intact id
+    //    make a Map of experiments by their Intact id
     this.getExperiments.map(experimentInfo).foreach(e => mapOfExperiments += (e.getId -> e))
     def processOneInteraction(interaction: Interaction): Unit = {
       val info = interactionInfo(interaction)
-//      name
+      //      name
       val reactionName = info.getName match {
         case Some(name) => name
         case _ => info.getSecondaryName match {
@@ -164,12 +157,12 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
           case _ => "unknown"
         }
       }
-//      xrefs
+      //      xrefs
       val listOfXrefs = info.getImexId match {
         case Some(id) => List(new XRef(info.getIntactId, intactDB), new XRef(id, imexDB))
         case None => List(new XRef(info.getIntactId, intactDB))
       }
-//      reactants
+      //      reactants
       val listOfReactants = info.getParticipants.map(mapOfReactants).toList
       val reaction = new Reaction(
         reactionName,
@@ -185,14 +178,6 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
   private def inchiWriter(inchiString: String): String = {
     if (inchiString.contains('=')) inchiString.split('=')(1)
     else inchiString
-  }
-
-  private def checkDbName(db: String) = {
-    val outputDbName = db.length match {
-      case i if i < 3 => db.toUpperCase
-      case _ => db.capitalize
-    }
-    outputDbName
   }
 }
 

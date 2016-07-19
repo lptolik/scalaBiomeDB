@@ -23,7 +23,7 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
   val fileReader = Source.fromFile(seedFile.getAbsolutePath)
   val linesOfSeedFile = fileReader.getLines().toList.drop(1)
   fileReader.close()
-  val accession = linesOfSeedFile(1).split("\t")(0)
+  val accession = linesOfSeedFile.head.split("\t")(0)
 
   var geneFunctionDictionary = getFunctionsNodesFromDB
 
@@ -32,7 +32,11 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
   def createSeedXrefs() = transaction(graphDataBaseConnection) {
 
     val seedDBNode = DBNode("SEED").upload(graphDataBaseConnection)
-    val organismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "accession", accession)
+    val organismNode = graphDataBaseConnection.findNode(
+      DynamicLabel.label("Organism"),
+      "accession",
+      accession
+    )
 
     def processOneSeedLine(lineInSeedFile: String): Unit = {
       val lineRecords = lineInSeedFile.split("\t")
@@ -53,14 +57,14 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
         xrefNode.createRelationshipTo(seedDBNode, BiomeDBRelations.linkTo)
 
         val functionLineSplit = lineRecords(8).split(";Name=")
-        def tryToCreateFucntionForGene(split: Array[String]): Unit = split match {
+        def tryToCreateFunctionForGene(split: Array[String]): Unit = split match {
           case Array(_, func) =>
             val testingNode = getOrCreateGeneFunctionNode(func)
             geneNode.createRelationshipTo(testingNode, BiomeDBRelations.isA)
           case Array(_) =>
         }
 //        val func = lineRecords(8).split(";Name=")(1)
-        tryToCreateFucntionForGene(functionLineSplit)
+        tryToCreateFunctionForGene(functionLineSplit)
       }
 
       def getOrCreateGeneFunctionNode(func: String): org.neo4j.graphdb.Node = {

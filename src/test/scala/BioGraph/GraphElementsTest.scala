@@ -125,6 +125,8 @@ class GraphElementsTest extends FunSuite {
     val reaction1 = new Reaction("Two reactant reaction", List(reactant1, reactant2))
     val reaction1Copy = reaction1.copy()
     val reaction2 = new Reaction("Another two reactant reaction", List(reactant1, reactant2))
+
+
   }
 
   test("test DBNode getLabels") {
