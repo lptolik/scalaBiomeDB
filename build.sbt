@@ -41,7 +41,7 @@ libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3"
 
 //libraryDependencies += "org.sbml.jsbml.modules" % "jsbml-tidy" % "1.1-b1"
 
-//libraryDependencies += "org.biojava" % "biojava-ontology" % "4.0.0"
+//libraryDependencies += "com.graphaware.neo4j" % "tests" % "3.0.3.39"
 
 libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
 

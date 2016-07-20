@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
 object IntactUploader {
   def main(args: Array[String]) {
 //    val dir = "/home/artem/BLAST_DB/intact/1173018.xml"
-    val pathToPsiXml = "/home/artem/BLAST_DB/intact/ecoli/ecoli_01.xml"
+    val pathToPsiXml = "/home/artem/BLAST_DB/intact/ecoli/ecoli_04.xml"
     val dataBaseFile = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
     val fileOfPsiXml = new File(pathToPsiXml)
     val reader = new PsimiXmlReader()

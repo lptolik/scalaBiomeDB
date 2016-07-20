@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.neo4j:neo4j-cypher-compiler-2.2_2.11:2.2.6:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/jars/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/srcs/neo4j-cypher-compiler-2.2_2.11-2.2.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
