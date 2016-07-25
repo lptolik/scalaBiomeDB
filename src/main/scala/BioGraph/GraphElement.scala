@@ -1082,13 +1082,16 @@ package BioGraph {
                   inchi: Map[String, String] = Map(),
                   stoichiometry: Option[Double] = None,
                   compartment: Option[Compartment] = None,
+                  toCheck: Boolean = false,
                   nodeId: Long = -1)
   extends Node(properties = Map(), nodeId) {
 
-    def getLabels = this.getSequence.nonEmpty match {
+    def getLabels = this.toCheck match {
       case true => List("Reactant", "To_check")
       case false => List("Reactant")
     }
+
+    def getToCheck = this.toCheck
 
     def getName = this.name
 
@@ -1098,7 +1101,7 @@ package BioGraph {
 
     def getStoichiometry = this.stoichiometry
 
-    def getComparment = this.compartment
+    def getCompartment = this.compartment
 
     override def equals(that: Any): Boolean = that match {
       case that: Reactant =>
@@ -1125,7 +1128,7 @@ package BioGraph {
       val reactantNode = super.upload(graphDatabaseConnection)
       newProperties.foreach{case (k, v) => reactantNode.setProperty(k, v)}
 
-      this.getComparment match {
+      this.getCompartment match {
         case Some(c) =>
           val compartmentNode = c.upload(graphDatabaseConnection)
           reactantNode.createRelationshipTo(compartmentNode, BiomeDBRelations.locates_in)
