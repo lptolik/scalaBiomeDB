@@ -143,7 +143,8 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
             name = reactantName,
             sequence = parsedInteractor.getSequence,
             inchi = inchiMap,
-            toCheck = true)
+            toCheck = true
+          )
           val reactantNode = reactant.upload(graphDataBaseConnection)
           xrefNodes.foreach(reactantNode.createRelationshipTo(_, BiomeDBRelations.evidence))
           reactant

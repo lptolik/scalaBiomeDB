@@ -23,7 +23,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val readResult = reader.readSBML(openFile)
     val parsedModel = readResult.getModel
     val compartments = parsedModel.getListOfCompartments.asScala.toList
-    compartmentNodes = compartments.map(c => c.getName -> new Compartment(c.getName)).toMap
+    compartmentNodes = compartments.map(elem => elem.getName -> new Compartment(elem.getName)).toMap
     parsedModel
   }
 
@@ -35,7 +35,11 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val name = specie.getName
       val compartment = specie.getCompartment
       val stoi = reactant.getStoichiometry
-      new Reactant(name = name, stoichiometry = Some(stoi), compartment = Some(compartmentNodes(specie.getCompartment)))
+      new Reactant(
+        name = name,
+        stoichiometry = Some(stoi),
+        compartment = Some(compartmentNodes(specie.getCompartment))
+      )
     }
 
     def makeReactionObject(reaction: org.sbml.jsbml.Reaction): Reaction = {

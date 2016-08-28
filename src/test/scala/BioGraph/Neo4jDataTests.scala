@@ -1,6 +1,6 @@
 package BioGraph
 
-import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
 import org.scalatest.FunSuite
 import org.neo4j.test.TestGraphDatabaseFactory
 import utilFunctions.TransactionSupport
@@ -11,35 +11,39 @@ import scala.collection.JavaConverters._
   */
 class Neo4jDataTests extends FunSuite with TransactionSupport{
 
-  val graphDataBaseConnection = new TestGraphDatabaseFactory().newImpermanentDatabase()
 
-  def createFirstNodes(): Unit = transaction(graphDataBaseConnection) {
+
+  def createFirstNodes(graphDataBaseConnection: GraphDatabaseService): Unit = transaction(graphDataBaseConnection) {
     val testNode = graphDataBaseConnection.createNode()
     testNode.addLabel(DynamicLabel.label("Test Node"))
     testNode.addLabel(DynamicLabel.label("So much very exciting"))
     testNode.setProperty("very", "important")
   }
-  createFirstNodes()
 
-  def findNode = transaction(graphDataBaseConnection) {
+  def findNode(graphDataBaseConnection: GraphDatabaseService) = transaction(graphDataBaseConnection) {
     val foundNode = graphDataBaseConnection.findNode(DynamicLabel.label("Test Node"), "very", "important")
     foundNode
   }
 
 
+
   test("test find node labels") {
-    val foundNode = findNode
+    val graphDataBaseConnection = new TestGraphDatabaseFactory().newImpermanentDatabase()
+    createFirstNodes(graphDataBaseConnection)
+    val foundNode = findNode(graphDataBaseConnection)
     def getLabels = transaction(graphDataBaseConnection) {
       foundNode.getLabels.asScala.toList
     }
     assert(getLabels === List(DynamicLabel.label("Test Node"), DynamicLabel.label("So much very exciting")))
+    graphDataBaseConnection.shutdown()
   }
 
   test("test find node") {
-    val foundNode = findNode
+    val graphDataBaseConnection = new TestGraphDatabaseFactory().newImpermanentDatabase()
+    createFirstNodes(graphDataBaseConnection)
+    val foundNode = findNode(graphDataBaseConnection)
     assert((foundNode.getId > -1) === true)
+    graphDataBaseConnection.shutdown()
   }
-
-  graphDataBaseConnection.shutdown()
 
 }

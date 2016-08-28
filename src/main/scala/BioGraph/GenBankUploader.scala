@@ -24,7 +24,7 @@ object GenBankUploader extends App with TransactionSupport{
 //    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/"
 //    val localDir = "/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/genbank_files_for_metacyc/"
     val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files"
-//    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc"
+//    val remoteDir = "/home/jane/graph_new_release/genomes/"
     val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc/240_bacateria"
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
@@ -39,8 +39,8 @@ object GenBankUploader extends App with TransactionSupport{
 //      case _ => remoteDir
 //    }
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(localDir)
-    val dataBaseFile = new File(localDB)
+    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(remoteDir)
+    val dataBaseFile = new File(remoteDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
     def uploadOneFile(gbFile: File): Unit = transaction(graphDataBaseConnection) {
