@@ -23,7 +23,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val readResult = reader.readSBML(openFile)
     val parsedModel = readResult.getModel
     val compartments = parsedModel.getListOfCompartments.asScala.toList
-    compartmentNodes = compartments.map(elem => elem.getName -> new Compartment(elem.getName)).toMap
+    compartmentNodes = compartments.map(elem => elem.getId -> new Compartment(elem.getName)).toMap
     parsedModel
   }
 
