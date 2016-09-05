@@ -23,8 +23,9 @@ object GenBankUploader extends App with TransactionSupport{
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000034.gb")
 //    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/"
 //    val localDir = "/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/genbank_files_for_metacyc/"
-    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files"
-//    val remoteDir = "/home/jane/graph_new_release/genomes/"
+//    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files/"
+    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/genomes/"
+//    val localDir = "/media/artem/Elements/genomes"
 //    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc/240_bacateria"
     val remoteDir = "/home/jane/graph_new_release/genomes"
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
@@ -77,6 +78,8 @@ object GenBankUploader extends App with TransactionSupport{
       uploader(setOfOrganismsNodes, processReadGenBankObjects)
     }
     gbFiles.foreach(uploadOneFile)
+    graphDataBaseConnection.shutdown()
+//    gbFiles.foreach(uploadOneFile)
     println("Upload finished")
   }
   main()
