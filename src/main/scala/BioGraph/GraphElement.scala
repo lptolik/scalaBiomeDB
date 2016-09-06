@@ -959,18 +959,36 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
 
-      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("Sequence"), "md5", this.getMD5)
-      if (tryToFindNode == null) {
-        val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
-        val sequenceNode = super.upload(graphDataBaseConnection)
-        newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
-        sequenceNode
+//      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("Sequence"), "md5", this.getMD5)
+//      if (tryToFindNode == null) {
+//        val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+//        val sequenceNode = super.upload(graphDataBaseConnection)
+//        newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
+//        sequenceNode
+//      }
+//      else {
+//        this.setId(tryToFindNode.getId)
+//        tryToFindNode
+//      }
+
+      if (this.getId < 0) {
+//        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Sequence"), "md5", this.getMD5))
+//        val sequenceNode = tryToFindNode match {
+//          case Some(n) => n
+//          case None =>
+          val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+          val sequenceNode = super.upload(graphDataBaseConnection)
+          newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
+          sequenceNode
+//        }
+//        this.setId(sequenceNode.getId)
+//        sequenceNode
       }
-      else {
-        this.setId(tryToFindNode.getId)
-        tryToFindNode
-      }
+      else graphDataBaseConnection.getNodeById(this.getId)
     }
+
+
+
 
   //  override def toString = md5
   }

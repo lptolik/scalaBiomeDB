@@ -4,10 +4,13 @@ import java.io.File
 
 import org.biojava.nbio.core.sequence.DNASequence
 import org.neo4j.graphdb
-import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import utilFunctions.{TransactionSupport, BiomeDBRelations}
 import utilFunctions.utilFunctionsObject._
+import scala.collection.JavaConverters._
+
+import scala.collection.immutable.Map
 
 /**
   * Created by artem on 15.05.16.
@@ -31,6 +34,8 @@ object GenBankUploader extends App with TransactionSupport{
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
+    val filesToDrop = 1776//1425
+
 //    val db = args.nonEmpty match {
 //    case true => args(0)
 //    case _ => remoteDB
@@ -41,13 +46,64 @@ object GenBankUploader extends App with TransactionSupport{
 //      case _ => remoteDir
 //    }
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(localDir)
-    val dataBaseFile = new File(localDB)
+    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(remoteDir).drop(filesToDrop)
+    val dataBaseFile = new File(remoteDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
-//    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/e_coli_k_12.gb")
+
+
+//    def getSequenceDict(graphDatabaseConnection: GraphDatabaseService): Map[String, Sequence] = transaction(graphDataBaseConnection) {
+//
+//      def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
+//        val md5 = sequenceNode.getProperty("md5").toString
+//        val seq = new Sequence(
+//          sequence = sequenceNode.getProperty("Sequence").toString,
+//          md5 = md5,
+//          nodeId = sequenceNode.getId
+//        )
+//        md5 -> seq
+//      }
+//
+//      val sequenceNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Sequence")).asScala.toList
+//      val sequenceDict = sequenceNodes.map{node => getSequenceProperties(node)}.toMap
+//      sequenceDict
+//    }
+
+    def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
+      val md5 = sequenceNode.getProperty("md5").toString
+      val seq = new Sequence(
+        sequence = sequenceNode.getProperty("seq").toString,
+        md5 = md5,
+        nodeId = sequenceNode.getId
+      )
+      md5 -> seq
+    }
+
+    def getDBProperties(sequenceNode: graphdb.Node): (String, DBNode) = {
+      val name = sequenceNode.getProperty("name").toString
+      val db = new DBNode(
+        name = name,
+        nodeId = sequenceNode.getId
+      )
+      name -> db
+    }
+
+    def getNodesDict[T <: Node]
+    (graphDatabaseConnection: GraphDatabaseService)
+    (f: graphdb.Node => (String, T), label: String): Map[String, T] = transaction(graphDataBaseConnection) {
+      val sequenceNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
+      val sequenceDict = sequenceNodes.map{node => f(node)}.toMap
+      sequenceDict
+    }
+
+    //    var totalSequenceCollector: Map[String, Sequence] = Map()
+    var totalSequenceCollector: Map[String, Sequence] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")
+    var totalDBCollector: Map[String, DBNode] = getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")
+
     def uploadOneFile(gbFile: File): Unit = transaction(graphDataBaseConnection) {
       println(gbFile.getName)
       val gbReader = new GenBankUtil(gbFile)
+      gbReader.sequenceCollector = totalSequenceCollector
+      gbReader.externalDataBasesCollector = totalDBCollector
       val accessions = gbReader.getAccessionsFromGenBankFile
       val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
       val setOfOrganismsNodes = accessions.values.map(gbReader.getInitialData)
@@ -76,6 +132,8 @@ object GenBankUploader extends App with TransactionSupport{
         }
       }
       uploader(setOfOrganismsNodes, processReadGenBankObjects)
+      totalSequenceCollector = gbReader.sequenceCollector
+      totalDBCollector = gbReader.externalDataBasesCollector
     }
     gbFiles.foreach(uploadOneFile)
     graphDataBaseConnection.shutdown()
