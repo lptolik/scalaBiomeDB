@@ -26,15 +26,15 @@ object GenBankUploader extends App with TransactionSupport{
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000034.gb")
 //    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/"
 //    val localDir = "/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/genbank_files_for_metacyc/"
-//    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files/"
-    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/genomes/"
+    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files/"
+//    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/genomes/"
 //    val localDir = "/media/artem/Elements/genomes"
 //    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc/240_bacateria"
     val remoteDir = "/home/jane/graph_new_release/genomes"
     val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
-    val filesToDrop = 1776//1425
+    val filesToDrop = 0//1776//1425
 
 //    val db = args.nonEmpty match {
 //    case true => args(0)
@@ -46,8 +46,8 @@ object GenBankUploader extends App with TransactionSupport{
 //      case _ => remoteDir
 //    }
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getGenBankFilesFromDirectory(remoteDir).drop(filesToDrop)
-    val dataBaseFile = new File(remoteDB)
+    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(localDir, "gb").drop(filesToDrop)
+    val dataBaseFile = new File(localDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
 
