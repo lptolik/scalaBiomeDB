@@ -1,7 +1,6 @@
 import java.util
 
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.neo4j.kernel.EmbeddedGraphDatabase
 import org.neo4j.graphdb._
 import collection.JavaConversions._
 import java.io.File

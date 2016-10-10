@@ -270,16 +270,23 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
     val sequence = makeTranslation(feature)
     val gene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2)
-    val listOfXrefs = makeListOfXrefs(feature)
+
+    val proteinId = Option(feature.getQualifiers.get("protein_id"))
+    val listOfXrefs = proteinId match {
+      case Some(p) => makeListOfXrefs(feature) ++ List(makeXref("NCBI:" + p.get(0).getValue))
+      case None => makeListOfXrefs(feature)
+    }
+
+    val product = getProduct(feature)
 
     val polypeptide = Polypeptide(
       name = gene.getName,
       xRefs = listOfXrefs,
       sequence = sequence,
-      terms = gene.getTerms,
+      terms = getTermForGeneProduct(product, gene),
       gene = gene,
       organism = orgCCPSeq._1,
-      properties = getProduct(feature)
+      properties = product
     )
     (gene, sequence, polypeptide)
   }
@@ -374,6 +381,14 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         List()
     }
 
+  }
+
+  private def getTermForGeneProduct(product: Map[String, String], gene: Gene): List[Term] = {
+    val termList = product.nonEmpty match {
+      case true => gene.getTerms ++ List(Term(product("product")))
+      case false => gene.getTerms
+    }
+    termList
   }
 
   private def checkTermsForDuplicates(listOfTerms: List[Term]): List[Term] = {
