@@ -783,23 +783,18 @@ package BioGraph {
     override def hashCode = 41 * text.hashCode
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-      val newProperties = this.setProperties(Map("name" -> this.getText))
-      val termNode = super.upload(graphDataBaseConnection)
-      newProperties.foreach{case (k, v) => termNode.setProperty(k, v)}
-      termNode
+//      val newProperties = this.setProperties(Map("text" -> this.getText))
+//      val termNode = super.upload(graphDataBaseConnection)
+//      newProperties.foreach{case (k, v) => termNode.setProperty(k, v)}
+//      termNode
 
-//      if (this.getId < 0) {
-//        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Term"), "text", this.getText))
-//        val term = tryToFindNode match {
-//          case Some(n) => n
-//          case None =>
-//            val createdTerm = super.upload(graphDataBaseConnection)
-//            this.setProperties(Map("text" -> this.getText)).foreach{case (k, v) => createdTerm.setProperty(k, v)}
-//            createdTerm
-//        }
-//        term
-//      }
-//      else graphDataBaseConnection.getNodeById(this.getId)
+      if (this.getId < 0) {
+        val newProperties = this.setProperties(Map("text" -> this.getText))
+        val termNode = super.upload(graphDataBaseConnection)
+        newProperties.foreach{case (k, v) => termNode.setProperty(k, v)}
+        termNode
+      }
+      else graphDataBaseConnection.getNodeById(this.getId)
 
       }
   }

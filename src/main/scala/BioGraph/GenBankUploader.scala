@@ -114,6 +114,7 @@ object GenBankUploader extends App with TransactionSupport{
       val gbReader = new GenBankUtil(gbFile)
       gbReader.sequenceCollector = totalSequenceCollector
       gbReader.externalDataBasesCollector = totalDBCollector
+      gbReader.termCollector = totalTermCollector
       val accessions = gbReader.getAccessionsFromGenBankFile
       val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
       val setOfOrganismsNodes = accessions.values.map(gbReader.getInitialData)
@@ -144,6 +145,7 @@ object GenBankUploader extends App with TransactionSupport{
       uploader(setOfOrganismsNodes, processReadGenBankObjects)
       totalSequenceCollector = gbReader.sequenceCollector
       totalDBCollector = gbReader.externalDataBasesCollector
+      totalTermCollector = gbReader.termCollector
     }
     gbFiles.foreach(uploadOneFile)
     graphDataBaseConnection.shutdown()

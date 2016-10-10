@@ -218,9 +218,21 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       }
       else List()
     }
+    
+    def getECNumber: List[Term] = {
+      val tryGetECNumber = getGeneNames("EC_number")
+      val ecNumberTerm = tryGetECNumber match {
+        case Some(properName) =>
+          val ecNumber = properName.get(0).getValue
+          List(Term(ecNumber))
+        case None =>
+          List()
+      }
+      ecNumberTerm
+    }
 
     val geneName = getGeneName
-    val geneTermList = List(Term(locusTag)) ::: List(Term(geneName)) ::: getGeneSynonymNames
+    val geneTermList = getECNumber ++ List(Term(locusTag)) ++ List(Term(geneName)) ++ getGeneSynonymNames
 
     val gene = Gene(
       name = geneName,
@@ -364,15 +376,15 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
   }
 
-  def checkTermsForDuplicates(listOfTerms: List[Term]): List[Term] = {
+  private def checkTermsForDuplicates(listOfTerms: List[Term]): List[Term] = {
     def checker(term: Term): Term = {
-      if (termCollector.contains(term.text)) termCollector(term.text)
+      if (termCollector.contains(term.getText)) termCollector(term.getText)
       else {
-        termCollector = termCollector ++ Map(term.text -> term)
+        termCollector = termCollector ++ Map(term.getText -> term)
         term
       }
     }
-    listOfTerms.map(checker).distinct
+    listOfTerms.distinct.map(checker)
   }
 
   def getUniqueFeatures(features: List[NucleotideFeature]) = {
