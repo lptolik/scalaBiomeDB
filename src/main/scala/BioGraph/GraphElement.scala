@@ -917,6 +917,10 @@ package BioGraph {
       xrefNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
       geneNode.createRelationshipTo(polypeptideNode, BiomeDBRelations.encodes)
+
+      val termNodes = this.getTerms.map(_.upload(graphDataBaseConnection))
+      termNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.hasName))
+
       polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getSeq.getId), BiomeDBRelations.isA)
 
       polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getOrganism.getId), BiomeDBRelations.partOf)
@@ -1149,7 +1153,7 @@ package BioGraph {
       }
 
       newProperties = this.getStoichiometry match {
-        case Some(stoi) => newProperties ++ Map("stoichiometric_coef" -> stoi)
+        case Some(stoi) => newProperties ++ Map("stoichiometric_coef" -> -1 * stoi)
         case None => newProperties
       }
 

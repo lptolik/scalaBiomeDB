@@ -278,12 +278,12 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     }
 
     val product = getProduct(feature)
-
+    val polypeptideTerms = getTermForGeneProduct(product, gene) ++ gene.getTerms
     val polypeptide = Polypeptide(
       name = gene.getName,
       xRefs = listOfXrefs,
       sequence = sequence,
-      terms = getTermForGeneProduct(product, gene),
+      terms = polypeptideTerms.distinct,
       gene = gene,
       organism = orgCCPSeq._1,
       properties = product

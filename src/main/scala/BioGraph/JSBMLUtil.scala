@@ -37,7 +37,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       Reactant(
         name = name,
         stoichiometry = Some(stoi),
-        compartment = Some(compartmentNodes(specie.getCompartment))
+        compartment = Some(compartmentNodes(compartment))
       )
     }
 
