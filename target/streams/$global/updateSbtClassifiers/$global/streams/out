@@ -1101,9 +1101,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar
 [debug] 	[NOT REQUIRED] org.jboss.interceptor#jboss-interceptor-api;1.1!jboss-interceptor-api.jar
-[debug] :: resolution report :: resolve 1632ms :: artifacts dl 43ms
+[debug] :: resolution report :: resolve 916ms :: artifacts dl 26ms
 [debug] 	report for default#biograph$sbt_2.11;1.0 default produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sbt_2.11-default.xml
-[debug] 	resolve done (1632ms resolve - 43ms download)
+[debug] 	resolve done (916ms resolve - 26ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#biograph$sources_2.11;1.0
 [debug] 	confs: [default]
@@ -1335,11 +1335,6 @@
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.spire-math#json4s-support_2.10;0.6.0 [default->runtime]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.spire-math#json4s-support_2.10;0.6.0 [default->compile]
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.spire-math#json4s-support_2.10;0.6.0 [default->master]
-[debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-sbt#run;0.13.8 [default->default(compile)]
-[info] Resolving org.scala-sbt#run;0.13.8 ...
-[debug] sbt-chain: Checking cache for: dependency: org.scala-sbt#run;0.13.8 {default=[default(compile)]}
-[debug] sbt-chain: module revision found in cache: org.scala-sbt#run;0.13.8
-[debug] 	found org.scala-sbt#run;0.13.8 in sbt-chain
 [debug] == resolving dependencies default#biograph$sources_2.11;1.0->org.scala-sbt#task-system;0.13.8 [default->default(compile)]
 [info] Resolving org.scala-sbt#task-system;0.13.8 ...
 [debug] sbt-chain: Checking cache for: dependency: org.scala-sbt#task-system;0.13.8 {default=[default(compile)]}
@@ -1610,7 +1605,6 @@
 [debug] 	[NOT REQUIRED] com.thoughtworks.paranamer#paranamer;2.6!paranamer.jar(src)
 [debug] 	[NOT REQUIRED] org.spire-math#jawn-parser_2.10;0.6.0!jawn-parser_2.10.jar(src)
 [debug] 	[NOT REQUIRED] org.spire-math#json4s-support_2.10;0.6.0!json4s-support_2.10.jar(src)
-[debug] 	[NOT REQUIRED] org.scala-sbt#run;0.13.8!run.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#task-system;0.13.8!task-system.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#tasks;0.13.8!tasks.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#tracking;0.13.8!tracking.jar(src)
@@ -1645,6 +1639,6 @@
 [debug] 	[NOT REQUIRED] org.eclipse.sisu#org.eclipse.sisu.inject;0.3.0!org.eclipse.sisu.inject.jar(src)
 [debug] 	[NOT REQUIRED] org.codehaus.plexus#plexus-component-annotations;1.5.5!plexus-component-annotations.jar(src)
 [debug] 	[NOT REQUIRED] org.codehaus.plexus#plexus-classworlds;2.5.2!plexus-classworlds.jar(src)
-[debug] :: resolution report :: resolve 173ms :: artifacts dl 28ms
+[debug] :: resolution report :: resolve 99ms :: artifacts dl 12ms
 [debug] 	report for default#biograph$sources_2.11;1.0 default produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-default.xml
-[debug] 	resolve done (173ms resolve - 28ms download)
+[debug] 	resolve done (99ms resolve - 12ms download)

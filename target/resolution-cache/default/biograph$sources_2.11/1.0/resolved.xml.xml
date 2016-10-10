@@ -4,7 +4,7 @@
 		module="biograph$sources_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160909113753"
+		publication="20161010162721"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
@@ -177,15 +177,6 @@
 		<dependency org="com.fasterxml.staxmate" name="staxmate" rev="2.3.0" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
 			<artifact name="staxmate" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1.1" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
-			<artifact name="json-simple" type="src" ext="jar" conf="sources" e:classifier="sources"/>
-		</dependency>
-		<dependency org="junit" name="junit" rev="4.10" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
-			<artifact name="junit" type="src" ext="jar" conf="sources" e:classifier="sources"/>
-		</dependency>
-		<dependency org="org.hamcrest" name="hamcrest-core" rev="1.1" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
-			<artifact name="hamcrest-core" type="src" ext="jar" conf="sources" e:classifier="sources"/>
-		</dependency>
 		<dependency org="org.sbml.jsbml.ext" name="jsbml-arrays" rev="1.2-SNAPSHOT" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
 			<artifact name="jsbml-arrays" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
@@ -339,7 +330,7 @@
 		<dependency org="org.biopax.validator" name="obo-fetcher" rev="2.0.0" transitive="false" conf="provided->default(compile);compile-internal->default(compile);test-internal->default(compile)">
 			<artifact name="obo-fetcher" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
-		<dependency org="junit" name="junit" rev="4.4" transitive="false" conf="provided->default(compile)">
+		<dependency org="junit" name="junit" rev="4.4" transitive="false" conf="provided->default(compile);compile-internal->default(compile);test-internal->default(compile)">
 			<artifact name="junit" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="com.svnkit" name="svnkit" rev="1.1.0" transitive="false" conf="provided->default(compile);compile-internal->default(compile);test-internal->default(compile)">

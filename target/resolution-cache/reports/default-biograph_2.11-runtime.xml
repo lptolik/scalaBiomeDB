@@ -7,143 +7,143 @@
 		revision="1.0"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160827150332"/>
+		date="20161010162640"/>
 	<dependencies>
 		<module organisation="org.sbml.jsbml" name="jsbml">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818162129" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="42">
-				<metadata-artifact status="no" details="" size="8023" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/jsbml/1.2-SNAPSHOT/jsbml-1.2-20160818.132014-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510144627" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="42">
+				<metadata-artifact status="no" details="" size="8023" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml/1.2-SNAPSHOT/jsbml-1.2-20160510.114627-4.pom"/>
 				<caller organisation="default" name="biograph_2.11" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.0"/>
 				<artifacts>
 					<artifact name="jsbml" type="jar" ext="jar" status="no" details="" size="1733" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml/jars/jsbml-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/jsbml/1.2-SNAPSHOT/jsbml-1.2-20160818.132014-5.jar"/>
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml/1.2-SNAPSHOT/jsbml-1.2-20160510.114627-4.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-spatial">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818162046" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="67">
-				<metadata-artifact status="no" details="" size="3509" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-spatial/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-spatial/1.2-SNAPSHOT/jsbml-spatial-1.2-20160818.131930-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135417" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="64">
+				<metadata-artifact status="no" details="" size="3621" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-spatial/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-spatial/1.2-SNAPSHOT/jsbml-spatial-1.2-20160510.105417-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-spatial" type="jar" ext="jar" status="no" details="" size="160404" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-spatial/jars/jsbml-spatial-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-spatial/1.2-SNAPSHOT/jsbml-spatial-1.2-20160818.131930-5.jar"/>
+					<artifact name="jsbml-spatial" type="jar" ext="jar" status="no" details="" size="166253" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-spatial/jars/jsbml-spatial-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-spatial/1.2-SNAPSHOT/jsbml-spatial-1.2-20160510.105417-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-req">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161958" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="66">
-				<metadata-artifact status="no" details="" size="3501" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-req/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-req/1.2-SNAPSHOT/jsbml-req-1.2-20160818.131843-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135406" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="63">
+				<metadata-artifact status="no" details="" size="3613" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-req/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-req/1.2-SNAPSHOT/jsbml-req-1.2-20160510.105406-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
 					<artifact name="jsbml-req" type="jar" ext="jar" status="no" details="" size="11613" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-req/jars/jsbml-req-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-req/1.2-SNAPSHOT/jsbml-req-1.2-20160818.131843-5.jar"/>
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-req/1.2-SNAPSHOT/jsbml-req-1.2-20160510.105406-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-render">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161914" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="65">
-				<metadata-artifact status="no" details="" size="3663" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-render/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-render/1.2-SNAPSHOT/jsbml-render-1.2-20160818.131759-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135402" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="62">
+				<metadata-artifact status="no" details="" size="3775" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-render/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-render/1.2-SNAPSHOT/jsbml-render-1.2-20160510.105402-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-render" type="jar" ext="jar" status="no" details="" size="107839" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-render/jars/jsbml-render-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-render/1.2-SNAPSHOT/jsbml-render-1.2-20160818.131759-5.jar"/>
+					<artifact name="jsbml-render" type="jar" ext="jar" status="no" details="" size="108333" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-render/jars/jsbml-render-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-render/1.2-SNAPSHOT/jsbml-render-1.2-20160510.105402-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-qual">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161825" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="64">
-				<metadata-artifact status="no" details="" size="3503" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-qual/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-qual/1.2-SNAPSHOT/jsbml-qual-1.2-20160818.131710-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135353" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="61">
+				<metadata-artifact status="no" details="" size="3615" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-qual/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-qual/1.2-SNAPSHOT/jsbml-qual-1.2-20160510.105353-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-qual" type="jar" ext="jar" status="no" details="" size="36010" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-qual/jars/jsbml-qual-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-qual/1.2-SNAPSHOT/jsbml-qual-1.2-20160818.131710-5.jar"/>
+					<artifact name="jsbml-qual" type="jar" ext="jar" status="no" details="" size="36694" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-qual/jars/jsbml-qual-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-qual/1.2-SNAPSHOT/jsbml-qual-1.2-20160510.105353-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-multi">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161741" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="63">
-				<metadata-artifact status="no" details="" size="3505" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-multi/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-multi/1.2-SNAPSHOT/jsbml-multi-1.2-20160818.131626-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135347" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="60">
+				<metadata-artifact status="no" details="" size="3617" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-multi/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-multi/1.2-SNAPSHOT/jsbml-multi-1.2-20160510.105347-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-multi" type="jar" ext="jar" status="no" details="" size="72605" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-multi/jars/jsbml-multi-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-multi/1.2-SNAPSHOT/jsbml-multi-1.2-20160818.131626-5.jar"/>
+					<artifact name="jsbml-multi" type="jar" ext="jar" status="no" details="" size="74577" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-multi/jars/jsbml-multi-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-multi/1.2-SNAPSHOT/jsbml-multi-1.2-20160510.105347-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-layout">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161655" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="62">
-				<metadata-artifact status="no" details="" size="3563" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-layout/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-layout/1.2-SNAPSHOT/jsbml-layout-1.2-20160818.131540-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135338" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="59">
+				<metadata-artifact status="no" details="" size="3675" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-layout/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-layout/1.2-SNAPSHOT/jsbml-layout-1.2-20160510.105338-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<caller organisation="org.sbml.jsbml.ext" name="jsbml-render" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-layout" type="jar" ext="jar" status="no" details="" size="91744" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-layout/jars/jsbml-layout-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-layout/1.2-SNAPSHOT/jsbml-layout-1.2-20160818.131540-5.jar"/>
+					<artifact name="jsbml-layout" type="jar" ext="jar" status="no" details="" size="90292" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-layout/jars/jsbml-layout-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-layout/1.2-SNAPSHOT/jsbml-layout-1.2-20160510.105338-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-groups">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161606" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="61">
-				<metadata-artifact status="no" details="" size="3507" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-groups/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-groups/1.2-SNAPSHOT/jsbml-groups-1.2-20160818.131451-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135326" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="58">
+				<metadata-artifact status="no" details="" size="3619" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-groups/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-groups/1.2-SNAPSHOT/jsbml-groups-1.2-20160510.105326-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-groups" type="jar" ext="jar" status="no" details="" size="26584" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-groups/jars/jsbml-groups-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-groups/1.2-SNAPSHOT/jsbml-groups-1.2-20160818.131451-5.jar"/>
+					<artifact name="jsbml-groups" type="jar" ext="jar" status="no" details="" size="27111" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-groups/jars/jsbml-groups-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-groups/1.2-SNAPSHOT/jsbml-groups-1.2-20160510.105326-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-fbc">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161521" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="60">
-				<metadata-artifact status="no" details="" size="3557" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160818.131406-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135321" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="57">
+				<metadata-artifact status="no" details="" size="3669" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160510.105321-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-fbc" type="jar" ext="jar" status="no" details="" size="53548" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/jars/jsbml-fbc-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160818.131406-5.jar"/>
+					<artifact name="jsbml-fbc" type="jar" ext="jar" status="no" details="" size="54640" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/jars/jsbml-fbc-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160510.105321-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-dyn">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161435" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="59">
-				<metadata-artifact status="no" details="" size="3501" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-dyn/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-dyn/1.2-SNAPSHOT/jsbml-dyn-1.2-20160818.131320-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135314" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="56">
+				<metadata-artifact status="no" details="" size="3613" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-dyn/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-dyn/1.2-SNAPSHOT/jsbml-dyn-1.2-20160510.105314-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-dyn" type="jar" ext="jar" status="no" details="" size="49956" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-dyn/jars/jsbml-dyn-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-dyn/1.2-SNAPSHOT/jsbml-dyn-1.2-20160818.131320-5.jar"/>
+					<artifact name="jsbml-dyn" type="jar" ext="jar" status="no" details="" size="50578" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-dyn/jars/jsbml-dyn-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-dyn/1.2-SNAPSHOT/jsbml-dyn-1.2-20160510.105314-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-distrib">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161351" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="58">
-				<metadata-artifact status="no" details="" size="3644" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-distrib/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-distrib/1.2-SNAPSHOT/jsbml-distrib-1.2-20160818.131236-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135309" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="55">
+				<metadata-artifact status="no" details="" size="3756" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-distrib/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-distrib/1.2-SNAPSHOT/jsbml-distrib-1.2-20160510.105309-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-distrib" type="jar" ext="jar" status="no" details="" size="28933" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-distrib/jars/jsbml-distrib-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-distrib/1.2-SNAPSHOT/jsbml-distrib-1.2-20160818.131236-5.jar"/>
+					<artifact name="jsbml-distrib" type="jar" ext="jar" status="no" details="" size="29196" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-distrib/jars/jsbml-distrib-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-distrib/1.2-SNAPSHOT/jsbml-distrib-1.2-20160510.105309-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.modules" name="jsbml-tidy">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161308" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="68">
-				<metadata-artifact status="no" details="" size="3754" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.modules/jsbml-tidy/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/modules/jsbml-tidy/1.2-SNAPSHOT/jsbml-tidy-1.2-20160818.131153-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135250" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="65">
+				<metadata-artifact status="no" details="" size="3748" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.modules/jsbml-tidy/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/modules/jsbml-tidy/1.2-SNAPSHOT/jsbml-tidy-1.2-20160510.105250-2.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-tidy" type="jar" ext="jar" status="no" details="" size="7411" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.modules/jsbml-tidy/jars/jsbml-tidy-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/modules/jsbml-tidy/1.2-SNAPSHOT/jsbml-tidy-1.2-20160818.131153-5.jar"/>
+					<artifact name="jsbml-tidy" type="jar" ext="jar" status="no" details="" size="7484" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.modules/jsbml-tidy/jars/jsbml-tidy-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/modules/jsbml-tidy/1.2-SNAPSHOT/jsbml-tidy-1.2-20160510.105250-2.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="net.sf.jtidy" name="jtidy">
-			<revision name="r938" status="release" pubdate="20100720154512" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jtidy.sourceforge.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="69">
+			<revision name="r938" status="release" pubdate="20100720154512" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jtidy.sourceforge.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="66">
 				<license name="Java HTML Tidy License" url="http://jtidy.svn.sourceforge.net/viewvc/jtidy/trunk/jtidy/LICENSE.txt?revision=95"/>
 				<metadata-artifact status="no" details="" size="3418" time="0" location="/home/artem/.ivy2/cache/net.sf.jtidy/jtidy/ivy-r938.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/net/sf/jtidy/jtidy/r938/jtidy-r938.pom"/>
 				<caller organisation="org.sbml.jsbml.modules" name="jsbml-tidy" conf="compile, runtime" rev="r938" rev-constraint-default="r938" rev-constraint-dynamic="r938" callerrev="1.2-SNAPSHOT"/>
@@ -155,31 +155,31 @@
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-arrays">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161209" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="56">
-				<metadata-artifact status="no" details="" size="3717" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-arrays/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-arrays/1.2-SNAPSHOT/jsbml-arrays-1.2-20160818.131054-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135304" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="53">
+				<metadata-artifact status="no" details="" size="3829" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-arrays/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-arrays/1.2-SNAPSHOT/jsbml-arrays-1.2-20160510.105303-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-arrays" type="jar" ext="jar" status="no" details="" size="93434" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-arrays/jars/jsbml-arrays-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-arrays/1.2-SNAPSHOT/jsbml-arrays-1.2-20160818.131054-5.jar"/>
+					<artifact name="jsbml-arrays" type="jar" ext="jar" status="no" details="" size="93228" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-arrays/jars/jsbml-arrays-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-arrays/1.2-SNAPSHOT/jsbml-arrays-1.2-20160510.105303-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-comp">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161125" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="57">
-				<metadata-artifact status="no" details="" size="3503" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-comp/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-comp/1.2-SNAPSHOT/jsbml-comp-1.2-20160818.131010-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135256" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="54">
+				<metadata-artifact status="no" details="" size="3615" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-comp/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-comp/1.2-SNAPSHOT/jsbml-comp-1.2-20160510.105256-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<caller organisation="org.sbml.jsbml.ext" name="jsbml-arrays" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-comp" type="jar" ext="jar" status="no" details="" size="43463" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-comp/jars/jsbml-comp-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/ext/jsbml-comp/1.2-SNAPSHOT/jsbml-comp-1.2-20160818.131010-5.jar"/>
+					<artifact name="jsbml-comp" type="jar" ext="jar" status="no" details="" size="44572" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-comp/jars/jsbml-comp-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-comp/1.2-SNAPSHOT/jsbml-comp-1.2-20160510.105256-1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml" name="jsbml-core">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160818161021" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="43">
-				<metadata-artifact status="no" details="" size="4521" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml-core/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/jsbml-core/1.2-SNAPSHOT/jsbml-core-1.2-20160818.130905-5.pom"/>
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135247" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="43">
+				<metadata-artifact status="no" details="" size="4365" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml-core/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml-core/1.2-SNAPSHOT/jsbml-core-1.2-20160510.105247-3.pom"/>
 				<caller organisation="org.sbml.jsbml.ext" name="jsbml-fbc" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<caller organisation="org.sbml.jsbml.ext" name="jsbml-distrib" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<caller organisation="org.sbml.jsbml.ext" name="jsbml-multi" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
@@ -195,20 +195,8 @@
 				<caller organisation="org.sbml.jsbml.ext" name="jsbml-dyn" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<caller organisation="org.sbml.jsbml.modules" name="jsbml-tidy" conf="compile, runtime" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
 				<artifacts>
-					<artifact name="jsbml-core" type="jar" ext="jar" status="no" details="" size="1304590" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml-core/jars/jsbml-core-1.2-SNAPSHOT.jar">
-						<origin-location is-local="false" location="http://jsbml.sourceforge.net/m2repo_snapshots/org/sbml/jsbml/jsbml-core/1.2-SNAPSHOT/jsbml-core-1.2-20160818.130905-5.jar"/>
-					</artifact>
-				</artifacts>
-			</revision>
-		</module>
-		<module organisation="com.googlecode.json-simple" name="json-simple">
-			<revision name="1.1.1" status="release" pubdate="20120321091133" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://code.google.com/p/json-simple/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="53">
-				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
-				<metadata-artifact status="no" details="" size="2860" time="0" location="/home/artem/.ivy2/cache/com.googlecode.json-simple/json-simple/ivy-1.1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.pom"/>
-				<caller organisation="org.sbml.jsbml" name="jsbml-core" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="1.2-SNAPSHOT"/>
-				<artifacts>
-					<artifact name="json-simple" type="bundle" ext="jar" status="no" details="" size="23931" time="0" location="/home/artem/.ivy2/cache/com.googlecode.json-simple/json-simple/bundles/json-simple-1.1.1.jar">
-						<origin-location is-local="false" location="https://jcenter.bintray.com/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar"/>
+					<artifact name="jsbml-core" type="jar" ext="jar" status="no" details="" size="1008265" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml/jsbml-core/jars/jsbml-core-1.2-SNAPSHOT.jar">
+						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/jsbml-core/1.2-SNAPSHOT/jsbml-core-1.2-20160510.105247-3.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
@@ -482,98 +470,98 @@
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j">
-			<revision name="2.3.1" status="release" pubdate="20151111212117" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+			<revision name="2.3.1" status="release" pubdate="20151112010248" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="27241" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j/2.3.1/neo4j-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="27241" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j/2.3.1/neo4j-2.3.1.pom"/>
 				<caller organisation="default" name="biograph_2.11" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<artifacts>
 					<artifact name="neo4j" type="jar" ext="jar" status="no" details="" size="22807" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j/jars/neo4j-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j/2.3.1/neo4j-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j/2.3.1/neo4j-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-consistency-check">
-			<revision name="2.3.1" status="release" pubdate="20151111211913" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="29">
+			<revision name="2.3.1" status="release" pubdate="20151112010300" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="29">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="26312" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="26312" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-consistency-check" type="jar" ext="jar" status="no" details="" size="369161" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check/jars/neo4j-consistency-check-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-consistency-check/2.3.1/neo4j-consistency-check-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-consistency-check-legacy">
-			<revision name="2.3.1" status="release" pubdate="20151111211908" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="30">
+			<revision name="2.3.1" status="release" pubdate="20151112010309" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="30">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="26143" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="26143" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-consistency-check" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-consistency-check-legacy" type="jar" ext="jar" status="no" details="" size="327843" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-consistency-check-legacy/jars/neo4j-consistency-check-legacy-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-consistency-check-legacy/2.3.1/neo4j-consistency-check-legacy-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-jmx">
-			<revision name="2.3.1" status="release" pubdate="20151111212020" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="28">
+			<revision name="2.3.1" status="release" pubdate="20151112010259" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="28">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="25218" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="25218" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-jmx" type="jar" ext="jar" status="no" details="" size="46760" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-jmx/jars/neo4j-jmx-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-jmx/2.3.1/neo4j-jmx-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-cypher">
-			<revision name="2.3.1" status="release" pubdate="20151111211938" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="15">
+			<revision name="2.3.1" status="release" pubdate="20151112010257" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="15">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="41195" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="41195" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-cypher" type="jar" ext="jar" status="no" details="" size="1137733" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher/jars/neo4j-cypher-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher/2.3.1/neo4j-cypher-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="net.sf.opencsv" name="opencsv">
-			<revision name="2.3" status="release" pubdate="20110728090018" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opencsv.sf.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="27">
+			<revision name="2.3" status="release" pubdate="20110728090010" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://opencsv.sf.net" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="27">
 				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
-				<metadata-artifact status="no" details="" size="3228" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/ivy-2.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/net/sf/opencsv/opencsv/2.3/opencsv-2.3.pom"/>
+				<metadata-artifact status="no" details="" size="3228" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/ivy-2.3.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/net/sf/opencsv/opencsv/2.3/opencsv-2.3.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.3" rev-constraint-default="2.3" rev-constraint-dynamic="2.3" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="opencsv" type="jar" ext="jar" status="no" details="" size="19827" time="0" location="/home/artem/.ivy2/cache/net.sf.opencsv/opencsv/jars/opencsv-2.3.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-cypher-compiler-2.3">
-			<revision name="2.3.1" status="release" pubdate="20151111211927" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="25">
+			<revision name="2.3.1" status="release" pubdate="20151112010307" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="25">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="36119" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="36119" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-cypher-compiler-2.3" type="jar" ext="jar" status="no" details="" size="8733249" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.3/jars/neo4j-cypher-compiler-2.3-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-compiler-2.3/2.3.1/neo4j-cypher-compiler-2.3-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru">
-			<revision name="1.4.2" status="release" pubdate="20150128043055" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://code.google.com/p/concurrentlinkedhashmap" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="24">
+			<revision name="1.4.2" status="release" pubdate="20150128043000" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://code.google.com/p/concurrentlinkedhashmap" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="24">
 				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
-				<metadata-artifact status="no" details="" size="5094" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/ivy-1.4.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.pom"/>
+				<metadata-artifact status="no" details="" size="5094" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/ivy-1.4.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-compiler-2.2_2.11" conf="compile, runtime" rev="1.4" rev-constraint-default="1.4" rev-constraint-dynamic="1.4" callerrev="2.2.6"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="1.4.2" rev-constraint-default="1.4.2" rev-constraint-dynamic="1.4.2" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="concurrentlinkedhashmap-lru" type="jar" ext="jar" status="no" details="" size="116565" time="0" location="/home/artem/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/jars/concurrentlinkedhashmap-lru-1.4.2.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
@@ -586,207 +574,184 @@
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-cypher-frontend-2.3">
-			<revision name="2.3.1" status="release" pubdate="20151111211932" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="26">
+			<revision name="2.3.1" status="release" pubdate="20151112010311" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="26">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="41652" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="41652" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-compiler-2.3" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-cypher-frontend-2.3" type="jar" ext="jar" status="no" details="" size="3414589" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-frontend-2.3/jars/neo4j-cypher-frontend-2.3-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-frontend-2.3/2.3.1/neo4j-cypher-frontend-2.3-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-cypher-compiler-2.2_2.11">
-			<revision name="2.2.6" status="release" pubdate="20151016130101" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="21">
+			<revision name="2.2.6" status="release" pubdate="20151019004254" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="21">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="34990" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/ivy-2.2.6.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6.pom"/>
+				<metadata-artifact status="no" details="" size="34990" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/ivy-2.2.6.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.2.6" rev-constraint-default="2.2.6" rev-constraint-dynamic="2.2.6" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-cypher-compiler-2.2_2.11" type="jar" ext="jar" status="no" details="" size="10404861" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-2.2_2.11/jars/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-compiler-2.2_2.11/2.2.6/neo4j-cypher-compiler-2.2_2.11-2.2.6.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.parboiled" name="parboiled-scala_2.11">
-			<revision name="1.1.7" status="release" pubdate="20150209191151" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://parboiled.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="22">
+			<revision name="1.1.7" status="release" pubdate="20150209191100" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://parboiled.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="22">
 				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
-				<metadata-artifact status="no" details="" size="2968" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/ivy-1.1.7.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7.pom"/>
+				<metadata-artifact status="no" details="" size="2968" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/ivy-1.1.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-frontend-2.3" conf="compile, runtime" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-compiler-2.3" conf="compile, runtime" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-compiler-2.2_2.11" conf="compile, runtime" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="2.2.6"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="parboiled-scala_2.11" type="jar" ext="jar" status="no" details="" size="233224" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-scala_2.11/jars/parboiled-scala_2.11-1.1.7.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/parboiled/parboiled-scala_2.11/1.1.7/parboiled-scala_2.11-1.1.7.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.parboiled" name="parboiled-core">
-			<revision name="1.1.7" status="release" pubdate="20150209191230" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://parboiled.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="23">
+			<revision name="1.1.7" status="release" pubdate="20150209191200" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://parboiled.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="23">
 				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
-				<metadata-artifact status="no" details="" size="2663" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/ivy-1.1.7.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.pom"/>
+				<metadata-artifact status="no" details="" size="2663" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/ivy-1.1.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.pom"/>
 				<caller organisation="org.parboiled" name="parboiled-scala_2.11" conf="compile, runtime" rev="1.1.7" rev-constraint-default="1.1.7" rev-constraint-dynamic="1.1.7" callerrev="1.1.7"/>
 				<artifacts>
 					<artifact name="parboiled-core" type="jar" ext="jar" status="no" details="" size="186607" time="0" location="/home/artem/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.7.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-cypher-compiler-1.9_2.11">
-			<revision name="2.0.5" status="release" pubdate="20150504120617" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="20">
+			<revision name="2.0.5" status="release" pubdate="20150504120600" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="20">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="34281" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/ivy-2.0.5.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5.pom"/>
+				<metadata-artifact status="no" details="" size="34281" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/ivy-2.0.5.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.0.5" rev-constraint-default="2.0.5" rev-constraint-dynamic="2.0.5" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-cypher-compiler-1.9_2.11" type="jar" ext="jar" status="no" details="" size="2986228" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-cypher-compiler-1.9_2.11/jars/neo4j-cypher-compiler-1.9_2.11-2.0.5.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-cypher-compiler-1.9_2.11/2.0.5/neo4j-cypher-compiler-1.9_2.11-2.0.5.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-codegen">
-			<revision name="2.3.1" status="release" pubdate="20151111211859" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="18">
+			<revision name="2.3.1" status="release" pubdate="20151112010305" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="18">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="31111" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="31111" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-codegen" type="jar" ext="jar" status="no" details="" size="131280" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-codegen/jars/neo4j-codegen-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-codegen/2.3.1/neo4j-codegen-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.ow2.asm" name="asm">
-			<revision name="5.0.2" status="release" pubdate="20140421114708" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="19">
-				<metadata-artifact status="no" details="" size="3758" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/ivy-5.0.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.pom"/>
+			<revision name="5.0.2" status="release" pubdate="20140421114700" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="19">
+				<metadata-artifact status="no" details="" size="3758" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/ivy-5.0.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/ow2/asm/asm/5.0.2/asm-5.0.2.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-codegen" conf="compile, runtime" rev="5.0.2" rev-constraint-default="5.0.2" rev-constraint-dynamic="5.0.2" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="asm" type="jar" ext="jar" status="no" details="" size="53232" time="0" location="/home/artem/.ivy2/cache/org.ow2.asm/asm/jars/asm-5.0.2.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/ow2/asm/asm/5.0.2/asm-5.0.2.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/ow2/asm/asm/5.0.2/asm-5.0.2.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.scala-lang.modules" name="scala-parser-combinators_2.11">
-			<revision name="1.0.4" status="release" pubdate="20150430170747" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="17">
+			<revision name="1.0.4" status="release" pubdate="20150430170700" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="17">
 				<license name="BSD 3-clause" url="http://opensource.org/licenses/BSD-3-Clause"/>
-				<metadata-artifact status="no" details="" size="2803" time="0" location="/home/artem/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/ivy-1.0.4.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.pom"/>
+				<metadata-artifact status="no" details="" size="2803" time="0" location="/home/artem/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/ivy-1.0.4.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="1.0.4" rev-constraint-default="1.0.4" rev-constraint-dynamic="1.0.4" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="scala-parser-combinators_2.11" type="bundle" ext="jar" status="no" details="" size="423753" time="0" location="/home/artem/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.4.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.scala-lang" name="scala-reflect">
-			<revision name="2.11.7" status="release" pubdate="20150622231746" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.7/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="16">
+			<revision name="2.11.7" status="release" pubdate="20150622231700" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.7/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="16">
 				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>
-				<metadata-artifact status="no" details="" size="2825" time="0" location="/home/artem/.ivy2/cache/org.scala-lang/scala-reflect/ivy-2.11.7.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.11.7/scala-reflect-2.11.7.pom"/>
+				<metadata-artifact status="no" details="" size="2825" time="0" location="/home/artem/.ivy2/cache/org.scala-lang/scala-reflect/ivy-2.11.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/scala-lang/scala-reflect/2.11.7/scala-reflect-2.11.7.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-compiler-2.2_2.11" conf="compile, runtime" rev="2.11.7" rev-constraint-default="2.11.7" rev-constraint-dynamic="2.11.7" callerrev="2.2.6"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.11.7" rev-constraint-default="2.11.7" rev-constraint-dynamic="2.11.7" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="scala-reflect" type="jar" ext="jar" status="no" details="" size="4576443" time="0" location="/home/artem/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.7.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.11.7/scala-reflect-2.11.7.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/scala-lang/scala-reflect/2.11.7/scala-reflect-2.11.7.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-graph-matching">
-			<revision name="2.3.1" status="release" pubdate="20151111211958" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="14">
+			<revision name="2.3.1" status="release" pubdate="20151112010256" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="14">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="25280" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="25280" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-graph-matching" type="jar" ext="jar" status="no" details="" size="55596" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-matching/jars/neo4j-graph-matching-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-graph-matching/2.3.1/neo4j-graph-matching-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-udc">
-			<revision name="2.3.1" status="release" pubdate="20151111212108" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="13">
+			<revision name="2.3.1" status="release" pubdate="20151112010254" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="13">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="26076" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="26076" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-udc" type="jar" ext="jar" status="no" details="" size="37793" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-udc/jars/neo4j-udc-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-udc/2.3.1/neo4j-udc-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-graph-algo">
-			<revision name="2.3.1" status="release" pubdate="20151111211954" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="12">
+			<revision name="2.3.1" status="release" pubdate="20151112010253" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="12">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="25371" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="25371" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-graph-algo" type="jar" ext="jar" status="no" details="" size="183238" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-graph-algo/jars/neo4j-graph-algo-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-graph-algo/2.3.1/neo4j-graph-algo-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-lucene-index">
-			<revision name="2.3.1" status="release" pubdate="20151111212037" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="10">
+			<revision name="2.3.1" status="release" pubdate="20151112010252" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="10">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="26092" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="26092" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-consistency-check" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-consistency-check-legacy" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-lucene-index" type="jar" ext="jar" status="no" details="" size="236617" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-lucene-index/jars/neo4j-lucene-index-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-lucene-index/2.3.1/neo4j-lucene-index-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.apache.lucene" name="lucene-core">
 			<revision name="3.6.2" status="release" pubdate="20121224195635" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="11">
-				<metadata-artifact status="no" details="" size="19091" time="0" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/ivy-3.6.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.pom"/>
+				<metadata-artifact status="no" details="" size="19091" time="0" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/ivy-3.6.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-lucene-index" conf="compile, runtime" rev="3.6.2" rev-constraint-default="3.6.2" rev-constraint-dynamic="3.6.2" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="lucene-core" type="jar" ext="jar" status="no" details="" size="1539086" time="0" location="/home/artem/.ivy2/cache/org.apache.lucene/lucene-core/jars/lucene-core-3.6.2.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.jar"/>
-					</artifact>
-				</artifacts>
-			</revision>
-		</module>
-		<module organisation="junit" name="junit">
-			<revision name="4.10" status="release" pubdate="20110929231223" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://junit.org" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="54">
-				<license name="Common Public License Version 1.0" url="http://www.opensource.org/licenses/cpl1.0.txt"/>
-				<metadata-artifact status="no" details="" size="2771" time="0" location="/home/artem/.ivy2/cache/junit/junit/ivy-4.10.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/junit/junit/4.10/junit-4.10.pom"/>
-				<caller organisation="com.googlecode.json-simple" name="json-simple" conf="compile, runtime" rev="4.10" rev-constraint-default="4.10" rev-constraint-dynamic="4.10" callerrev="1.1.1"/>
-				<artifacts>
-					<artifact name="junit" type="jar" ext="jar" status="no" details="" size="253160" time="0" location="/home/artem/.ivy2/cache/junit/junit/jars/junit-4.10.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/junit/junit/4.10/junit-4.10.jar"/>
-					</artifact>
-				</artifacts>
-			</revision>
-		</module>
-		<module organisation="org.hamcrest" name="hamcrest-core">
-			<revision name="1.1" status="release" pubdate="20070718231143" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="55">
-				<metadata-artifact status="no" details="" size="4339" time="0" location="/home/artem/.ivy2/cache/org.hamcrest/hamcrest-core/ivy-1.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.pom"/>
-				<caller organisation="junit" name="junit" conf="compile, runtime" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="4.10"/>
-				<artifacts>
-					<artifact name="hamcrest-core" type="jar" ext="jar" status="no" details="" size="76643" time="0" location="/home/artem/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-kernel">
-			<revision name="2.3.1" status="release" pubdate="20151111212028" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="2">
+			<revision name="2.3.1" status="release" pubdate="20151112010251" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="2">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="27083" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="27083" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j" conf="default, compile, runtime, master" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-graph-matching" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-udc" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
@@ -800,115 +765,115 @@
 						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1-tests.jar"/>
 					</artifact>
 					<artifact name="neo4j-kernel" type="jar" ext="jar" status="no" details="" size="3360858" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-kernel/jars/neo4j-kernel-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-kernel/2.3.1/neo4j-kernel-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-logging">
-			<revision name="2.3.1" status="release" pubdate="20151111212032" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="9">
+			<revision name="2.3.1" status="release" pubdate="20151112010304" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="9">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="25448" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="25448" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-kernel" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-logging" type="jar" ext="jar" status="no" details="" size="67789" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-logging/jars/neo4j-logging-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-logging/2.3.1/neo4j-logging-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-csv">
-			<revision name="2.3.1" status="release" pubdate="20151111211917" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="8">
+			<revision name="2.3.1" status="release" pubdate="20151112010304" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="8">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="30746" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="30746" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-kernel" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-csv" type="jar" ext="jar" status="no" details="" size="69029" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-csv/jars/neo4j-csv-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-csv/2.3.1/neo4j-csv-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-io">
-			<revision name="2.3.1" status="release" pubdate="20151111212016" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="6">
+			<revision name="2.3.1" status="release" pubdate="20151112010303" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="6">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="25639" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="25639" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-logging" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="default" name="biograph_2.11" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="1.0"/>
 				<caller organisation="org.neo4j" name="neo4j-kernel" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
+					<artifact name="neo4j-io" type="jar" ext="jar" status="no" details="" size="128745" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/jars/neo4j-io-2.3.1.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1.jar"/>
+					</artifact>
 					<artifact name="neo4j-io" type="jar" ext="jar" extra-classifier="tests" status="no" details="" size="315689" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/jars/neo4j-io-2.3.1-tests.jar">
 						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1-tests.jar"/>
-					</artifact>
-					<artifact name="neo4j-io" type="jar" ext="jar" status="no" details="" size="128745" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-io/jars/neo4j-io-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-io/2.3.1/neo4j-io-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.apache.commons" name="commons-lang3">
-			<revision name="3.3.2" status="release" pubdate="20140406162129" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/proper/commons-lang/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="7">
-				<metadata-artifact status="no" details="" size="10428" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/ivy-3.3.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.pom"/>
+			<revision name="3.3.2" status="release" pubdate="20140406162100" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/proper/commons-lang/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="7">
+				<metadata-artifact status="no" details="" size="10428" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/ivy-3.3.2.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-codegen" conf="compile, runtime" rev="3.3.2" rev-constraint-default="3.3.2" rev-constraint-dynamic="3.3.2" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher-frontend-2.3" conf="compile, runtime" rev="3.3.2" rev-constraint-default="3.3.2" rev-constraint-dynamic="3.3.2" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-io" conf="compile, runtime" rev="3.3.2" rev-constraint-default="3.3.2" rev-constraint-dynamic="3.3.2" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="commons-lang3" type="jar" ext="jar" status="no" details="" size="412739" time="0" location="/home/artem/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.3.2.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-primitive-collections">
-			<revision name="2.3.1" status="release" pubdate="20151111212050" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="3">
+			<revision name="2.3.1" status="release" pubdate="20151112010302" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="3">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="31326" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="31326" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-kernel" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-io" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-csv" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-primitive-collections" type="jar" ext="jar" status="no" details="" size="191174" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-primitive-collections/jars/neo4j-primitive-collections-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-primitive-collections/2.3.1/neo4j-primitive-collections-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-function">
-			<revision name="2.3.1" status="release" pubdate="20151111211950" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="5">
+			<revision name="2.3.1" status="release" pubdate="20151112010311" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="5">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="30942" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="30942" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-primitive-collections" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-function" type="jar" ext="jar" status="no" details="" size="66370" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-function/jars/neo4j-function-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-function/2.3.1/neo4j-function-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.neo4j" name="neo4j-unsafe">
-			<revision name="2.3.1" status="release" pubdate="20151111212112" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="4">
+			<revision name="2.3.1" status="release" pubdate="20151112010310" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://components.neo4j.org/${project.artifactId}/${project.version}" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="4">
 				<license name="GNU General Public License, Version 3" url="http://www.gnu.org/licenses/gpl-3.0-standalone.html"/>
-				<metadata-artifact status="no" details="" size="30897" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1.pom"/>
+				<metadata-artifact status="no" details="" size="30897" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/ivy-2.3.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1.pom"/>
 				<caller organisation="org.neo4j" name="neo4j-primitive-collections" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<caller organisation="org.neo4j" name="neo4j-io" conf="compile, runtime" rev="2.3.1" rev-constraint-default="2.3.1" rev-constraint-dynamic="2.3.1" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="neo4j-unsafe" type="jar" ext="jar" status="no" details="" size="26616" time="0" location="/home/artem/.ivy2/cache/org.neo4j/neo4j-unsafe/jars/neo4j-unsafe-2.3.1.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/neo4j/neo4j-unsafe/2.3.1/neo4j-unsafe-2.3.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.scala-lang" name="scala-library">
-			<revision name="2.11.7" status="release" pubdate="20150622231702" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.7/" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="0">
+			<revision name="2.11.7" status="release" pubdate="20150803190311" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.7/" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="0">
 				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>
-				<metadata-artifact status="no" details="" size="2653" time="0" location="/home/artem/.ivy2/cache/org.scala-lang/scala-library/ivy-2.11.7.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.7/scala-library-2.11.7.pom"/>
+				<metadata-artifact status="no" details="" size="2653" time="0" location="/home/artem/.ivy2/cache/org.scala-lang/scala-library/ivy-2.11.7.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/scala-lang/scala-library/2.11.7/scala-library-2.11.7.pom"/>
 				<caller organisation="org.scala-lang" name="scala-reflect" conf="compile, runtime" rev="2.11.7" rev-constraint-default="2.11.7" rev-constraint-dynamic="2.11.7" callerrev="2.11.7"/>
 				<caller organisation="org.scala-lang.modules" name="scala-parser-combinators_2.11" conf="compile, runtime" rev="2.11.6" rev-constraint-default="2.11.6" rev-constraint-dynamic="2.11.6" callerrev="1.0.4"/>
 				<caller organisation="default" name="biograph_2.11" conf="compile, runtime" rev="2.11.7" rev-constraint-default="2.11.7" rev-constraint-dynamic="2.11.7" callerrev="1.0"/>
 				<caller organisation="org.neo4j" name="neo4j-cypher" conf="compile, runtime" rev="2.11.7" rev-constraint-default="2.11.7" rev-constraint-dynamic="2.11.7" callerrev="2.3.1"/>
 				<artifacts>
 					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="5745606" time="0" location="/home/artem/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.7.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.7/scala-library-2.11.7.jar"/>
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/scala-lang/scala-library/2.11.7/scala-library-2.11.7.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>

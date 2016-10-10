@@ -70,7 +70,7 @@ object GenBankUploader extends App with TransactionSupport{
 
     def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
       val md5 = sequenceNode.getProperty("md5").toString
-      val seq = new Sequence(
+      val seq = Sequence(
         sequence = sequenceNode.getProperty("seq").toString,
         md5 = md5,
         nodeId = sequenceNode.getId
@@ -78,13 +78,22 @@ object GenBankUploader extends App with TransactionSupport{
       md5 -> seq
     }
 
-    def getDBProperties(sequenceNode: graphdb.Node): (String, DBNode) = {
-      val name = sequenceNode.getProperty("name").toString
-      val db = new DBNode(
+    def getDBProperties(dataBaseNode: graphdb.Node): (String, DBNode) = {
+      val name = dataBaseNode.getProperty("name").toString
+      val db = DBNode(
         name = name,
-        nodeId = sequenceNode.getId
+        nodeId = dataBaseNode.getId
       )
       name -> db
+    }
+
+    def getTermProperties(dataBaseNode: graphdb.Node): (String, Term) = {
+      val text = dataBaseNode.getProperty("text").toString
+      val term = Term(
+        text = text,
+        nodeId = dataBaseNode.getId
+      )
+      text -> term
     }
 
     def getNodesDict[T <: Node]
@@ -98,6 +107,7 @@ object GenBankUploader extends App with TransactionSupport{
     //    var totalSequenceCollector: Map[String, Sequence] = Map()
     var totalSequenceCollector: Map[String, Sequence] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")
     var totalDBCollector: Map[String, DBNode] = getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")
+    var totalTermCollector: Map[String, Term] = getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")
 
     def uploadOneFile(gbFile: File): Unit = transaction(graphDataBaseConnection) {
       println(gbFile.getName)

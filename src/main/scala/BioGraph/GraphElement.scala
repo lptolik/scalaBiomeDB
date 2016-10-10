@@ -764,7 +764,7 @@ package BioGraph {
 
   case class Term(
                    text: String,
-                   nodeId: Int = -1)
+                   nodeId: Long = -1)
     extends Node(Map(), nodeId) {
 
     def getText = text
@@ -787,6 +787,20 @@ package BioGraph {
       val termNode = super.upload(graphDataBaseConnection)
       newProperties.foreach{case (k, v) => termNode.setProperty(k, v)}
       termNode
+
+//      if (this.getId < 0) {
+//        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Term"), "text", this.getText))
+//        val term = tryToFindNode match {
+//          case Some(n) => n
+//          case None =>
+//            val createdTerm = super.upload(graphDataBaseConnection)
+//            this.setProperties(Map("text" -> this.getText)).foreach{case (k, v) => createdTerm.setProperty(k, v)}
+//            createdTerm
+//        }
+//        term
+//      }
+//      else graphDataBaseConnection.getNodeById(this.getId)
+
       }
   }
 
@@ -794,7 +808,7 @@ package BioGraph {
                        name: String,
                        source: List[String],
                        accessions: List[XRef] = List(),
-                       var taxon: Taxon = new Taxon("Empty", TaxonType.no_rank),
+                       var taxon: Taxon = Taxon("Empty", TaxonType.no_rank),
                        properties: Map[String, Any] = Map(),
                        nodeId: Long = -1)
     extends Node(properties, nodeId) {
@@ -953,7 +967,7 @@ package BioGraph {
       if (!similarities.contains(similarity)) {
         val newSimilarity = List(similarity) ::: similarities
         similarities = newSimilarity
-        similarity.getSequence.addSimilarity(new Similarity(this, similarity.getEvalue, similarity.getIdentity))
+        similarity.getSequence.addSimilarity(Similarity(this, similarity.getEvalue, similarity.getIdentity))
       }
     }
 
@@ -1047,9 +1061,10 @@ package BioGraph {
                 rnaType: String,
                 xRefs: List[XRef],
                 source: List[String] = List("GenBank"),
-                nodeId: Long = -1
+                nodeId: Long = -1,
+                properties: Map[String, Any] = Map()
                 )
-    extends Node(properties = Map(), nodeId)
+    extends Node(properties, nodeId)
     with BioEntity with GeneProduct {
     def getLabels = List("RNA", "BioEntity", rnaType)
 

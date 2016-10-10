@@ -1,14 +1,16 @@
 package BioGraph
 
-import java.io.{PrintWriter, File}
+import java.io.{File, PrintWriter}
+import java.util
+
 import org.biojava.nbio.core.exceptions.ParserException
 import org.biojava.nbio.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
 import utilFunctions.TransactionSupport
 
 import scala.collection.JavaConverters._
 import org.biojava.nbio.core.sequence.DNASequence
-import org.biojava.nbio.core.sequence.io.{DNASequenceCreator, GenericGenbankHeaderParser, GenbankReader}
-import org.biojava.nbio.core.sequence.features.FeatureInterface
+import org.biojava.nbio.core.sequence.io.{DNASequenceCreator, GenbankReader, GenericGenbankHeaderParser}
+import org.biojava.nbio.core.sequence.features.{FeatureInterface, Qualifier}
 import org.biojava.nbio.core.sequence.template.AbstractSequence
 import org.apache.logging.log4j.LogManager
 import org.biojava.bio.seq.DNATools
@@ -27,6 +29,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("Start processing " + gbFile.getName)
   var sequenceCollector: Map[String, Sequence] = Map()
+  var termCollector: Map[String, Term] = Map()
   var externalDataBasesCollector: Map[String, DBNode] = Map()
 
   private def correctDBXrefInFile(gbFile: File): File = {
@@ -92,28 +95,28 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 //    features(0).getQualifiers.get("organism").get(0).getValue
     val organismName = dnaSeq.getFeaturesByType("source").get(0).getQualifiers.get("organism").get(0).getValue
 //    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
-    val organism = new Organism(
+    val organism = Organism(
       name = organismName,
       accessions = List(makeXref("GenBank:"  + accession)),
       source = genbankSourceValue,
       properties = Map("accession" -> accession))
 
     val ccp = ccpType match{
-      case "Chromosome" => new Chromosome(
+      case "Chromosome" => Chromosome(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
         length = ccpLength,
         properties = Map("length" -> dnaLength))
-      case "Contig" => new Contig(
+      case "Contig" => Contig(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
         length = ccpLength,
         properties = Map("length" -> dnaLength))
-      case "Plasmid" => new Plasmid(
+      case "Plasmid" => Plasmid(
         name = descriptionForUpload,
         organism = organism,
         dnaType = circularOrLinear,
@@ -156,7 +159,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       case Failure(except) => Map[String, Any]()
     }
 
-    val misc = new MiscFeature(
+    val misc = MiscFeature(
       miscFeatureType = miscFeatureType.capitalize,
       coordinates = getCoordinates(miscFeature),
       ccp = orgAndCCP._2,
@@ -175,8 +178,6 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   }
 
   private def makeGene(feature: NucleotideFeature, organism: Organism, ccp: CCP): Gene = {
-
-
     val tryGetLocusTag = Try(feature.getQualifiers.get("locus_tag").get(0).getValue)
     val locusTag = tryGetLocusTag match {
       case Success(properLocusTag) => tryGetLocusTag.get
@@ -188,20 +189,42 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         "hypothetical protein"
     }
 
+    def getGeneNames(typeOfName: String): Option[util.List[Qualifier]] = {
+      val tryGetGeneName = Option(feature.getQualifiers.get(typeOfName))
+      tryGetGeneName
+    }
+
     def getGeneName: String = {
-      val tryGetGeneName = Try(feature.getQualifiers.get("gene").get(0).getValue)
+      val tryGetGeneName = getGeneNames("gene") //Try(feature.getQualifiers.get("gene").get(0).getValue)
       val name = tryGetGeneName match {
-        case Success(properName) => tryGetGeneName.get
-        case Failure(except) => locusTag
+        case Some(properName) => properName.get(0).getValue
+        case None =>
+          logger.warn("Gene " + feature + " has no gene-name")
+          locusTag
       }
       name
     }
 
+    def getGeneSynonymNames: List[Term] = {
+      val tryGetGeneName = getGeneNames("gene_synonym")
+      val name = tryGetGeneName match {
+        case Some(properName) => properName.get(0).getValue
+        case None => ""
+      }
+      if (name.nonEmpty) {
+        val synonyms = name.split(";").toList
+        val synonymTerms = synonyms.map(s => Term(s))
+        synonymTerms
+      }
+      else List()
+    }
+
     val geneName = getGeneName
-    val geneTermList = List(new Term(geneName))
-    val gene = new Gene(
+    val geneTermList = List(Term(locusTag)) ::: List(Term(geneName)) ::: getGeneSynonymNames
+
+    val gene = Gene(
       name = geneName,
-      terms = geneTermList,
+      terms = checkTermsForDuplicates(geneTermList),
       coordinates = getCoordinates(feature),
       organism = organism,
       ccp = ccp,
@@ -213,7 +236,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, Sequence, Polypeptide) = {
 
     def makeTranslation(feature: NucleotideFeature): Sequence = {
-      val tryGetTranslation = Try(new Sequence(feature.getQualifiers.get("translation").get(0).getValue))
+      val tryGetTranslation = Try(Sequence(feature.getQualifiers.get("translation").get(0).getValue))
       val sequenceToCheck = tryGetTranslation match {
         case Success(seq) => tryGetTranslation.get
         case Failure(except) =>
@@ -223,7 +246,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
             coordinates.getEnd.getPosition,
             coordinates.getStrand)
           val translatedAminoAcidSeq = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).toString
-          new Sequence(sequence = translatedAminoAcidSeq)
+          Sequence(sequence = translatedAminoAcidSeq)
       }
       val md5 = sequenceToCheck.getMD5
       if (sequenceCollector.contains(md5)) sequenceCollector(md5)
@@ -237,13 +260,14 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val gene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2)
     val listOfXrefs = makeListOfXrefs(feature)
 
-    val polypeptide = new Polypeptide(
+    val polypeptide = Polypeptide(
       name = gene.getName,
       xRefs = listOfXrefs,
-      sequence =  sequence,
+      sequence = sequence,
       terms = gene.getTerms,
       gene = gene,
-      organism = orgCCPSeq._1
+      organism = orgCCPSeq._1,
+      properties = getProduct(feature)
     )
     (gene, sequence, polypeptide)
   }
@@ -254,33 +278,34 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       case _ => rnaType
     }
     val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
-    val rna = new RNA(
+    val rna = RNA(
       name = gene.getName,
       gene = gene,
       organism = orgAndCCP._1,
       rnaType = properRNAType,
       xRefs = makeListOfXrefs(feature),
-      source = genbankSourceValue
+      source = genbankSourceValue,
+      properties = getProduct(feature)
     )
     (gene, rna)
   }
 
   def makeSourceNodes(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)): CCP = {
-    val organism = new Organism(
+    val organism = Organism(
       name = feature.getQualifiers.get("organism").get(0).getValue,
       source = genbankSourceValue)
     val ccp = orgAndCCP._2.getType match {
-      case CCPType.Chromosome => new Chromosome(
+      case CCPType.Chromosome => Chromosome(
         name = orgAndCCP._2.getName,
         organism = organism,
         source = genbankSourceValue,
         length = orgAndCCP._2.getLength)
-      case CCPType.Contig => new Contig(
+      case CCPType.Contig => Contig(
         name = orgAndCCP._2.getName,
         organism = organism,
         source = genbankSourceValue,
         length = orgAndCCP._2.getLength)
-      case CCPType.Plasmid => new Plasmid(
+      case CCPType.Plasmid => Plasmid(
         name = orgAndCCP._2.getName,
         organism = organism,
         source = genbankSourceValue,
@@ -298,19 +323,30 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       case _ => Strand.unknown
     }
 //    new Coordinates(location.getStart.getPosition + 1, location.getEnd.getPosition, strand)
-    new Coordinates(location.getStart.getPosition, location.getEnd.getPosition, strand)
+    Coordinates(location.getStart.getPosition, location.getEnd.getPosition, strand)
   }
 
   private def makeXref(ref: String): XRef = {
     val dbName = ref.split(":")(0)
     val xrefText = ref.split(":")(1)
-    if (externalDataBasesCollector.contains(dbName)) new XRef(xrefText, externalDataBasesCollector(dbName))
+    if (externalDataBasesCollector.contains(dbName)) XRef(xrefText, externalDataBasesCollector(dbName))
     else {
-      val newDB = new DBNode(dbName)
-      val xrefNode = new XRef(xrefText, newDB)
+      val newDB = DBNode(dbName)
+      val xrefNode = XRef(xrefText, newDB)
       externalDataBasesCollector = externalDataBasesCollector ++ Map(dbName -> newDB)
       xrefNode
     }
+  }
+
+  private def getProduct(feature: NucleotideFeature): Map[String, String] = {
+    val tryGetProduct = Option(feature.getQualifiers.get("product"))
+    val product = tryGetProduct match {
+      case Some(p) => Map("product" -> p.get(0).getValue)
+      case None =>
+        val emptyMap: Map[String, String] = Map()
+        emptyMap
+    }
+    product
   }
 
   private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
@@ -326,6 +362,17 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         List()
     }
 
+  }
+
+  def checkTermsForDuplicates(listOfTerms: List[Term]): List[Term] = {
+    def checker(term: Term): Term = {
+      if (termCollector.contains(term.text)) termCollector(term.text)
+      else {
+        termCollector = termCollector ++ Map(term.text -> term)
+        term
+      }
+    }
+    listOfTerms.map(checker).distinct
   }
 
   def getUniqueFeatures(features: List[NucleotideFeature]) = {

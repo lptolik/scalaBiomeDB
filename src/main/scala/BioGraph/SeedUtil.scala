@@ -40,7 +40,7 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
 
     def processOneSeedLine(lineInSeedFile: String): Unit = {
       val lineRecords = lineInSeedFile.split("\t")
-      val geneCoordinates = new Coordinates(lineRecords(3).toInt, lineRecords(4).toInt, getStrand(lineRecords(6)))
+      val geneCoordinates = Coordinates(lineRecords(3).toInt, lineRecords(4).toInt, getStrand(lineRecords(6)))
       val query = "START org=node(" + organismNode.getId + ") " +
         "MATCH (org)<-[:PART_OF]-(g:Gene{start:" + geneCoordinates.start +
         ", end:" + geneCoordinates.end +

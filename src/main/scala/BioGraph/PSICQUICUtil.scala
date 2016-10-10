@@ -5,6 +5,7 @@ import java.io.File
 import org.hupo.psi.mi.psicquic.wsclient.UniversalPsicquicClient
 import org.hupo.psi.mi.psicquic.wsclient.result.MitabSearchResult
 import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.factory.GraphDatabaseFactory
 
 import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml
 import psidev.psi.mi.xml.model.EntrySet
@@ -31,11 +32,12 @@ class PSICQUICUtil(serverAddress: String) {
   }
 
   def searchForReactant(queryXmlResult: EntrySet, dataBaseFile: File) = {
+    val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
     val entries = queryXmlResult.getEntries.asScala
-    val reader = new IntactUtil(entries, dataBaseFile)
+    val reader = new IntactUtil(entries)
     val reactants = reader.getInteractors.map(reader.interactorInfo)
     val reactionInfo = reader.getInteractions.map(reader.interactionInfo)
-    val xrefNode = reader.graphDataBaseConnection.findNode(DynamicLabel.label("XRef"), "id", reactionInfo.head.getIntactId)
+    val xrefNode = graphDataBaseConnection.findNode(DynamicLabel.label("XRef"), "id", reactionInfo.head.getIntactId)
     val reactionNode = xrefNode.getRelationships(BiomeDBRelations.evidence).asScala.head.getStartNode
   }
 }

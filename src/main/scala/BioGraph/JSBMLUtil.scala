@@ -17,13 +17,12 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val reader = new SBMLReader()
   var compartmentNodes = Map[String, Compartment]()
 
-  def processSBMLFile(fileName: String): Model = transaction(graphDataBaseConnection){
+  def processSBMLFile(fileName: File): Model = transaction(graphDataBaseConnection){
 //    get one model
-    val openFile = new File(fileName)
-    val readResult = reader.readSBML(openFile)
+    val readResult = reader.readSBML(fileName)
     val parsedModel = readResult.getModel
     val compartments = parsedModel.getListOfCompartments.asScala.toList
-    compartmentNodes = compartments.map(elem => elem.getId -> new Compartment(elem.getName)).toMap
+    compartmentNodes = compartments.map(elem => elem.getId -> Compartment(elem.getName)).toMap
     parsedModel
   }
 
@@ -35,7 +34,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val name = specie.getName
       val compartment = specie.getCompartment
       val stoi = reactant.getStoichiometry
-      new Reactant(
+      Reactant(
         name = name,
         stoichiometry = Some(stoi),
         compartment = Some(compartmentNodes(specie.getCompartment))
@@ -46,7 +45,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val reactants = reaction.getListOfReactants.asScala.toList
       val reactantObjects = reactants.map(makeReactantObject)
       reactantObjects.foreach(_.upload(graphDataBaseConnection))
-      new Reaction(reaction.getName, reactantObjects)
+      Reaction(reaction.getName, reactantObjects)
     }
 
     val reactionObjects = reactions.map(makeReactionObject)

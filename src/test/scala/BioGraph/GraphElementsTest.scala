@@ -9,122 +9,122 @@ import utilFunctions.utilFunctionsObject
 class GraphElementsTest extends FunSuite {
 
   trait TestNodesAndRels {
-    val geneTerm = new Term("Gene standard name")
-    val geneTermCopy = new Term("Gene standard name")
-    val geneTerm2 = new Term("Such standard")
-    val geneTerm3 = new Term("The most common gene name")
-    val geneTerm4 = new Term("The most common gene name on forward strand")
-    val geneTerm5 = new Term("The most common gene name in another organism")
+    val geneTerm = Term("Gene standard name")
+    val geneTermCopy = Term("Gene standard name")
+    val geneTerm2 = Term("Such standard")
+    val geneTerm3 = Term("The most common gene name")
+    val geneTerm4 = Term("The most common gene name on forward strand")
+    val geneTerm5 = Term("The most common gene name in another organism")
 
-    val promoterTerm = new Term("Gene standard name")
+    val promoterTerm = Term("Gene standard name")
 
-    val taxon = new Taxon("Very taxonious", TaxonType.family)
-    val taxonCopy = new Taxon("Very taxonious", TaxonType.family)
-    val taxon2 = new Taxon("Much more taxonious", TaxonType.genus)
+    val taxon = Taxon("Very taxonious", TaxonType.family)
+    val taxonCopy = Taxon("Very taxonious", TaxonType.family)
+    val taxon2 = Taxon("Much more taxonious", TaxonType.genus)
 
-    val organism = new Organism("Eschrichia coli", taxon = taxon, source = List("GenBank"))
-    val organismCopy = new Organism("Eschrichia coli", List("GenBank"), taxon = taxon)
-    val organism2 = new Organism("Bacillus subtilis", List("GenBank"), taxon = taxon2)
+    val organism = Organism("Eschrichia coli", taxon = taxon, source = List("GenBank"))
+    val organismCopy = Organism("Eschrichia coli", List("GenBank"), taxon = taxon)
+    val organism2 = Organism("Bacillus subtilis", List("GenBank"), taxon = taxon2)
 
-    val uniprot = new DBNode("UniProt", Map("some property" -> "U123"))
-    val xref = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
-    val xrefCopy = new XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
+    val uniprot = DBNode("UniProt", Map("some property" -> "U123"))
+    val xref = XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
+    val xrefCopy = XRef("NZ_ACKO02000005", uniprot, Map("db_id" -> "NZ_ACKO02000005_GenBank"))
     val link = new LinkTo(xref, uniprot)
 
-    val chromosome1 = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", List("MetaCyc"), DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
-    val chromosome1Copy = new Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", List("MetaCyc"), DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
-    val chromosome2 = new Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", List("MetaCyc"), DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
-    val plasmid1 = new Plasmid("Listeria grayi DSM 20601", organism = organism)
-    val plasmid1Copy = new Plasmid("Listeria grayi DSM 20601", organism = organism)
-    val plasmid2 = new Plasmid("Bacteroides fragilis 3_1_12 plasmid unnamed supercont", organism = organism)
-    val contig1 = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
-    val contig1Copy = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
-    val contig2 = new Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld0, whole genome shotgun sequence.", organism = organism)
+    val chromosome1 = Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", List("MetaCyc"), DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
+    val chromosome1Copy = Chromosome("Bacillus subtilis subsp. subtilis str. 168 complete genome.", List("MetaCyc"), DNAType.circular, organism, 4215606, Map("bacilus property" -> "bacilus is fine"))
+    val chromosome2 = Chromosome("Corynebacterium glutamicum ATCC 13032, complete genome.", List("MetaCyc"), DNAType.circular, organism, 3282708, Map("some property" -> "works fine"))
+    val plasmid1 = Plasmid("Listeria grayi DSM 20601", organism = organism)
+    val plasmid1Copy = Plasmid("Listeria grayi DSM 20601", organism = organism)
+    val plasmid2 = Plasmid("Bacteroides fragilis 3_1_12 plasmid unnamed supercont", organism = organism)
+    val contig1 = Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
+    val contig1Copy = Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole genome shotgun sequence.", organism = organism)
+    val contig2 = Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld0, whole genome shotgun sequence.", organism = organism)
 
-    val coordinates1 = new Coordinates(150, 301, Strand.reverse)
-    val coordinates1Copy = new Coordinates(150, 301, Strand.reverse)
-    val coordinates2 = new Coordinates(2460, 2874, Strand.reverse)
-    val coordinates3 = new Coordinates(750, 1013, Strand.reverse)
-    val coordinates4 = new Coordinates(1753, 1917, Strand.forward)
-    val coordinates5 = new Coordinates(524, 729, Strand.reverse)
+    val coordinates1 = Coordinates(150, 301, Strand.reverse)
+    val coordinates1Copy = Coordinates(150, 301, Strand.reverse)
+    val coordinates2 = Coordinates(2460, 2874, Strand.reverse)
+    val coordinates3 = Coordinates(750, 1013, Strand.reverse)
+    val coordinates4 = Coordinates(1753, 1917, Strand.forward)
+    val coordinates5 = Coordinates(524, 729, Strand.reverse)
 
-    val gene1 = new Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = List("GenBank"), Map("source" -> "GenBank"))
-    val gene2 = new Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = List("GenBank"))
-    val gene3 = new Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = List("GenBank"), Map("source" -> "GenBank"))
-    val gene4 = new Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
-    val gene5 = new Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene1 = Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene2 = Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = List("GenBank"))
+    val gene3 = Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene4 = Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene5 = Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
 
     val evidence = new Evidence(gene1, xref)
 
-    val promoter = new Promoter("ydjFp1", new Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm, source = List("GenBank"))
-    val terminator = new Terminator(new Coordinates(4633111, 4633144, Strand.forward), plasmid1,source = List("GenBank"))
-    val miscFeature = new MiscFeature("Misc_feature", new Coordinates(1560, 6301, Strand.reverse), plasmid1, source = List("GenBank"))
-    val miscStructure = new MiscFeature("Misc_structure", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = List("GenBank"))
-    val mobileElement = new MobileElement("So mobile", new Coordinates(3020, 3101, Strand.forward), plasmid1, source = List("GenBank"))
+    val promoter = Promoter("ydjFp1", Coordinates(1854924, 1854924, Strand.unknown), plasmid1, organism, 1852948, promoterTerm, source = List("GenBank"))
+    val terminator = Terminator(Coordinates(4633111, 4633144, Strand.forward), plasmid1,source = List("GenBank"))
+    val miscFeature = MiscFeature("Misc_feature", Coordinates(1560, 6301, Strand.reverse), plasmid1, source = List("GenBank"))
+    val miscStructure = MiscFeature("Misc_structure", Coordinates(3020, 3101, Strand.forward), plasmid1, source = List("GenBank"))
+    val mobileElement = MobileElement("So mobile", Coordinates(3020, 3101, Strand.forward), plasmid1, source = List("GenBank"))
 
-    val boundaries1 = new Boundaries(gene1, gene2)
-    val boundaries1Copy = new Boundaries(gene1, gene2)
-    val boundaries2 = new Boundaries(gene3, gene2)
+    val boundaries1 = Boundaries(gene1, gene2)
+    val boundaries1Copy = Boundaries(gene1, gene2)
+    val boundaries2 = Boundaries(gene3, gene2)
 
-    val sequence1 = new Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
-    val sequence1Copy = new Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
-    val sequence2 = new Sequence("MNITATVLLAFGMSMDAFAASIGKGATLHKPKFSEALRTGLIFGAVETLTPLIGWGMGMLASRFVLEWNHWIAFVLLIFLGGRMIIEGFRGADDEDEEPRRRHGFWLLVTTAIATSLDAMAVGVGLAFLQVNIIATALAIGCATLIMSTLGMMVGRFIGSIIGKKAEILGGLVLIGIGVQILWTHFHG")
-    val sequence3 = new Sequence("MPKIVILPHQDLCPDGAVLEANSGETILDAALRNGIEIEHACEKSCACTTCHCIVREGFDSLPESSEQEDDMLDKAWGLEPESRLSCQARVTDEDLVVEIPRYTINHAREH")
+    val sequence1 = Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
+    val sequence1Copy = Sequence("MSIQLNGINCFYGAHQALFDITLDCPQGETLVLLGPSGAGKSSLLRVLNLLEMPRSGTLNIAGNHFDFTKTPSDKAIRDLRRNVGMVFQQYNLWPHLTVQQNLIEAPCRVLGLSKDQALARAEKLLERLRLKPYSDRYPLHLSGGQQQRVAIARALMMEPQVLLFDEPTAALDPEITAQIVSIIRELAETNITQVIVTHEVEVARKTASRVVYMENGHIVEQGDASCFTEPQTEAFKNYLSH")
+    val sequence2 = Sequence("MNITATVLLAFGMSMDAFAASIGKGATLHKPKFSEALRTGLIFGAVETLTPLIGWGMGMLASRFVLEWNHWIAFVLLIFLGGRMIIEGFRGADDEDEEPRRRHGFWLLVTTAIATSLDAMAVGVGLAFLQVNIIATALAIGCATLIMSTLGMMVGRFIGSIIGKKAEILGGLVLIGIGVQILWTHFHG")
+    val sequence3 = Sequence("MPKIVILPHQDLCPDGAVLEANSGETILDAALRNGIEIEHACEKSCACTTCHCIVREGFDSLPESSEQEDDMLDKAWGLEPESRLSCQARVTDEDLVVEIPRYTINHAREH")
 
-    val term1 = new Term("L-arginine ABC transporter")
-    val term2 = new Term("putative Mn(2+) efflux pump, mntR-regulated")
-    val term3 = new Term("reduced ferredoxin")
+    val term1 = Term("L-arginine ABC transporter")
+    val term2 = Term("putative Mn(2+) efflux pump, mntR-regulated")
+    val term3 = Term("reduced ferredoxin")
 
-    val xref1 = new XRef("EG11568", uniprot)
-    val xref2 = new XRef("EG10995", uniprot)
-    val xref3 = new XRef("EG11850", uniprot)
+    val xref1 = XRef("EG11568", uniprot)
+    val xref2 = XRef("EG10995", uniprot)
+    val xref3 = XRef("EG11850", uniprot)
 
-    val poly1 = new Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), gene1, organism, List("GenBank", "MetaCyc"))
+    val poly1 = Polypeptide("Test poly 1", List(xref1), sequence1, List(term1), gene1, organism, List("GenBank", "MetaCyc"))
     val poly1Copy = poly1.copy()
-    val poly2 = new Polypeptide("Test poly 2", List(xref2), sequence2, List(term2), gene2, organism)
-    val poly3 = new Polypeptide("Test poly 3", List(xref3), sequence3, List(term3), gene3, organism)
+    val poly2 = Polypeptide("Test poly 2", List(xref2), sequence2, List(term2), gene2, organism)
+    val poly3 = Polypeptide("Test poly 3", List(xref3), sequence3, List(term3), gene3, organism)
 
-    val tuTerm1 = new Term("So much very transcriptional unit")
-    val tuTerm2 = new Term("Much more transcriptional unit")
+    val tuTerm1 = Term("So much very transcriptional unit")
+    val tuTerm2 = Term("Much more transcriptional unit")
 
-    val operonTerm = new Term("So much very operonious term")
-    val operon = new Operon("So operonious", boundaries1, operonTerm, organism)
+    val operonTerm = Term("So much very operonious term")
+    val operon = Operon("So operonious", boundaries1, operonTerm, organism)
 
-    val tu1 = new TU("Very transcriptonal", tuTerm1, operon, promoter, organism, List(gene1))
-    val tu2 = new TU("More transcriptonal", tuTerm2, operon, promoter, organism, List(gene3))
+    val tu1 = TU("Very transcriptonal", tuTerm1, operon, promoter, organism, List(gene1))
+    val tu2 = TU("More transcriptonal", tuTerm2, operon, promoter, organism, List(gene3))
     operon.addTU(tu1)
 
-    val compound1 = new Compound(
+    val compound1 = Compound(
       "oxybuprocaine",
       inchi = "InChI=1S/C17H28N2O3/c1-4-7-11-21-16-13-14(8-9-15(16)18)17(20)22-12-10-19(5-2)6-3/h8-9,13H,4-7,10-12,18H2,1-3H3",
       smiles = "CCCCCCCCCC(CCCCCCCCCCCC([O-])=O)OC1(OC(C(C(C1OC2(OC(C(C(C2O)O)O)COC(C)=O))O)O)COC(=O)C)",
       reference = List(xref1))
-    val compound1Copy = new Compound(
+    val compound1Copy = Compound(
       "oxybuprocaine",
       inchi = "InChI=1S/C17H28N2O3/c1-4-7-11-21-16-13-14(8-9-15(16)18)17(20)22-12-10-19(5-2)6-3/h8-9,13H,4-7,10-12,18H2,1-3H3",
       smiles = "CCCCCCCCCC(CCCCCCCCCCCC([O-])=O)OC1(OC(C(C(C1OC2(OC(C(C(C2O)O)O)COC(C)=O))O)O)COC(=O)C)",
       reference = List(xref1))
-    val compound2 = new Compound(
+    val compound2 = Compound(
       "\t2-styrylquinoline",
       inchi = "InChI=1S/C17H13N/c1-2-6-14(7-3-1)10-12-16-13-11-15-8-4-5-9-17(15)18-16/h1-13H")
 
-    val similarity1 = new Similarity(sequence2, 1e-12, 78.5)
-    val similarity1Copy = new Similarity(sequence2, 1e-12, 78.5)
-    val similarity2 = new Similarity(sequence1, 1e-15, 87.4)
+    val similarity1 = Similarity(sequence2, 1e-12, 78.5)
+    val similarity1Copy = Similarity(sequence2, 1e-12, 78.5)
+    val similarity2 = Similarity(sequence1, 1e-15, 87.4)
     sequence3.addSimilarity(similarity1)
 
-    val rna1 = new RNA("5S ribosomal RNA", gene4, organism, "sRNA", List(xref1))
+    val rna1 = RNA("5S ribosomal RNA", gene4, organism, "sRNA", List(xref1))
     val rna1Copy = rna1.copy()
-    val rna2 = new RNA("16S ribosomal RNA", gene5, organism, "sRNA", List(xref2))
-    val rna3 = new RNA("15S ribosomal RNA", gene4, organism2, "tRNA", List(xref3))
+    val rna2 = RNA("16S ribosomal RNA", gene5, organism, "sRNA", List(xref2))
+    val rna3 = RNA("15S ribosomal RNA", gene4, organism2, "tRNA", List(xref3))
 
-    val intactDBNode = new DBNode("Intact")
-    val reactant1 = new Reactant("Super reactant", sequence = "MHQPQWWHP", toCheck = true)
+    val intactDBNode = DBNode("Intact")
+    val reactant1 = Reactant("Super reactant", sequence = "MHQPQWWHP", toCheck = true)
     val reactant1Copy = reactant1.copy()
-    val reactant2 = new Reactant("Mega reactant")
-    val reaction1 = new Reaction("Two reactant reaction", List(reactant1, reactant2))
+    val reactant2 = Reactant("Mega reactant")
+    val reaction1 = Reaction("Two reactant reaction", List(reactant1, reactant2))
     val reaction1Copy = reaction1.copy()
-    val reaction2 = new Reaction("Another two reactant reaction", List(reactant1, reactant2))
+    val reaction2 = Reaction("Another two reactant reaction", List(reactant1, reactant2))
 
 
   }
@@ -439,7 +439,7 @@ class GraphElementsTest extends FunSuite {
   test("test coordinates required start and end") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
-        new Coordinates(101, 100, Strand.forward)
+        Coordinates(101, 100, Strand.forward)
       }
       assert(thrown.getMessage === "requirement failed: Start coordinate cannot have bigger value than end coordinate!")
     }
@@ -490,7 +490,7 @@ class GraphElementsTest extends FunSuite {
   test("test boundaries required organism") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
-        new Boundaries(gene1, gene4)
+        Boundaries(gene1, gene4)
       }
       assert(thrown.getMessage === "requirement failed: Genes in the operon must be located on the same strand!")
     }
@@ -499,7 +499,7 @@ class GraphElementsTest extends FunSuite {
   test("test boundaries required ccp") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
-        new Boundaries(gene1, gene5)
+        Boundaries(gene1, gene5)
       }
       assert(thrown.getMessage === "requirement failed: Genes must be located on the same CCP!")
     }
@@ -508,7 +508,7 @@ class GraphElementsTest extends FunSuite {
   test("test boundaries required strand") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
-        new Boundaries(gene1, gene4)
+        Boundaries(gene1, gene4)
       }
       assert(thrown.getMessage === "requirement failed: Genes in the operon must be located on the same strand!")
     }
@@ -517,7 +517,7 @@ class GraphElementsTest extends FunSuite {
   test("test boundaries required comesBefore") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
-        new Boundaries(gene2, gene1)
+        Boundaries(gene2, gene1)
       }
       assert(thrown.getMessage === "requirement failed: Start gene coordinate cannot have bigger value than end gene coordinate!")
     }

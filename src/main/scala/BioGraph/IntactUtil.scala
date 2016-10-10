@@ -1,6 +1,7 @@
 package BioGraph
 
 
+import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import psidev.psi.mi.xml.model.{DbReference, ExperimentDescription, ExperimentalInteractor, Interaction, Interactor, Entry}
 
@@ -13,15 +14,14 @@ import scala.collection.JavaConverters._
 /**
   * Created by artem on 16.06.16.
   */
-class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends TransactionSupport {
+class IntactUtil(psiXmlEntries: Iterable[Entry]) extends TransactionSupport {
 
-  val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   //  var gbs = scala.collection.mutable.Set[String]()
   var mapOfReactants = Map[Int, Reactant]()
   var mapOfExperiments = Map[Int, ExperimentInfo]()
 
-  val intactDB = new DBNode("Intact")
-  val imexDB = new DBNode("Imex")
+  val intactDB = DBNode("Intact")
+  val imexDB = DBNode("Imex")
   var dbDictionary = Map[String, DBNode]()
 
   def getInteractors = {
@@ -94,7 +94,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
     experimentInfo
   }
 
-  private def findPolypetidesInteractors(parsedInteractors: List[InteractorInfo]) = {
+  private def findPolypetidesInteractors(parsedInteractors: List[InteractorInfo], graphDataBaseConnection: GraphDatabaseService) = {
     def findPolyNodeByXRef(xrefMap: Map[String, String]) = {
       def makeQuery(db: String, id: String) = {
         val query = "MATCH (db:DB)<-[:LINK_TO]-" +
@@ -112,7 +112,9 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
     findExistingNodes.flatten.map(_.map(_.asScala))
   }
 
-  def createInteractorNodes(interactors: List[Interactor]): Unit = transaction(graphDataBaseConnection) {
+  def createInteractorNodes(
+                             interactors: List[Interactor],
+                             graphDataBaseConnection: GraphDatabaseService): Unit = transaction(graphDataBaseConnection) {
     def processOneInteractor(parsedInteractor: InteractorInfo, queryResult: List[scala.collection.mutable.Map[String, AnyRef]]): Unit = {
       //      Name
       val reactantName = parsedInteractor.getName
@@ -128,7 +130,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
       //      Try to match a polypeptide in DB to a reactant
       val reactant = queryResult.nonEmpty match {
         case true =>
-          val reactant = new Reactant(name = reactantName)
+          val reactant = Reactant(name = reactantName)
           val reactantNode = reactant.upload(graphDataBaseConnection)
           xrefNodes.foreach(reactantNode.createRelationshipTo(_, BiomeDBRelations.evidence))
           queryResult.head.get("ID(p)") match {
@@ -139,7 +141,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
           }
           reactant
         case false =>
-          val reactant = new Reactant(
+          val reactant = Reactant(
             name = reactantName,
             sequence = parsedInteractor.getSequence,
             inchi = inchiMap,
@@ -153,12 +155,14 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
 
     }
     val parsedInteractors = interactors.map(interactorInfo)
-    val foundExistingPolyNodes = findPolypetidesInteractors(parsedInteractors)
+    val foundExistingPolyNodes = findPolypetidesInteractors(parsedInteractors, graphDataBaseConnection)
     val zipped = parsedInteractors.zip(foundExistingPolyNodes)
     zipped.foreach(z => processOneInteractor(z._1, z._2))
   }
 
-  def createReactionsNodes(interactions: List[Interaction]): Unit = transaction(graphDataBaseConnection) {
+  def createReactionsNodes(
+                            interactions: List[Interaction],
+                            graphDataBaseConnection: GraphDatabaseService): Unit = transaction(graphDataBaseConnection) {
     //    make a Map of experiments by their Intact id
     this.getExperiments.map(experimentInfo).foreach(elem => mapOfExperiments += (elem.getId -> elem))
     def processOneInteraction(interaction: Interaction): Unit = {
@@ -173,12 +177,12 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
       }
       //      xrefs
       val listOfXrefs = info.getImexId match {
-        case Some(id) => List(new XRef(info.getIntactId, intactDB), new XRef(id, imexDB))
-        case None => List(new XRef(info.getIntactId, intactDB))
+        case Some(id) => List(XRef(info.getIntactId, intactDB), XRef(id, imexDB))
+        case None => List(XRef(info.getIntactId, intactDB))
       }
       //      reactants
       val listOfReactants = info.getParticipants.map(mapOfReactants).toList
-      val reaction = new Reaction(
+      val reaction = Reaction(
         reactionName,
         listOfReactants,
         listOfXrefs,
@@ -194,11 +198,11 @@ class IntactUtil(psiXmlEntries: Iterable[Entry], dataBaseFile: File) extends Tra
     val dbObject = dbDictionary.contains(dbName) match {
       case true => dbDictionary(dbName)
       case false =>
-        val newDB = new DBNode(dbName)
+        val newDB = DBNode(dbName)
         dbDictionary += (dbName -> newDB)
         newDB
     }
-    new XRef(dbXrefPair._2, dbObject)
+    XRef(dbXrefPair._2, dbObject)
   }
 
   private def inchiWriter(inchiString: String): String = {

@@ -6,13 +6,23 @@ import java.io.File
   * Created by artem on 14.07.16.
   */
 object JSBMLUpload {
-  def main(args: Array[String]): Unit = {
-//    val dataBaseFile = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
-    val dataBaseFile = new File("/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db")
-    val jsbml = new JSBMLUtil(dataBaseFile)
-//    BMID000000065401.xml BIOMD0000000051.xml
-//    val model = jsbml.processSBMLFile("/home/artem/work/2016/JSBML/BMID000000065401.xml")
-    val model = jsbml.processSBMLFile("/home/jane/iWFL_1372.xml")
-    jsbml.uploadModels(model)
+  def main(): Unit = {
+
+//    val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
+//    val localDir = "/home/artem/work/2016/JSBML/models/"
+
+    val remoteDir = "/home/jane/graph_new_release/sbmlModels"
+    val remoteDB = new File("/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db")
+
+    val models = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(remoteDir, "xml")
+
+    val jsbml = new JSBMLUtil(remoteDB)
+
+    def uploadOneModel(smblModel: File): Unit = {
+      println(smblModel.getName)
+      val model = jsbml.processSBMLFile(smblModel)
+      jsbml.uploadModels(model)
+    }
+    models.foreach(uploadOneModel)
   }
 }

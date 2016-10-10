@@ -6,7 +6,7 @@ version := "1.0"
 
 scalaVersion := "2.11.7"
 
-//resolvers += "European Bioinformatics Institute" at "http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public"
+resolvers += "European Bioinformatics Institute" at "http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public"
 //http://www.ebi.ac.uk/~maven/m2repo/org/sbml/jsbml/jsbml/
 //http://www.ebi.ac.uk/~maven/m2repo
 //resolvers += "The EBI repository" at "http://www.ebi.ac.uk/~maven/m2repo/org/sbml/"

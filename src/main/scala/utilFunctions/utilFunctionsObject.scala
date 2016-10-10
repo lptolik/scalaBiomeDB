@@ -53,13 +53,13 @@ package utilFunctions {
         val identity: Double = line.split('\t')(1).toDouble
         val currentSeq =
           if (blastedSequences contains querySeqId) blastedSequences(querySeqId)
-          else new Sequence(sequence = querySeq, md5 = queryMD5, nodeId = querySeqId)
+          else Sequence(sequence = querySeq, md5 = queryMD5, nodeId = querySeqId)
         for (targetSeqId <- line.split('\t')(3).split('|').tail) {
-          val similarSeq = new Sequence(
+          val similarSeq = Sequence(
             sequence = targetSeq,
             md5 = targetMD5,
             nodeId = targetSeqId.toInt)
-          currentSeq.addSimilarity(new Similarity(similarSeq, evalue, identity))
+          currentSeq.addSimilarity(Similarity(similarSeq, evalue, identity))
         }
         insideBlastReadLoop(currentLines, blastedSequences + (querySeqId -> currentSeq), source)
       }
@@ -82,9 +82,9 @@ package utilFunctions {
         val identity: Double = splitString(1).toDouble
         val currentSeq =
           if (blastedSequences contains querySeqId) blastedSequences(querySeqId)
-          else new Sequence(sequence = querySeq, nodeId = querySeqId)
-        val similarSeq = new Sequence(sequence = targetSeq)
-        currentSeq.addSimilarity(new Similarity(similarSeq, evalue, identity))
+          else Sequence(sequence = querySeq, nodeId = querySeqId)
+        val similarSeq = Sequence(sequence = targetSeq)
+        currentSeq.addSimilarity(Similarity(similarSeq, evalue, identity))
         outsideBlastReadLoop(currentLines, blastedSequences + (querySeqId -> currentSeq), source)
       }
       else {
@@ -447,11 +447,12 @@ package utilFunctions {
 
     }
 
-    def getGenBankFilesFromDirectory(directory: String): List[File] = {
+    def getUploadFilesFromDirectory(directory: String, format: String): List[File] = {
       val files = new java.io.File(directory).listFiles().toList.sortBy(- _.length)
-      val gbFiles = files.filter(_.getName.endsWith(".gb"))
-      gbFiles
+      val sortedFiles = files.filter(_.getName.endsWith("." + format))
+      sortedFiles
     }
+
   }
 
 trait TransactionSupport {
