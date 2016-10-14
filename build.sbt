@@ -45,6 +45,8 @@ libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3" 
 
 libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
 
+libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
+
 //sbt-assembly
 //assemblySettings
 assemblyMergeStrategy in assembly := {

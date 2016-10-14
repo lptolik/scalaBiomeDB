@@ -11,6 +11,7 @@ package utilFunctions {
   import scala.collection.parallel.immutable.ParHashMap
   import scala.io.Source
   import scala.collection.JavaConverters._
+  import BioGraph._
 
   /**
     * Created by artem on 12.02.16.
@@ -452,7 +453,49 @@ package utilFunctions {
       val sortedFiles = files.filter(_.getName.endsWith("." + format))
       sortedFiles
     }
+    def getSequenceProperties(sequenceNode: Node): (String, Sequence) = {
+      val md5 = sequenceNode.getProperty("md5").toString
+      val seq = Sequence(
+        sequence = sequenceNode.getProperty("seq").toString,
+        md5 = md5,
+        nodeId = sequenceNode.getId
+      )
+      md5 -> seq
+    }
 
+    def getDBProperties(dataBaseNode: Node): (String, DBNode) = {
+      val name = dataBaseNode.getProperty("name").toString
+      val db = DBNode(
+        name = name,
+        nodeId = dataBaseNode.getId
+      )
+      name -> db
+    }
+
+    def getTermProperties(termNode: Node): (String, Term) = {
+      val text = termNode.getProperty("text").toString
+      val term = Term(
+        text = text,
+        nodeId = termNode.getId
+      )
+      text -> term
+    }
+
+    def getCompoundPropertiesByXRefs(xrefNode: Node): (String, Compound) = {
+      val xrefId = xrefNode.getProperty("id").toString
+      val compoundNode = xrefNode.getSingleRelationship(BiomeDBRelations.evidence, Direction.INCOMING).getStartNode
+      val compound = Compound(compoundNode.getProperty("name").toString, nodeId = compoundNode.getId)
+      xrefId -> compound
+    }
+
+    def getNodesDict[T <: BioGraph.Node]
+    (graphDataBaseConnection: GraphDatabaseService)
+    (f: Node => (String, T), label: String)
+    (filterFunc: Node => Boolean = _ => true): Map[String, T] = transaction(graphDataBaseConnection) {
+      val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
+      val dict = nodes.filter(filterFunc).map{node => f(node)}.toMap
+      dict
+    }
   }
 
 trait TransactionSupport {

@@ -1051,6 +1051,22 @@ package BioGraph {
     override def canEqual(that: Any) = that.isInstanceOf[Compound]
 
     override def hashCode = 41 * inchi.hashCode
+
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+      if (this.getId < 0) {
+        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Compound"), "name", this.getName))
+        val compartmentNode = tryToFindNode match {
+          case Some(n) => n
+          case None =>
+            val createdCompartmentNode = super.upload(graphDataBaseConnection)
+            this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdCompartmentNode.setProperty(k, v)}
+            createdCompartmentNode
+        }
+        compartmentNode
+      }
+      else graphDataBaseConnection.getNodeById(this.getId)
+    }
+
   }
 
   case class RNA(

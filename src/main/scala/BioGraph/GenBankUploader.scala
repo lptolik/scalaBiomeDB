@@ -67,47 +67,47 @@ object GenBankUploader extends App with TransactionSupport{
 //      val sequenceDict = sequenceNodes.map{node => getSequenceProperties(node)}.toMap
 //      sequenceDict
 //    }
-
-    def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
-      val md5 = sequenceNode.getProperty("md5").toString
-      val seq = Sequence(
-        sequence = sequenceNode.getProperty("seq").toString,
-        md5 = md5,
-        nodeId = sequenceNode.getId
-      )
-      md5 -> seq
-    }
-
-    def getDBProperties(dataBaseNode: graphdb.Node): (String, DBNode) = {
-      val name = dataBaseNode.getProperty("name").toString
-      val db = DBNode(
-        name = name,
-        nodeId = dataBaseNode.getId
-      )
-      name -> db
-    }
-
-    def getTermProperties(dataBaseNode: graphdb.Node): (String, Term) = {
-      val text = dataBaseNode.getProperty("text").toString
-      val term = Term(
-        text = text,
-        nodeId = dataBaseNode.getId
-      )
-      text -> term
-    }
-
-    def getNodesDict[T <: Node]
-    (graphDatabaseConnection: GraphDatabaseService)
-    (f: graphdb.Node => (String, T), label: String): Map[String, T] = transaction(graphDataBaseConnection) {
-      val sequenceNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
-      val sequenceDict = sequenceNodes.map{node => f(node)}.toMap
-      sequenceDict
-    }
+//
+//    def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
+//      val md5 = sequenceNode.getProperty("md5").toString
+//      val seq = Sequence(
+//        sequence = sequenceNode.getProperty("seq").toString,
+//        md5 = md5,
+//        nodeId = sequenceNode.getId
+//      )
+//      md5 -> seq
+//    }
+//
+//    def getDBProperties(dataBaseNode: graphdb.Node): (String, DBNode) = {
+//      val name = dataBaseNode.getProperty("name").toString
+//      val db = DBNode(
+//        name = name,
+//        nodeId = dataBaseNode.getId
+//      )
+//      name -> db
+//    }
+//
+//    def getTermProperties(dataBaseNode: graphdb.Node): (String, Term) = {
+//      val text = dataBaseNode.getProperty("text").toString
+//      val term = Term(
+//        text = text,
+//        nodeId = dataBaseNode.getId
+//      )
+//      text -> term
+//    }
+//
+//    def getNodesDict[T <: Node]
+//    (graphDatabaseConnection: GraphDatabaseService)
+//    (f: graphdb.Node => (String, T), label: String): Map[String, T] = transaction(graphDataBaseConnection) {
+//      val sequenceNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
+//      val sequenceDict = sequenceNodes.map{node => f(node)}.toMap
+//      sequenceDict
+//    }
 
     //    var totalSequenceCollector: Map[String, Sequence] = Map()
-    var totalSequenceCollector: Map[String, Sequence] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")
-    var totalDBCollector: Map[String, DBNode] = getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")
-    var totalTermCollector: Map[String, Term] = getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")
+    var totalSequenceCollector: Map[String, Sequence] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")()
+    var totalDBCollector: Map[String, DBNode] = getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")()
+    var totalTermCollector: Map[String, Term] = getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")()
 
     def uploadOneFile(gbFile: File): Unit = transaction(graphDataBaseConnection) {
       println(gbFile.getName)

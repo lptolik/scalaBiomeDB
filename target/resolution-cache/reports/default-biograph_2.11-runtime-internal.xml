@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="runtime-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20161010162640"/>
+		date="20161011122538"/>
 	<dependencies>
 		<module organisation="org.sbml.jsbml" name="jsbml">
 			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510144627" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="42">
@@ -99,9 +99,10 @@
 			</revision>
 		</module>
 		<module organisation="org.sbml.jsbml.ext" name="jsbml-fbc">
-			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135321" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="57">
+			<revision name="1.2-SNAPSHOT" status="integration" pubdate="20160510135321" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="true" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="57">
 				<metadata-artifact status="no" details="" size="3669" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/ivy-1.2-SNAPSHOT.xml" searched="true" origin-is-local="false" origin-location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160510.105321-1.pom"/>
 				<caller organisation="org.sbml.jsbml" name="jsbml" conf="default, compile, runtime, master" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.2-SNAPSHOT"/>
+				<caller organisation="default" name="biograph_2.11" conf="compile, runtime-internal, runtime, optional" rev="1.2-SNAPSHOT" rev-constraint-default="1.2-SNAPSHOT" rev-constraint-dynamic="1.2-SNAPSHOT" callerrev="1.0"/>
 				<artifacts>
 					<artifact name="jsbml-fbc" type="jar" ext="jar" status="no" details="" size="54640" time="0" location="/home/artem/.ivy2/cache/org.sbml.jsbml.ext/jsbml-fbc/jars/jsbml-fbc-1.2-SNAPSHOT.jar">
 						<origin-location is-local="false" location="http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/org/sbml/jsbml/ext/jsbml-fbc/1.2-SNAPSHOT/jsbml-fbc-1.2-20160510.105321-1.jar"/>

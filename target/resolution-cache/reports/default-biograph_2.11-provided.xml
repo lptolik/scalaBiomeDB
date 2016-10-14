@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="provided"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20161010162640"/>
+		date="20161011122538"/>
 	<dependencies>
 		<module organisation="org.hupo.psi.mi.psicquic" name="psicquic-client">
 			<revision name="1.5.3" status="release" pubdate="20130814175413" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="29">
@@ -418,7 +418,7 @@
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec">
 			<revision name="1.1.1" status="release" pubdate="20080831154615" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="154">
-				<metadata-artifact status="successful" details="" size="2580" time="509" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.pom"/>
+				<metadata-artifact status="successful" details="" size="2580" time="232" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-jms_1.1_spec" type="jar" ext="jar" status="no" details="" size="32359" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/jars/geronimo-jms_1.1_spec-1.1.1.jar">
@@ -429,7 +429,7 @@
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-servlet_2.5_spec">
 			<revision name="1.1.2" status="release" pubdate="20080831154615" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="153">
-				<metadata-artifact status="successful" details="" size="2191" time="283" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-servlet_2.5_spec/1.1.2/geronimo-servlet_2.5_spec-1.1.2.pom"/>
+				<metadata-artifact status="successful" details="" size="2191" time="236" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/ivy-1.1.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-servlet_2.5_spec/1.1.2/geronimo-servlet_2.5_spec-1.1.2.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.2" rev-constraint-default="1.1.2" rev-constraint-dynamic="1.1.2" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-servlet_2.5_spec" type="jar" ext="jar" status="no" details="" size="71301" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-servlet_2.5_spec/jars/geronimo-servlet_2.5_spec-1.1.2.jar">
@@ -734,7 +734,7 @@
 				</artifacts>
 			</revision>
 			<revision name="1.0.2" status="release" pubdate="20080831154616" resolver="jcenter" artresolver="jcenter" evicted="latest-revision" evicted-reason="" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="-1">
-				<metadata-artifact status="successful" details="" size="2151" time="376" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.2/geronimo-activation_1.1_spec-1.0.2.pom"/>
+				<metadata-artifact status="successful" details="" size="2151" time="236" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/ivy-1.0.2.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.2/geronimo-activation_1.1_spec-1.0.2.pom"/>
 				<evicted-by rev="1.1"/>
 				<caller organisation="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.jaxb-impl" conf="compile, runtime" rev="1.0.2" rev-constraint-default="1.0.2" rev-constraint-dynamic="1.0.2" callerrev="2.2.4_2"/>
 				<caller organisation="org.apache.servicemix.specs" name="org.apache.servicemix.specs.jaxb-api-2.2" conf="compile, runtime" rev="1.0.2" rev-constraint-default="1.0.2" rev-constraint-dynamic="1.0.2" callerrev="2.1.0"/>
@@ -813,7 +813,7 @@
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-annotation_1.0_spec">
 			<revision name="1.1.1" status="release" pubdate="20080831154616" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="125">
-				<metadata-artifact status="successful" details="" size="2151" time="379" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1.1/geronimo-annotation_1.0_spec-1.1.1.pom"/>
+				<metadata-artifact status="successful" details="" size="2151" time="231" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1.1/geronimo-annotation_1.0_spec-1.1.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-annotation_1.0_spec" type="jar" ext="jar" status="no" details="" size="12452" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-annotation_1.0_spec/jars/geronimo-annotation_1.0_spec-1.1.1.jar">
@@ -824,7 +824,7 @@
 		</module>
 		<module organisation="org.apache.geronimo.specs" name="geronimo-stax-api_1.0_spec">
 			<revision name="1.0.1" status="release" pubdate="20080831154614" resolver="jcenter" artresolver="jcenter" homepage="" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="124">
-				<metadata-artifact status="successful" details="" size="2166" time="299" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.pom"/>
+				<metadata-artifact status="successful" details="" size="2166" time="234" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml" searched="true" original-local-location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/ivy-1.0.1.xml.original" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.pom"/>
 				<caller organisation="org.apache.cxf" name="cxf-bundle" conf="compile, runtime" rev="1.0.1" rev-constraint-default="1.0.1" rev-constraint-dynamic="1.0.1" callerrev="2.4.3"/>
 				<artifacts>
 					<artifact name="geronimo-stax-api_1.0_spec" type="bundle" ext="jar" status="no" details="" size="28804" time="0" location="/home/artem/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/bundles/geronimo-stax-api_1.0_spec-1.0.1.jar">
