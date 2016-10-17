@@ -481,6 +481,15 @@ package utilFunctions {
       text -> term
     }
 
+    def getReactantProperties(reactantNode: Node): (String, Reactant) = {
+      val name = reactantNode.getProperty("name").toString
+      val reactant = Reactant(
+        name = name,
+        nodeId = reactantNode.getId
+      )
+      name -> reactant
+    }
+
     def getCompoundPropertiesByXRefs(xrefNode: Node): (String, Compound) = {
       val xrefId = xrefNode.getProperty("id").toString
       val compoundNode = xrefNode.getSingleRelationship(BiomeDBRelations.evidence, Direction.INCOMING).getStartNode
@@ -493,8 +502,21 @@ package utilFunctions {
     (f: Node => (String, T), label: String)
     (filterFunc: Node => Boolean = _ => true): Map[String, T] = transaction(graphDataBaseConnection) {
       val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
-      val dict = nodes.filter(filterFunc).map{node => f(node)}.toMap
-      dict
+      val dict = nodes.filter(filterFunc)
+      val res = dict.map{node => f(node)}.toMap
+      res
+    }
+
+    def findExistingRelationship(
+                                  graphDataBaseConnection: GraphDatabaseService,
+                                  searchFromNode: Node,
+                                  searchToNode: Node,
+                                  direction: Direction,
+                                  relationshipType: RelationshipType): List[(Relationship, Node)] = {
+      val tryFindParticipation = searchFromNode.getRelationships(relationshipType, direction).asScala.toList
+      val zipEdgeWithReaction = tryFindParticipation.zip(tryFindParticipation.map(_.getEndNode))
+      val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != searchToNode)
+      tryToFindReaction
     }
   }
 

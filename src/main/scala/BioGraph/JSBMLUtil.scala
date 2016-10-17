@@ -5,7 +5,7 @@ import java.io.File
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.sbml.jsbml._
-import org.sbml.jsbml.ext.fbc.{FBCModelPlugin, GeneProduct}
+import org.sbml.jsbml.ext.fbc.{FBCModelPlugin, FBCSpeciesPlugin, GeneProduct}
 import utilFunctions.TransactionSupport
 import org.neo4j.graphdb.{DynamicLabel, Node}
 import utilFunctions.utilFunctionsObject._
@@ -13,6 +13,7 @@ import utilFunctions.BiomeDBRelations
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Map
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by artem on 14.07.16.
@@ -22,12 +23,27 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   val reader = new SBMLReader()
   var compartmentNodes = Map[String, Compartment]()
-//  get dictionary of ChEBI XRefs
-  val chebiNodeId = findNode(graphDataBaseConnection, "DB", "name", "ChEBI").getId
-  val chebi = DBNode(name = "ChEBI", nodeId = chebiNodeId)
-  var totalChebiCompoundCollector: Map[String, Compound] =
+//  get dictionary of ChEBI and Reactome XRefs
+  val chebiInfo = getDataBasesNodes("CheEBI")
+  val reactomeInfo = getDataBasesNodes("Reactome")
+  val chebi = chebiInfo._1
+  val chebiNodeId = chebiInfo._2
+  val reactome = reactomeInfo._1
+  val reactomeNodeId = reactomeInfo._2
+  val totalChebiCompoundCollector: Map[String, Compound] =
     getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.contains("CHEBI:"))
-  totalChebiCompoundCollector = totalChebiCompoundCollector.filter(elem => elem._1.contains("CHEBI"))
+      .filter(elem => elem._1.contains("CHEBI"))
+  val totalReactomeCompoundCollector: Map[String, Compound] =
+    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.contains("reactome"))
+      .filter(elem => elem._1.contains("reactome"))
+  var totalCompoundCollector = totalChebiCompoundCollector ++ totalReactomeCompoundCollector
+  var reactantCollector: Map[String, Reactant] = Map()//getNodesDict(graphDataBaseConnection)(getReactantProperties, "Reactant")()
+
+  def getDataBasesNodes(dbName: String): (DBNode, Long) = transaction(graphDataBaseConnection){
+    val db = DBNode(dbName)
+    val dbNodeId = db.upload(graphDataBaseConnection).getId
+    (db, dbNodeId)
+  }
 
   def processSBMLFile(fileName: File): Model = transaction(graphDataBaseConnection){
 //    get one model
@@ -43,62 +59,79 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def makeCompoundObject(specie: Species, specieName: String): List[Compound] = transaction(graphDataBaseConnection) {
       val chebiXRefs = specie.getCVTerms.asScala.head.getResources.asScala.toList.filter(_.contains("CHEBI:"))
-      def getOrCreateCompoundNode(chebiXRef: String): Compound = {
-        val shortXRef = chebiXRef.split("/").last
-        if (totalChebiCompoundCollector.contains(shortXRef)) totalChebiCompoundCollector(shortXRef)
+      val reactomeXRefs = specie.getCVTerms.asScala.head.getResources.asScala.toList.filter(_.contains("reactome"))
+      def getOrCreateCompoundNode(xrefName: String, db: DBNode): Compound = {
+        val shortXRefName = xrefName.split("/").last
+        if (totalCompoundCollector.contains(shortXRefName)) totalCompoundCollector(shortXRefName)
         else {
-          logger.warn("No compound was found by XRef id:" + chebiXRef)
+          logger.warn("No compound was found by XRef id:" + xrefName)
           val createdCompound = Compound(specieName)
-          val createdXRef = XRef(shortXRef, chebi)
+          val createdXRef = XRef(shortXRefName, chebi)
           val createdCompoundNode = createdCompound.upload(graphDataBaseConnection)
           val createdXRefNode = createdXRef.upload(graphDataBaseConnection)
           createdCompoundNode.createRelationshipTo(createdXRefNode, BiomeDBRelations.evidence)
-          totalChebiCompoundCollector ++= Map(shortXRef -> createdCompound)
+          totalCompoundCollector ++= Map(shortXRefName -> createdCompound)
           createdCompound
         }
       }
 
-      val compounds = chebiXRefs.map(getOrCreateCompoundNode)
-      compounds
+      val compounds = chebiXRefs.map(getOrCreateCompoundNode(_, chebi)) ++ reactomeXRefs.map(getOrCreateCompoundNode(_, reactome))
+      compounds.distinct
     }
 
-    def makeReactantObject(speciesReference: SpeciesReference): Map[Reactant, List[Compound]] = {
+    def makeReactantObject(speciesReference: SpeciesReference, productFlag:Boolean = false): Reactant = {
       val specie = parsedModel.getSpecies(speciesReference.getSpecies)
       val specieName = specie.getName
       val compartment = specie.getCompartment
       val stoi = speciesReference.getStoichiometry
+      val metaId = specie.getMetaId
+      val specieFBC = new FBCSpeciesPlugin(specie)
+      val stoiFactor = productFlag match {
+        case true => 1
+        case false => -1
+      }
 
       val compounds = makeCompoundObject(specie, specieName)
-//      make return as reactant and several compounds
-      val reactant = Reactant(
-        name = specieName,
-        stoichiometry = Some(stoi),
-        compartment = Some(compartmentNodes(compartment))
-      )
-      Map(reactant -> compounds)
-    }
-
-    def reactantAndCompoundUploader(reactantCompoundPair: Tuple2[Reactant, Compound]) = {
-//      make upload for several compounds - foreach
-      val reactantNode = reactantCompoundPair._1.upload(graphDataBaseConnection)
-      val compoundNode = reactantCompoundPair._2.upload(graphDataBaseConnection)
-      val isARel = reactantNode.createRelationshipTo(compoundNode, BiomeDBRelations.isA)
+      val reactant = reactantCollector.contains(metaId) match {
+        case true => reactantCollector(metaId)
+        case false =>
+          //      make return as reactant and several compounds
+          val formula = specieFBC.isSetChemicalFormula match {
+            case true => Some(specieFBC.getChemicalFormula)
+            case false => None
+          }
+          val charge = specieFBC.isSetCharge match {
+            case true => Some(specieFBC.getCharge)
+            case false => None
+          }
+          val r = Reactant(
+            name = specieName,
+//            stoichiometry = Some(stoiFactor * stoi),
+            compartment = Some(compartmentNodes(compartment)),
+            compounds = compounds,
+            formula = formula,
+            charge = charge,
+            properties = Map(
+              "metaId" -> metaId,
+              "sboTerm" -> specie.getSBOTerm
+            )
+          )
+          reactantCollector ++= Map(metaId -> r)
+          r
+      }
+      reactant.setStoichiometry(Some(stoiFactor * stoi))
+      reactant
     }
 
     def makeReactionObject(reaction: org.sbml.jsbml.Reaction): Reaction = {
-      val reactants = reaction.getListOfReactants.asScala.toList
-      val reactantObjects = reactants.map(makeReactantObject)
-//      reactantObjects.foreach(_.upload(graphDataBaseConnection))
-      val listOfReactants = reactantObjects.map(uploadReactantsAndCompounds)
-      Reaction(reaction.getName, listOfReactants)
-    }
-
-    def uploadReactantsAndCompounds(reactantsAndCompounds: Map[Reactant, List[Compound]]): Reactant = {
-      val reactant = reactantsAndCompounds.keys.head
-      val reactantNode = reactant.upload(graphDataBaseConnection)
-      val compoundNodes = reactantsAndCompounds(reactant).map(_.upload(graphDataBaseConnection))
-      compoundNodes.foreach(elem => reactantNode.createRelationshipTo(elem, BiomeDBRelations.isA))
-      reactant
+      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, false))
+      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, true))
+      listOfReactants.foreach(_.upload(graphDataBaseConnection))
+      listOfProducts.foreach(_.upload(graphDataBaseConnection))
+//      val listOfReactants = reactantObjects.map(_.upload(graphDataBaseConnection))
+//      val listOfProducts = productObjects.map(_.upload(graphDataBaseConnection))
+      val properties = Map("reversible" -> reaction.isReversible, "metaId" -> reaction.getMetaId)
+      Reaction(name = reaction.getName, reactants = listOfReactants, products = listOfProducts, properties = properties)
     }
 
     def makeGeneProductObject(geneProduct: GeneProduct): Reactant = {

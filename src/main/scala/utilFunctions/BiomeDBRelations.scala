@@ -49,4 +49,12 @@ object BiomeDBRelations {
   val locates_in = new RelationshipType {
     override def name(): String = "LOCATES_IN"
   }
+
+  val is_product = new RelationshipType {
+    override def name(): String = "IS_PRODUCT"
+  }
+
+  val is_reactant = new RelationshipType {
+    override def name(): String = "IS_REACTANT"
+  }
 }

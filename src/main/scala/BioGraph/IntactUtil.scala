@@ -181,12 +181,13 @@ class IntactUtil(psiXmlEntries: Iterable[Entry]) extends TransactionSupport {
         case None => List(XRef(info.getIntactId, intactDB))
       }
       //      reactants
+
       val listOfReactants = info.getParticipants.map(mapOfReactants).toList
       val reaction = Reaction(
-        reactionName,
-        listOfReactants,
-        listOfXrefs,
-        mapOfExperiments(info.getExperiments).getFullName
+        name = reactionName,
+        reactants = listOfReactants,
+        xRefs = listOfXrefs,
+        experiment = mapOfExperiments(info.getExperiments).getFullName
       )
       reaction.upload(graphDataBaseConnection)
     }
