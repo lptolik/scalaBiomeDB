@@ -56,20 +56,21 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   }
 
   def uploadModels(parsedModel: Model) = transaction(graphDataBaseConnection) {
-    val speciesList = parsedModel.getListOfSpecies.asScala.toList
-    val checkFBC = speciesList.head.isSetPlugin("fbc")
-    val fbcS = speciesList.head.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
-    val formula = fbcS.getChemicalFormula
-    val fbcModel = parsedModel.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
-    val numberOfGeneProducts = fbcModel.getNumGeneProducts
+    val fbcModel = parsedModel.getModel.getPlugin("fbc")//.asInstanceOf[FBCModelPlugin]
+    fbcModel match {
+      case model: FBCModelPlugin =>
+        val listOfGeneProducts = model.getListOfGeneProducts.asScala.toList
+        geneProductCollector ++= listOfGeneProducts.map(getPolypeptideByLocusTag)
+      case _ =>
+    }
+
 
     val reactions = parsedModel.getListOfReactions.asScala.toList
-    val fbc = new FBCModelPlugin(parsedModel)
-    val nu = fbc.getNumGeneProducts
-    val geneProducts = fbc.getListOfGeneProducts.asScala.toList
-//    geneProductCollector ++=
-    val res = geneProducts.map(getPolypeptideByLocusTag)
-    res
+//    val fbc = new FBCModelPlugin(parsedModel)
+//    val nu = fbc.getNumGeneProducts
+//    val geneProducts = fbc.getListOfGeneProducts.asScala.toList
+//    val res = geneProducts.map(getPolypeptideByLocusTag)
+//    res
 //    geneProducts.map(makeGeneProductObject)
 
     def makeCompoundObject(specie: Species, specieName: String): List[Compound] = transaction(graphDataBaseConnection) {
@@ -166,7 +167,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 //    }
 //  }
 
-  def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
+  def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Map[String, org.neo4j.graphdb.Node] = {
     val geneNode = Option(
       graphDataBaseConnection.findNode(
         DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
@@ -179,7 +180,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         Some(geneProduct.getMetaId, polypeptideNode)
       case None => None
     }
-    result
+    result.flatten.toMap
   }
 
 }
