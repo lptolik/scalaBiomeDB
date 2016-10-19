@@ -7,7 +7,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.fbc.{FBCModelPlugin, FBCSpeciesPlugin, GeneProduct}
 import utilFunctions.TransactionSupport
-import org.neo4j.graphdb.{DynamicLabel, Node}
+import org.neo4j.graphdb.{Direction, DynamicLabel, Node}
 import utilFunctions.utilFunctionsObject._
 import utilFunctions.BiomeDBRelations
 
@@ -27,9 +27,9 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val chebiInfo = getDataBasesNodes("CheEBI")
   val reactomeInfo = getDataBasesNodes("Reactome")
   val chebi = chebiInfo._1
-  val chebiNodeId = chebiInfo._2
+//  val chebiNodeId = chebiInfo._2
   val reactome = reactomeInfo._1
-  val reactomeNodeId = reactomeInfo._2
+//  val reactomeNodeId = reactomeInfo._2
   val totalChebiCompoundCollector: Map[String, Compound] =
     getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.contains("CHEBI:"))
       .filter(elem => elem._1.contains("CHEBI"))
@@ -38,6 +38,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       .filter(elem => elem._1.contains("reactome"))
   var totalCompoundCollector = totalChebiCompoundCollector ++ totalReactomeCompoundCollector
   var reactantCollector: Map[String, Reactant] = Map()//getNodesDict(graphDataBaseConnection)(getReactantProperties, "Reactant")()
+  var geneProductCollector: Map[String, org.neo4j.graphdb.Node] = Map()
 
   def getDataBasesNodes(dbName: String): (DBNode, Long) = transaction(graphDataBaseConnection){
     val db = DBNode(dbName)
@@ -55,7 +56,21 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   }
 
   def uploadModels(parsedModel: Model) = transaction(graphDataBaseConnection) {
+    val speciesList = parsedModel.getListOfSpecies.asScala.toList
+    val checkFBC = speciesList.head.isSetPlugin("fbc")
+    val fbcS = speciesList.head.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
+    val formula = fbcS.getChemicalFormula
+    val fbcModel = parsedModel.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
+    val numberOfGeneProducts = fbcModel.getNumGeneProducts
+
     val reactions = parsedModel.getListOfReactions.asScala.toList
+    val fbc = new FBCModelPlugin(parsedModel)
+    val nu = fbc.getNumGeneProducts
+    val geneProducts = fbc.getListOfGeneProducts.asScala.toList
+//    geneProductCollector ++=
+    val res = geneProducts.map(getPolypeptideByLocusTag)
+    res
+//    geneProducts.map(makeGeneProductObject)
 
     def makeCompoundObject(specie: Species, specieName: String): List[Compound] = transaction(graphDataBaseConnection) {
       val chebiXRefs = specie.getCVTerms.asScala.head.getResources.asScala.toList.filter(_.contains("CHEBI:"))
@@ -85,7 +100,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val compartment = specie.getCompartment
       val stoi = speciesReference.getStoichiometry
       val metaId = specie.getMetaId
-      val specieFBC = new FBCSpeciesPlugin(specie)
+      val specieFBC = specie.getPlugin("fbc")//.asInstanceOf[FBCSpeciesPlugin]
       val stoiFactor = productFlag match {
         case true => 1
         case false => -1
@@ -96,17 +111,17 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         case true => reactantCollector(metaId)
         case false =>
           //      make return as reactant and several compounds
-          val formula = specieFBC.isSetChemicalFormula match {
-            case true => Some(specieFBC.getChemicalFormula)
-            case false => None
+          val formula = specieFBC match {
+            case fbc:FBCSpeciesPlugin => Some(fbc.getChemicalFormula)
+            case _ => None
           }
-          val charge = specieFBC.isSetCharge match {
-            case true => Some(specieFBC.getCharge)
-            case false => None
+          val charge = specieFBC match {
+            case fbc:FBCSpeciesPlugin => Some(fbc.getCharge)
+            case _ => None
           }
           val r = Reactant(
             name = specieName,
-//            stoichiometry = Some(stoiFactor * stoi),
+            stoichiometry = Some(stoiFactor * stoi),
             compartment = Some(compartmentNodes(compartment)),
             compounds = compounds,
             formula = formula,
@@ -119,7 +134,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
           reactantCollector ++= Map(metaId -> r)
           r
       }
-      reactant.setStoichiometry(Some(stoiFactor * stoi))
       reactant
     }
 
@@ -134,15 +148,38 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       Reaction(name = reaction.getName, reactants = listOfReactants, products = listOfProducts, properties = properties)
     }
 
-    def makeGeneProductObject(geneProduct: GeneProduct): Reactant = {
-      val fbc = new FBCModelPlugin(parsedModel)
-      val geneProducts = fbc.getListOfGeneProducts
-      geneProducts.asScala.map(gp => gp.getName)
-      Reactant("")
-    }
+
+//    val geneProducts = makeGeneProductObject()
 
     val reactionObjects = reactions.map(makeReactionObject)
     reactionObjects.map(_.upload(graphDataBaseConnection))
+  }
+
+//  def makeGeneProductObject(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Polypeptide = {
+//    val geneName = geneProduct.getName
+//    val metaId = geneProduct.getMetaId
+//    val locus_tag = geneProduct.getLabel
+//    if (geneProductCollector.contains(metaId)) geneProductCollector(metaId)
+//    else {
+////      Polypeptide(geneName, Gene)
+//      geneProductCollector(metaId)
+//    }
+//  }
+
+  def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
+    val geneNode = Option(
+      graphDataBaseConnection.findNode(
+        DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
+      )
+    )
+    val result = geneNode match {
+      case Some(gn) =>
+        val polypeptideNode = gn.getSingleRelationship(BiomeDBRelations.encodes, Direction.OUTGOING).getEndNode
+//        val props = polypeptideNode.getPropertyKeys.asScala.toMap
+        Some(geneProduct.getMetaId, polypeptideNode)
+      case None => None
+    }
+    result
   }
 
 }

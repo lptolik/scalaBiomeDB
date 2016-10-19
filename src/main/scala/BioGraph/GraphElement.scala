@@ -1192,7 +1192,8 @@ package BioGraph {
         }
 
         newProperties = this.getFormula match {
-          case Some(f) => newProperties ++ Map("chemical_formula" -> f)
+          case Some(f: String) => newProperties ++ Map("chemical_formula" -> f)
+          case Some(null) => newProperties
           case None => newProperties
         }
 
