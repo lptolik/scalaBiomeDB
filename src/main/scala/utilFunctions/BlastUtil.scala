@@ -91,7 +91,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     callUblast(ublastLocation)(command)
   }
 
-  def createSimilarRelationshipsFromInsideBlast(blastOutputFilename: String, dropSize: Int): Int = transaction(graphDataBaseConnection){
+  def createSimilarRelationshipsForBlast(blastOutputFilename: String, dropSize: Int, outerBlastFlag: Boolean): Int = transaction(graphDataBaseConnection){
 //    val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
     logger.debug("Transaction in createSimilarRelationshipsFromInsideBlast")
 
@@ -99,7 +99,22 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     val fullReadFileIterator = source.getLines()
     val currentIterator = fullReadFileIterator.drop(dropSize)
 
-    def parseString(currentString: String): List[String] = {
+
+    def createMapOfSequences(sequenceNode: Node): (String, Long) = {
+      val md5 = sequenceNode.getProperties("md5").toString
+      val nodeId = sequenceNode.getId
+      (md5, nodeId)
+    }
+    //  read ID of existing Sequence and its other parameters
+    var sequenceNodeCollector = outerBlastFlag match {
+      case true =>
+        val sequenceNodes = getAllSequencesNodes.asScala
+        sequenceNodes.map(createMapOfSequences).toMap
+      case false => Map[String, Long]()
+    }
+
+
+    def parseStringOfInnerBlast(currentString: String): List[String] = {
       val splitString = currentString.split('\t')
       val querySeqId: String = splitString(0)
       val querySeq: String = splitString.last
@@ -118,22 +133,63 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       )
     }
 
+    def parseStringOfOuterBlast(currentString: String): List[String] = {
+      val splitString = currentString.split('\t')
+      val querySeqId: String = splitString(0)
+      val querySeq: String = splitString.last
+      val targetSeq: String = splitString(2)
+      val evalue: String = splitString(10)
+      val identity: String = splitString(1)
+      val md5 = utilFunctionsObject.md5ToString(targetSeq)
+      List(
+        querySeq,
+        querySeqId,
+        querySeq,
+        targetSeq,
+        md5,
+        evalue,
+        identity
+      )
+    }
+
     def createInnerBlastSimilarRelationship(lineList: List[String]): Unit = {
 //      logger.debug("Get the node with id:" + lineList(1))
       val querySeqNode = graphDataBaseConnection.getNodeById(lineList(1).toLong)
 //      logger.debug("Get the node with id:" + lineList(4))
-      val targetSeqNode = graphDataBaseConnection.getNodeById(lineList(4).toLong)
-//      println(querySeqNode.getProperty("md5"), targetSeqNode.getProperty("md5"))
-      if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
+      val targetSeqNode = outerBlastFlag match {
+        case true => getOrCreateSequenceNode(lineList(4), lineList(3))
+        case false => graphDataBaseConnection.getNodeById(lineList(4).toLong)
+      }
+      def createSimilarRelationship(querySeqNode: Node, targetSeqNode: Node): Unit = {
         val similarRelationship = querySeqNode.createRelationshipTo(targetSeqNode, BiomeDBRelations.similar)
         similarRelationship.setProperty("evalue", lineList(5).toDouble)
         similarRelationship.setProperty("identity", lineList(6).toDouble)
+      }
+//      println(querySeqNode.getProperty("md5"), targetSeqNode.getProperty("md5"))
+      if (outerBlastFlag) createSimilarRelationship(querySeqNode, targetSeqNode)
+      else {
+        if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
+          createSimilarRelationship(querySeqNode, targetSeqNode)
+      }
 //        println("Created relationship.")
       }
     }
 
+    def getOrCreateSequenceNode(md5: String, seq: String): Node = {
+      if (sequenceNodeCollector.contains(md5)) graphDataBaseConnection.getNodeById(sequenceNodeCollector(md5))
+      else {
+        val sequenceNode = graphDataBaseConnection.createNode(
+          DynamicLabel.label("AA_Sequence"),
+          DynamicLabel.label("Sequence")
+        )
+        sequenceNode.setProperty("md5", md5)
+        sequenceNode.setProperty("seq", seq)
+        sequenceNode
+      }
+    }
+
     def createInnersBlastRelationships(currentString: String): Unit = {
-      val lineList = parseString(currentString)
+      val lineList = parseStringOfInnerBlast(currentString)
       createInnerBlastSimilarRelationship(lineList)
     }
 
@@ -145,16 +201,20 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     dropSize
   }
 
-  def makeInnerBlast(blastOutputFilename: String, dropSize: Int): Unit = {
+  def makeBlast(blastOutputFilename: String, dropSize: Int)(outerBlastFlag: Boolean): Unit = {
     val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
     logger.debug("Number of lines: " + iteratorSize)
-//    val res = createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize)
-//    if (res < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, res)
+    //    val res = createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize)
+    //    if (res < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, res)
     def loop(res: Int): Unit = {
-      val nextRes = createSimilarRelationshipsFromInsideBlast(blastOutputFilename, res)
+      val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag)
       if (nextRes < iteratorSize) loop(nextRes + 500000)
     }
     loop(0)
   }
+
+  def makeInnerBlast(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(false)
+
+  def makeOuterBlast(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(true)
 
 }

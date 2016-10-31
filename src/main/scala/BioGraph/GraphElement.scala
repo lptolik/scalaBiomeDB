@@ -48,13 +48,16 @@ package BioGraph {
     def setId(newId: Long): Unit = id = newId
 
     def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-      val graphDBNode = graphDataBaseConnection.createNode
-      //    convert string to labels and add them to the node
-      getLabels.map(utilFunctionsObject.stringToLabel).foreach(graphDBNode.addLabel)
-      //    upload properties from the Map "properties"
-  //    this.getProperties.foreach{case (k, v) => graphDBNode.setProperty(k, v)}
-      this.setId(graphDBNode.getId)
-      graphDBNode
+      if (this.getId > -1) graphDataBaseConnection.getNodeById(this.getId)
+      else {
+        val graphDBNode = graphDataBaseConnection.createNode
+        //    convert string to labels and add them to the node
+        getLabels.map(utilFunctionsObject.stringToLabel).foreach(graphDBNode.addLabel)
+        //    upload properties from the Map "properties"
+        //    this.getProperties.foreach{case (k, v) => graphDBNode.setProperty(k, v)}
+        this.setId(graphDBNode.getId)
+        graphDBNode
+      }
     }
   }
 
@@ -901,31 +904,34 @@ package BioGraph {
     override def hashCode = 41 * (41 * (41 + sequence.hashCode) + organism.hashCode) + name.hashCode
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-      val newGeneAndPolypeptideProperties = this.setProperties(
-        Map(
-          "name" -> this.getName,
-          "source" -> this.getSource.mkString(", ")))
-      val polypeptideNode = super.upload(graphDataBaseConnection)
-      newGeneAndPolypeptideProperties.foreach{case (k, v) => polypeptideNode.setProperty(k, v)}
+      if (this.getId > -1) graphDataBaseConnection.getNodeById(this.getId)
+      else {
+        val newGeneAndPolypeptideProperties = this.setProperties(
+          Map(
+            "name" -> this.getName,
+            "source" -> this.getSource.mkString(", ")))
+        val polypeptideNode = super.upload(graphDataBaseConnection)
+        newGeneAndPolypeptideProperties.foreach { case (k, v) => polypeptideNode.setProperty(k, v) }
 
-//      val sequenceNode = this.getSeq.upload(graphDataBaseConnection)
+        //      val sequenceNode = this.getSeq.upload(graphDataBaseConnection)
 
-      val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
+        val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
 
-      val geneNode = graphDataBaseConnection.getNodeById(this.getGene.getId)
-      xrefNodes.foreach(geneNode.createRelationshipTo(_, BiomeDBRelations.evidence))
-      xrefNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.evidence))
+        val geneNode = graphDataBaseConnection.getNodeById(this.getGene.getId)
+        xrefNodes.foreach(geneNode.createRelationshipTo(_, BiomeDBRelations.evidence))
+        xrefNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
-      geneNode.createRelationshipTo(polypeptideNode, BiomeDBRelations.encodes)
+        geneNode.createRelationshipTo(polypeptideNode, BiomeDBRelations.encodes)
 
-      val termNodes = this.getTerms.map(_.upload(graphDataBaseConnection))
-      termNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.hasName))
+        val termNodes = this.getTerms.map(_.upload(graphDataBaseConnection))
+        termNodes.foreach(polypeptideNode.createRelationshipTo(_, BiomeDBRelations.hasName))
 
-      polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getSeq.getId), BiomeDBRelations.isA)
+        polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getSeq.getId), BiomeDBRelations.isA)
 
-      polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getOrganism.getId), BiomeDBRelations.partOf)
+        polypeptideNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getOrganism.getId), BiomeDBRelations.partOf)
 
-      polypeptideNode
+        polypeptideNode
+      }
     }
   }
 
@@ -1221,6 +1227,7 @@ package BioGraph {
                      reactants: List[Reactant],
                      products: List[Reactant] = List(),
                      xRefs: List[XRef] = List(),
+                     enzymes: List[Enzyme] = List(),
                      experiment: String = "",
                      properties: Map[String, Any] = Map(),
                      nodeId: Long = -1
@@ -1352,48 +1359,49 @@ package BioGraph {
   }
 
 
-  //case class Enzyme(
-  //                   name: String,
-  //                   var polypeptide: List[Polypeptide] = List(),
-  //                   var complex: List[Complex] = List(),
-  //                   var regulates: List[EnzymeRegulation] = List(),
-  //                   var catalizes: List[Reaction] = List(),
-  //                   nodeId: Long = -1)
-  //  extends Node(properties = Map(), nodeId)
-  //  with BioEntity{
-  //
-  //  def getLabels = List("Enzyme", "Protein", "BioEntity")
-  //
-  //  def getName = name
-  //
-  //  def getPolypeptide = polypeptide
-  //
-  //  def getComplexes = complex
-  //
-  //  def getRegulations = regulates
-  //
-  //  def getCatalization = catalizes
-  //
-  //  def setPolypeptide(newPolypeptide: Polypeptide) = polypeptide ::: List(newPolypeptide)
-  //
-  //  def setComplexes(listOfComplexes: List[Complex]): Unit = complex ::: listOfComplexes
-  //
-  //  def setRegulations(newRegulatesList: List[EnzymeRegulation]): Unit = regulates ::: newRegulatesList
-  //}
-  //
-  //case class Antiantitermintor(
-  //                            coordinates: Coordinates,
-  //                            ccp: CCP,
-  //                            var modulates: List[Terminator] = List(),
-  //                            var participatesIn: List[Attenuation],
-  //                            nodeId: BigInt = -1)
-  //  extends Feature(coordinates, properties = Map(), ccp, nodeId)
-  //  with DNA {
-  //
-  //  override def getLabels = List("Antiantitermintor", "Feature")
-  //
-  //  override def getCCP = ccp
-  //}
+  case class Enzyme(
+                     name: String,
+                     var polypeptide: List[Polypeptide] = List(),
+//                     var complex: List[Complex] = List(),
+//                     var regulates: List[EnzymeRegulation] = List(),
+                     var catalizes: List[Reaction] = List(),
+                     nodeId: Long = -1,
+                     properties: Map[String, Any] = Map())
+    extends Node(properties = properties, nodeId)
+    with BioEntity{
+
+    def getLabels = List("Enzyme", "Protein", "BioEntity")
+
+    def getName = name
+
+    def getPolypeptide = polypeptide
+
+//    def getComplexes = complex
+
+//    def getRegulations = regulates
+
+    def getCatalization = catalizes
+
+    def setPolypeptide(newPolypeptide: Polypeptide) = polypeptide ::: List(newPolypeptide)
+
+//    def setComplexes(listOfComplexes: List[Complex]): Unit = complex ::: listOfComplexes
+
+//    def setRegulations(newRegulatesList: List[EnzymeRegulation]): Unit = regulates ::: newRegulatesList
+  }
+
+//  case class Antiantitermintor(
+//                              coordinates: Coordinates,
+//                              ccp: CCP,
+//                              var modulates: List[Terminator] = List(),
+//                              var participatesIn: List[Attenuation],
+//                              nodeId: BigInt = -1)
+//    extends Feature(coordinates, properties = Map(), ccp, nodeId)
+//    with DNA {
+//
+//    override def getLabels = List("Antiantitermintor", "Feature")
+//
+//    override def getCCP = ccp
+//  }
 
   class LinkTo(start: XRef, end: DBNode, properties: Map[String, String] = Map()) extends Rel(id = -1, start, end, properties) {
 

@@ -57,4 +57,8 @@ object BiomeDBRelations {
   val is_reactant = new RelationshipType {
     override def name(): String = "IS_REACTANT"
   }
+
+  val catalyzes = new RelationshipType {
+    override def name(): String = "CATALYZES"
+  }
 }
