@@ -155,9 +155,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     }
 
     def createBlastSimilarRelationship(lineList: List[String]): Unit = {
-//      logger.debug("Get the node with id:" + lineList(1))
+
       val querySeqNode = graphDataBaseConnection.getNodeById(lineList(1).toLong)
-//      logger.debug("Get the node with id:" + lineList(4))
       val targetSeqNode = outerBlastFlag match {
         case true => getOrCreateSequenceNode(lineList(4), lineList(3), lineList(2))
         case false => graphDataBaseConnection.getNodeById(lineList(4).toLong)
@@ -167,15 +166,13 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         similarRelationship.setProperty("evalue", lineList(5).toDouble)
         similarRelationship.setProperty("identity", lineList(6).toDouble)
       }
-//      println(querySeqNode.getProperty("md5"), targetSeqNode.getProperty("md5"))
       if (outerBlastFlag) {
         createSimilarRelationship(querySeqNode, targetSeqNode)
       }
       else {
         if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
           createSimilarRelationship(querySeqNode, targetSeqNode)
-      }
-//        println("Created relationship.")
+        }
       }
     }
 
@@ -218,8 +215,6 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   def makeBlast(blastOutputFilename: String, dropSize: Int)(outerBlastFlag: Boolean): Unit = {
     val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
     logger.debug("Number of lines: " + iteratorSize)
-    //    val res = createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize)
-    //    if (res < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, res)
     def loop(res: Int): Unit = {
       val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag)
       if (nextRes < iteratorSize) loop(nextRes + 500000)
