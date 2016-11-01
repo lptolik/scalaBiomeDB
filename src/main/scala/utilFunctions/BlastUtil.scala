@@ -112,6 +112,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         sequenceNodes.map(createMapOfSequences).toMap
       case false => Map[String, Long]()
     }
+    val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
 
 
     def parseStringOfInnerBlast(currentString: String): List[String] = {
@@ -141,10 +142,11 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       val evalue: String = splitString(10)
       val identity: String = splitString(1)
       val md5 = utilFunctionsObject.md5ToString(targetSeq)
+      val uniprotXref = splitString(3)
       List(
         querySeq,
         querySeqId,
-        querySeq,
+        uniprotXref,
         targetSeq,
         md5,
         evalue,
@@ -152,12 +154,12 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       )
     }
 
-    def createInnerBlastSimilarRelationship(lineList: List[String]): Unit = {
+    def createBlastSimilarRelationship(lineList: List[String]): Unit = {
 //      logger.debug("Get the node with id:" + lineList(1))
       val querySeqNode = graphDataBaseConnection.getNodeById(lineList(1).toLong)
 //      logger.debug("Get the node with id:" + lineList(4))
       val targetSeqNode = outerBlastFlag match {
-        case true => getOrCreateSequenceNode(lineList(4), lineList(3))
+        case true => getOrCreateSequenceNode(lineList(4), lineList(3), lineList(2))
         case false => graphDataBaseConnection.getNodeById(lineList(4).toLong)
       }
       def createSimilarRelationship(querySeqNode: Node, targetSeqNode: Node): Unit = {
@@ -166,7 +168,9 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         similarRelationship.setProperty("identity", lineList(6).toDouble)
       }
 //      println(querySeqNode.getProperty("md5"), targetSeqNode.getProperty("md5"))
-      if (outerBlastFlag) createSimilarRelationship(querySeqNode, targetSeqNode)
+      if (outerBlastFlag) {
+        createSimilarRelationship(querySeqNode, targetSeqNode)
+      }
       else {
         if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
           createSimilarRelationship(querySeqNode, targetSeqNode)
@@ -175,7 +179,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       }
     }
 
-    def getOrCreateSequenceNode(md5: String, seq: String): Node = {
+    def getOrCreateSequenceNode(md5: String, seq: String, xrefId: String): Node = {
       if (sequenceNodeCollector.contains(md5)) graphDataBaseConnection.getNodeById(sequenceNodeCollector(md5))
       else {
         val sequenceNode = graphDataBaseConnection.createNode(
@@ -184,17 +188,27 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         )
         sequenceNode.setProperty("md5", md5)
         sequenceNode.setProperty("seq", seq)
+        sequenceNodeCollector ++= Map(md5 -> sequenceNode.getId)
+        val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
+        xrefNode.setProperty("id", xrefId)
+        sequenceNode.createRelationshipTo(xrefNode, BiomeDBRelations.linkTo)
         sequenceNode
       }
     }
 
-    def createInnersBlastRelationships(currentString: String): Unit = {
-      val lineList = parseStringOfInnerBlast(currentString)
-      createInnerBlastSimilarRelationship(lineList)
+    def createInnerBlastRelationships(currentString: String): Unit = {
+      if (outerBlastFlag) {
+        val lineList = parseStringOfInnerBlast(currentString)
+        createBlastSimilarRelationship(lineList)
+      }
+      else {
+        val lineList = parseStringOfOuterBlast(currentString)
+        createBlastSimilarRelationship(lineList)
+      }
     }
 
     logger.debug("Transaction in 500000 nodes start")
-    currentIterator.take(500000).foreach(createInnersBlastRelationships)
+    currentIterator.take(500000).foreach(createInnerBlastRelationships)
     println("Number of lines: " + dropSize)
     logger.debug("Transaction in 500000 nodes finish")
 //    if (dropSize < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize + 500000)

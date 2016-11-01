@@ -1,5 +1,6 @@
 [debug] Other repositories:
 [debug] Default repositories:
+[debug] no default cache defined: set to /home/artem/.ivy2/cache
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#biograph$sbt_2.11;1.0
 [debug] 	confs: [default]
@@ -1101,9 +1102,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar
 [debug] 	[NOT REQUIRED] org.jboss.interceptor#jboss-interceptor-api;1.1!jboss-interceptor-api.jar
-[debug] :: resolution report :: resolve 5103ms :: artifacts dl 48ms
+[debug] :: resolution report :: resolve 1989ms :: artifacts dl 92ms
 [debug] 	report for default#biograph$sbt_2.11;1.0 default produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sbt_2.11-default.xml
-[debug] 	resolve done (5103ms resolve - 48ms download)
+[debug] 	resolve done (1989ms resolve - 92ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#biograph$sources_2.11;1.0
 [debug] 	confs: [default]
@@ -1639,6 +1640,6 @@
 [debug] 	[NOT REQUIRED] org.eclipse.sisu#org.eclipse.sisu.inject;0.3.0!org.eclipse.sisu.inject.jar(src)
 [debug] 	[NOT REQUIRED] org.codehaus.plexus#plexus-component-annotations;1.5.5!plexus-component-annotations.jar(src)
 [debug] 	[NOT REQUIRED] org.codehaus.plexus#plexus-classworlds;2.5.2!plexus-classworlds.jar(src)
-[debug] :: resolution report :: resolve 106ms :: artifacts dl 19ms
+[debug] :: resolution report :: resolve 397ms :: artifacts dl 62ms
 [debug] 	report for default#biograph$sources_2.11;1.0 default produced in /home/artem/work/2016/scala_projects/BioGraph/target/resolution-cache/reports/default-biograph$sources_2.11-default.xml
-[debug] 	resolve done (106ms resolve - 19ms download)
+[debug] 	resolve done (397ms resolve - 62ms download)

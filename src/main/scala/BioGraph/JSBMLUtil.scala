@@ -123,7 +123,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   def getEnzymes: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = {
     val enzymeNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Enzyme")).asScala
     val enzymePolys = enzymeNodes.map(
-      elem => elem.getRelationships(Direction.INCOMING, BiomeDBRelations.partOf).asScala.map(_.getEndNode).toSet)
+      elem => elem.getRelationships(Direction.INCOMING, BiomeDBRelations.partOf).asScala.map(_.getEndNode).toSet
+    )
 //      .map(n => n.getStartNode))
 //    enzymePolys
     enzymePolys.zip(enzymeNodes).toMap
