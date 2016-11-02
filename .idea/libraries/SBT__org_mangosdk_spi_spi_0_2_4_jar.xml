@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="SBT: org.mangosdk.spi:spi:0.2.4:jar">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.ivy2/cache/org.mangosdk.spi/spi/jars/spi-0.2.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

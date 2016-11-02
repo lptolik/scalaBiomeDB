@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="SBT: proteomics:proteomics-common:1.5:jar">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.ivy2/cache/proteomics/proteomics-common/jars/proteomics-common-1.5.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
