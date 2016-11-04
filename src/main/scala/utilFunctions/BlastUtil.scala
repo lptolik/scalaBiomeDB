@@ -166,13 +166,12 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         similarRelationship.setProperty("evalue", lineList(5).toDouble)
         similarRelationship.setProperty("identity", lineList(6).toDouble)
       }
-      if (outerBlastFlag) {
+      if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
         createSimilarRelationship(querySeqNode, targetSeqNode)
-      }
-      else {
-        if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
-          createSimilarRelationship(querySeqNode, targetSeqNode)
-        }
+//        val uniprotXRef = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
+//        uniprotXRef.setProperty("id", lineList(2))
+//        uniprotXRef.createRelationshipTo(uniprotNode, BiomeDBRelations.linkTo)
+//        targetSeqNode.createRelationshipTo(uniprotXRef, BiomeDBRelations.evidence)
       }
     }
 
@@ -188,24 +187,25 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         sequenceNodeCollector ++= Map(md5 -> sequenceNode.getId)
         val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
         xrefNode.setProperty("id", xrefId)
-        sequenceNode.createRelationshipTo(xrefNode, BiomeDBRelations.linkTo)
+        sequenceNode.createRelationshipTo(xrefNode, BiomeDBRelations.evidence)
+        xrefNode.createRelationshipTo(uniprotNode, BiomeDBRelations.linkTo)
         sequenceNode
       }
     }
 
-    def createInnerBlastRelationships(currentString: String): Unit = {
+    def createBlastRelationships(currentString: String): Unit = {
       if (outerBlastFlag) {
-        val lineList = parseStringOfInnerBlast(currentString)
+        val lineList = parseStringOfOuterBlast(currentString)
         createBlastSimilarRelationship(lineList)
       }
       else {
-        val lineList = parseStringOfOuterBlast(currentString)
+        val lineList = parseStringOfInnerBlast(currentString)
         createBlastSimilarRelationship(lineList)
       }
     }
 
     logger.debug("Transaction in 500000 nodes start")
-    currentIterator.take(500000).foreach(createInnerBlastRelationships)
+    currentIterator.take(500000).foreach(createBlastRelationships)
     println("Number of lines: " + dropSize)
     logger.debug("Transaction in 500000 nodes finish")
 //    if (dropSize < iteratorSize) createSimilarRelationshipsFromInsideBlast(blastOutputFilename, dropSize + 500000)
