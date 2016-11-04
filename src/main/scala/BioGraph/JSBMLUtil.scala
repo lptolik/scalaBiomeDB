@@ -183,6 +183,10 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       }
 
       val compounds = makeCompoundObject(specie, specieName)
+      val toCheck = compounds.isEmpty match {
+        case true => true
+        case false => false
+      }
       val reactant = reactantCollector.contains(metaId) match {
         case true => reactantCollector(metaId)
         case false =>
@@ -202,6 +206,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
             compounds = compounds,
             formula = formula,
             charge = charge,
+            toCheck = toCheck,
             properties = Map(
               "metaId" -> metaId,
               "sboTerm" -> specie.getSBOTerm
