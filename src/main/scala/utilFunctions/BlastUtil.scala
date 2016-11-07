@@ -30,6 +30,9 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("BlastUtil object is initialized.")
 
+  val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
+//  val uniprotXRefCollector = uniprotNode.getRelationships.asScala.map(_.getStartNode.get).toMap
+
   def getAllSequencesNodes = getAllNodesByLabel("Sequence")
 
   def applyOperationToNodes(nodeIterator: ResourceIterator[Node])
@@ -112,46 +115,52 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         sequenceNodes.map(createMapOfSequences).toMap
       case false => Map[String, Long]()
     }
-    val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
-
 
     def parseStringOfInnerBlast(currentString: String): List[String] = {
       val splitString = currentString.split('\t')
       val querySeqId: String = splitString(0)
-      val querySeq: String = splitString.last
-      val targetSeq: String = splitString(2)
+      val querySeq: String = splitString.last.toUpperCase
+      val targetSeq: String = splitString(2).toUpperCase
       val targetSeqId: String = splitString(3)
       val evalue: String = splitString(10)
       val identity: String = splitString(1)
-      List(
-        querySeq,
-        querySeqId,
-        querySeq,
-        targetSeq,
-        targetSeqId,
-        evalue,
-        identity
-      )
+      utilFunctionsObject.checkAASequence(targetSeq) match {
+        case true =>
+        List(
+          querySeq,
+          querySeqId,
+          querySeq,
+          targetSeq,
+          targetSeqId,
+          evalue,
+          identity
+        )
+        case false => List(targetSeq)
+      }
     }
 
     def parseStringOfOuterBlast(currentString: String): List[String] = {
       val splitString = currentString.split('\t')
       val querySeqId: String = splitString(0)
-      val querySeq: String = splitString.last
-      val targetSeq: String = splitString(2)
+      val querySeq: String = splitString.last.toUpperCase
+      val targetSeq: String = splitString(2).toUpperCase
       val evalue: String = splitString(10)
       val identity: String = splitString(1)
       val md5 = utilFunctionsObject.md5ToString(targetSeq)
       val uniprotXref = splitString(3)
-      List(
-        querySeq,
-        querySeqId,
-        uniprotXref,
-        targetSeq,
-        md5,
-        evalue,
-        identity
-      )
+      utilFunctionsObject.checkAASequence(targetSeq) match {
+        case true =>
+          List(
+            querySeq,
+            querySeqId,
+            uniprotXref,
+            targetSeq,
+            md5,
+            evalue,
+            identity
+          )
+        case false => List(targetSeq)
+      }
     }
 
     def createBlastSimilarRelationship(lineList: List[String]): Unit = {
@@ -194,13 +203,13 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     }
 
     def createBlastRelationships(currentString: String): Unit = {
-      if (outerBlastFlag) {
-        val lineList = parseStringOfOuterBlast(currentString)
-        createBlastSimilarRelationship(lineList)
+      val lineList = outerBlastFlag match {
+        case true => parseStringOfOuterBlast(currentString)
+        case false => parseStringOfInnerBlast(currentString)
       }
-      else {
-        val lineList = parseStringOfInnerBlast(currentString)
-        createBlastSimilarRelationship(lineList)
+      lineList.tail.nonEmpty match {
+        case true => createBlastSimilarRelationship(lineList)
+        case false => logger.warn("Sequence has non-canonical amino acids: " + lineList.head)
       }
     }
 

@@ -518,6 +518,15 @@ package utilFunctions {
       val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != searchToNode)
       tryToFindReaction
     }
+
+    def checkAASequence(sequenceString: String): Boolean = {
+      val canonicalLetters = "[^ARNDCEQGHILKMFPSTWYV]".r
+      val res = canonicalLetters.findFirstIn(sequenceString)
+      res match {
+        case Some(s) => false
+        case None => true
+      }
+    }
   }
 
 trait TransactionSupport {
