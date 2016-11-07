@@ -453,6 +453,7 @@ package utilFunctions {
       val sortedFiles = files.filter(_.getName.endsWith("." + format))
       sortedFiles
     }
+
     def getSequenceProperties(sequenceNode: Node): (String, Sequence) = {
       val md5 = sequenceNode.getProperty("md5").toString
       val seq = Sequence(

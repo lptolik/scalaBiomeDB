@@ -30,15 +30,6 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("BlastUtil object is initialized.")
 
-  val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
-  var uniprotXRefCollector: Map[String, Node] = {
-      uniprotNode
-      .getRelationships
-      .asScala
-      .map(elem => elem.getStartNode.getProperty("id").toString -> elem.getStartNode)
-      .toMap
-  }
-
   def getAllSequencesNodes = getAllNodesByLabel("Sequence")
 
   def applyOperationToNodes(nodeIterator: ResourceIterator[Node])
@@ -104,6 +95,15 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
 //    val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
     logger.debug("Transaction in createSimilarRelationshipsFromInsideBlast")
 
+    val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
+    var uniprotXRefCollector: Map[String, Node] = {
+      uniprotNode
+        .getRelationships
+        .asScala
+        .map(elem => elem.getStartNode.getProperty("id").toString -> elem.getStartNode)
+        .toMap
+    }
+
     val source = Source.fromFile(blastOutputFilename)
     val fullReadFileIterator = source.getLines()
     val currentIterator = fullReadFileIterator.drop(dropSize)
@@ -130,6 +130,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       val targetSeqId: String = splitString(3)
       val evalue: String = splitString(10)
       val identity: String = splitString(1)
+      val length: String = splitString(4)
       utilFunctionsObject.checkAASequence(targetSeq) match {
         case true =>
         List(
@@ -139,7 +140,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
           targetSeq,
           targetSeqId,
           evalue,
-          identity
+          identity,
+          length
         )
         case false => List(targetSeq)
       }
@@ -152,8 +154,9 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       val targetSeq: String = splitString(2).toUpperCase
       val evalue: String = splitString(10)
       val identity: String = splitString(1)
-      val md5 = utilFunctionsObject.md5ToString(targetSeq)
-      val uniprotXref = splitString(3)
+      val md5: String = utilFunctionsObject.md5ToString(targetSeq)
+      val uniprotXref: String = splitString(3)
+      val length: String = splitString(4)
       utilFunctionsObject.checkAASequence(targetSeq) match {
         case true =>
           List(
@@ -163,7 +166,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
             targetSeq,
             md5,
             evalue,
-            identity
+            identity,
+            length
           )
         case false => List(targetSeq)
       }
@@ -180,6 +184,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         val similarRelationship = querySeqNode.createRelationshipTo(targetSeqNode, BiomeDBRelations.similar)
         similarRelationship.setProperty("evalue", lineList(5).toDouble)
         similarRelationship.setProperty("identity", lineList(6).toDouble)
+        similarRelationship.setProperty("length", lineList(7))
       }
       if (!utilFunctionsObject.checkRelationExistenceWithDirection(querySeqNode, targetSeqNode)) {
         createSimilarRelationship(querySeqNode, targetSeqNode)

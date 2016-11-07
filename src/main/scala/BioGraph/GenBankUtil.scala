@@ -257,8 +257,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
             coordinates.getStart.getPosition,
             coordinates.getEnd.getPosition,
             coordinates.getStrand)
-          val s = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase.replaceAll("\\*", "")
-          s
+          DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase.replaceAll("\\*", "")
       }
       val sequenceObject = Sequence(sequence = sequenceToCheck)
       val md5 = sequenceObject.getMD5
