@@ -943,7 +943,7 @@ package BioGraph {
                        nodeId: Long = -1)
     extends Node(properties, nodeId) {
 
-    require (sequence.forall(_.isUpper), "Sequence must be written in upper case.")
+    require (sequence.forall(_.isUpper), "Sequence must be written in upper case: " + sequence)
 //    require (start <= end, "Start coordinate cannot have bigger value than end coordinate!")
 
     if (md5.length < 32) md5 = countMD5

@@ -248,23 +248,24 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, Sequence, Polypeptide) = {
 
     def makeTranslation(feature: NucleotideFeature): Sequence = {
-      val tryGetTranslation = Try(Sequence(feature.getQualifiers.get("translation").get(0).getValue))
-      val sequenceToCheck = tryGetTranslation match {
-        case Success(seq) => tryGetTranslation.get
+      val tryGetTranslation = Try(feature.getQualifiers.get("translation").get(0).getValue)
+      val sequenceToCheck: String = tryGetTranslation match {
+        case Success(seq) => tryGetTranslation.get.toUpperCase
         case Failure(except) =>
           val coordinates = feature.getLocations
           val dnaSeqForTranslation = orgCCPSeq._3.getSequenceAsString(
             coordinates.getStart.getPosition,
             coordinates.getEnd.getPosition,
             coordinates.getStrand)
-          val translatedAminoAcidSeq = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).toString
-          Sequence(sequence = translatedAminoAcidSeq)
+          val s = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase.replaceAll("\\*", "")
+          s
       }
-      val md5 = sequenceToCheck.getMD5
+      val sequenceObject = Sequence(sequence = sequenceToCheck)
+      val md5 = sequenceObject.getMD5
       if (sequenceCollector.contains(md5)) sequenceCollector(md5)
       else {
-        sequenceCollector = sequenceCollector ++ Map(md5 -> sequenceToCheck)
-        sequenceToCheck
+        sequenceCollector = sequenceCollector ++ Map(md5 -> sequenceObject)
+        sequenceObject
       }
     }
 

@@ -456,7 +456,7 @@ package utilFunctions {
     def getSequenceProperties(sequenceNode: Node): (String, Sequence) = {
       val md5 = sequenceNode.getProperty("md5").toString
       val seq = Sequence(
-        sequence = sequenceNode.getProperty("seq").toString,
+        sequence = sequenceNode.getProperty("seq").toString.toUpperCase,
         md5 = md5,
         nodeId = sequenceNode.getId
       )

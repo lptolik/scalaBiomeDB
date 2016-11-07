@@ -31,7 +31,13 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   logger.info("BlastUtil object is initialized.")
 
   val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
-//  val uniprotXRefCollector = uniprotNode.getRelationships.asScala.map(_.getStartNode.get).toMap
+  var uniprotXRefCollector: Map[String, Node] = {
+      uniprotNode
+      .getRelationships
+      .asScala
+      .map(elem => elem.getStartNode.getProperty("id").toString -> elem.getStartNode)
+      .toMap
+  }
 
   def getAllSequencesNodes = getAllNodesByLabel("Sequence")
 
@@ -191,16 +197,25 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
           DynamicLabel.label("AA_Sequence"),
           DynamicLabel.label("Sequence")
         )
+        def getOrCreateXRef = {
+          if (uniprotXRefCollector.contains(xrefId)) uniprotXRefCollector(xrefId)
+          else {
+            val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
+            xrefNode.setProperty("id", xrefId)
+            uniprotXRefCollector ++= Map(xrefId -> xrefNode)
+            xrefNode
+          }
+        }
         sequenceNode.setProperty("md5", md5)
         sequenceNode.setProperty("seq", seq)
         sequenceNodeCollector ++= Map(md5 -> sequenceNode.getId)
-        val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
-        xrefNode.setProperty("id", xrefId)
+        val xrefNode = getOrCreateXRef
         sequenceNode.createRelationshipTo(xrefNode, BiomeDBRelations.evidence)
         xrefNode.createRelationshipTo(uniprotNode, BiomeDBRelations.linkTo)
         sequenceNode
       }
     }
+
 
     def createBlastRelationships(currentString: String): Unit = {
       val lineList = outerBlastFlag match {
