@@ -1,55 +1,49 @@
 package BioGraph.sbml
 
-import java.io.File
-
 import org.apache.logging.log4j.LogManager
-import org.neo4j.graphdb.{DynamicLabel, Label, Node}
-import org.neo4j.graphdb.factory.GraphDatabaseFactory
+import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Label, Node}
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.fbc._
 import utilFunctions.BiomeDBRelations._
 import utilFunctions.TransactionSupport
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable.::
 
 /**
   * Created by piane_ramso on 12/16/16.
   */
-object JSBMLExport extends App with TransactionSupport {
+object JSBMLExport extends TransactionSupport {
   val logger = LogManager.getLogger(this.getClass.getName)
-
-  val localDB = new File("/Users/piane_ramso/Ya.Disk/Yandex.Disk/Studying/PhD/thesis/pushchono_phd/data/graph.db")
-  val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
-
-  val reactionLabel = DynamicLabel.label("Reaction")
   val defaultNil = 0
   val defaultLowerBound = -1000
   val defaultUpperBound = 1000
 
-  transaction(graphDataBaseConnection) {
+  def assembleModel(reactionsNodes: List[Node], modelName: String)(db: GraphDatabaseService): SBMLDocument = {
+    transaction(db) {
+      val reactions = getReactionsOut(reactionsNodes)
+      val species = reactions.flatMap(r => r._1.products.map(_.speciesOut) ++ r._1.reactants.map(_.speciesOut)).distinct
+      val geneProducts = reactions.flatMap(_._2.allGeneProducts).distinct
 
-    val reactions = getReactions()
-      .toList
-    val species = reactions.flatMap(r => r._1.products.map(_.speciesOut) ++ r._1.reactants.map(_.speciesOut)).distinct
-    val geneProducts = reactions.flatMap(_._2.allGeneProducts).distinct
+      val sbmlDoc = new SBMLDocument(3, 1)
+      val model = sbmlDoc.createModel(modelName)
 
-    val sbmlDoc = new SBMLDocument(3, 1)
-    val model = sbmlDoc.createModel("biograph_export_model")
+      val compartmentNameToCompartment = addCompartments(species, model)
+      val speciesToSbmlSpecies = addSpecies(species, model, compartmentNameToCompartment)
 
-    val compartmentNameToCompartment = addCompartments(species, model)
-    val speciesToSbmlSpecies = addSpecies(species, model, compartmentNameToCompartment)
+      val modelFBC = model.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
+      modelFBC.setStrict(true)
+      addListOfUnits(model)
+      val defaultParameters = addParameters(model)
+      val geneProductToSBMLGeneProduct = addGeneProducts(geneProducts, modelFBC)
 
-    val modelFBC = model.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
-    modelFBC.setStrict(true)
-    addListOfUnits(model)
-    val defaultParameters = addParameters(model)
-    val geneProductToSBMLGeneProduct = addGeneProducts(geneProducts, modelFBC)
+      addReactions(reactions, model, speciesToSbmlSpecies, geneProductToSBMLGeneProduct, defaultParameters)
 
-    addReactions(reactions, model, speciesToSbmlSpecies, geneProductToSBMLGeneProduct, defaultParameters)
+      sbmlDoc
+    }
+  }
 
-    val out = "/Users/piane_ramso/Ya.Disk/Yandex.Disk/Studying/PhD/thesis/pushchono_phd/sbml_out/out.xml"
-    SBMLWriter.write(sbmlDoc, out, "biograph", "0.9")
+  def writeToFile(sbmlDoc: SBMLDocument, filename: String) = {
+    SBMLWriter.write(sbmlDoc, filename, "biograph", "0.9")
   }
 
   private def addListOfUnits(model: Model) = {
@@ -228,9 +222,8 @@ object JSBMLExport extends App with TransactionSupport {
       }.toMap
   }
 
-  private def getReactions(): Iterator[(ReactionOut, GeneProductAssociationOut)] = {
-    graphDataBaseConnection
-      .findNodes(reactionLabel).asScala
+  private def getReactionsOut(reactionsNodes: List[Node]): List[(ReactionOut, GeneProductAssociationOut)] = {
+    reactionsNodes
       .map { r =>
         val reactants = r.getRelationships(is_reactant).asScala.map { r =>
           val s = SpeciesOut(r.getStartNode)
