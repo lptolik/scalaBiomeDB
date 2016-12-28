@@ -92,8 +92,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   }
 
   def createSimilarRelationshipsForBlast(blastOutputFilename: String, dropSize: Int, outerBlastFlag: Boolean): Int = transaction(graphDataBaseConnection){
-//    val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
-    logger.debug("Transaction in createSimilarRelationshipsFromInsideBlast")
+    logger.debug("Transaction in createSimilarRelationshipsForBlast")
 
     val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
     var uniprotXRefCollector: Map[String, Node] = {

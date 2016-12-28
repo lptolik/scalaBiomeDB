@@ -37,7 +37,6 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val outputFile = new PrintWriter(new File(outputFileName))
     def rewriteWithProperXRefs(line: String): Unit = {
       if (line.contains("/db_xref=") && line.split(":")(1).contains(" ")) {
-        //outputFile.write(line.split(" ")(0) + "\"\n")
         val parts = line.split(":")
         val partOne = parts(0) + ":"
         val partTwo = parts(1).split(" ")(0) + "\"\n"

@@ -26,7 +26,7 @@ import utilFunctions.TransactionSupport
     def uploadOneModel(smblModel: File): Unit = {
       println(smblModel.getName)
       val model = jsbml.processSBMLFile(smblModel)
-      jsbml.uploadModels(model)
+      jsbml.uploadModel(model)
     }
     models.foreach(uploadOneModel)
   }

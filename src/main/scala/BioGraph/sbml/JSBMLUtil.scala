@@ -41,6 +41,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   var reactantCollector: Map[String, Reactant] = Map()
   var geneProductCollector: Map[String, org.neo4j.graphdb.Node] = Map()
   var enzymeCollector: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = Map()
+  var mapOfModelParameters: Map[String, Double] = Map()
 
   def getDataBasesNodes(dbName: String): (DBNode, Long) = transaction(graphDataBaseConnection){
     val db = DBNode(dbName)
@@ -55,6 +56,15 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val compartments = parsedModel.getListOfCompartments.asScala.toList
     compartmentNodes = compartments.map(elem => elem.getId -> Compartment(elem.getName)).toMap
     parsedModel
+  }
+
+  private def checkModelOrganismName(organismName: String): Boolean = {
+    val searching = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName))
+    val res =  searching match {
+      case Some(o) => true
+      case None => false
+    }
+    res
   }
 
   def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
@@ -85,9 +95,21 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     reaction
   }
 
-  def uploadModels(parsedModel: Model) = transaction(graphDataBaseConnection) {
+  @throws[IllegalArgumentException]
+  def uploadModel(parsedModel: Model) = transaction(graphDataBaseConnection) {
+
+    checkModelOrganismName(parsedModel.getName) match {
+      case false => throw new IllegalArgumentException("There is no organism with the name " + parsedModel.getName)
+      case true =>
+    }
+
     // try to get fbc information from the SBML model
     val fbcModel = parsedModel.getModel.getPlugin("fbc")
+    mapOfModelParameters ++= parsedModel.getListOfParameters.asScala.map(p => (p.getId, p.getValue)).toMap
+
+//    to do
+//    put this data from annotation to graph
+//    val tax = parsedModel.getAnnotation.getFullAnnotation.getChild(1).getChild(0).getChild(5).getChild(1).getChild(1).getAttrValue(0)
 
     fbcModel match {
       case model: FBCModelPlugin =>
@@ -131,6 +153,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     uploadedReactions
   }
 
+
+
   def getEnzymes: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = {
     graphDataBaseConnection
       .findNodes(DynamicLabel.label("Enzyme"))
@@ -145,6 +169,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
   case class ReactionReader(parsedModel: Model)(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) {
     val reaction = zipFBCReaction._1
+    val fbcReaction = zipFBCReaction._2
     val reactionName = reaction.getName
     def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
       val geneNode = Option(
@@ -241,34 +266,33 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       //      the result must be a List
       //      so it can be flattened
       //      make a special class for reaction to read it
+      val lowerFluxMap = Option(mapOfModelParameters(fbcReaction.getLowerFluxBound)) match {
+        case Some(v) => Map("lowerFluxBound" -> v)
+        case None => Map()
+      }
+
+      val upperFluxMap = Option(mapOfModelParameters(fbcReaction.getUpperFluxBound)) match {
+        case Some(v) => Map("upperFluxBound" -> v)
+        case None => Map()
+      }
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
         "metaId" -> reaction.getMetaId,
-        "sbmlId" -> reaction.getId)
-      Reaction(name = reaction.getName, reactants = listOfReactants, products = listOfProducts, properties = properties)
+        "sbmlId" -> reaction.getId) ++
+        upperFluxMap ++
+        lowerFluxMap
+      Reaction(
+        name = reactionName,
+        reactants = listOfReactants,
+        products = listOfProducts,
+        properties = properties)
     }
 
     def getGeneProductsAssociations: List[org.neo4j.graphdb.Node] = {
-      val fbcReaction = zipFBCReaction._2
+//      fbcReaction.getLowerFluxBound
       val geneAssociations = reactionLoop(fbcReaction)
       geneAssociations
-    }
-
-    def getFBCReaction(fbcReaction: SBasePlugin): Option[FBCReactionPlugin] = {
-      val reaction = fbcReaction match {
-        case r:FBCReactionPlugin => Some(r)
-        case _ => None
-      }
-      reaction
-    }
-
-    private def filterOperator(operList: List[Association]): List[Association] = {
-      val refs = operList.flatMap{
-        case fbcReaction: GeneProductRef => Some(fbcReaction)
-        case _ => None
-      }
-      refs
     }
 
     def processAndOperator(listOfAssociations: List[Association]): List[org.neo4j.graphdb.Node] = {
