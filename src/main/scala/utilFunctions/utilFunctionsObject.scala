@@ -336,13 +336,13 @@ package utilFunctions {
 
     def makeNextRelationship(
                               graphDataBaseConnection: GraphDatabaseService,
-                              typeOfFeature: Label,
+                              typeOfFeature: String,
                               organismName: String): Unit =
       transaction(graphDataBaseConnection){
         val listOfCCP = getOrganismCCP(graphDataBaseConnection, organismName)
         if (listOfCCP.nonEmpty) {
           val strandList = List(Strand.forward, Strand.reverse)
-          val sortedFeatures = strandList.map(strand => listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label("Feature"), strand)))
+          val sortedFeatures = strandList.map(strand => listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label(typeOfFeature), strand)))
 
           def createNext(previousFeature: Node, nextFeaturePath: Path): Node = {
             val nextFeature = nextFeaturePath.endNode()
@@ -360,11 +360,11 @@ package utilFunctions {
 
     def makeOverlapRelationship(
                                  graphDataBaseConnection: GraphDatabaseService,
-                                 typeOfFeature: Label,
+                                 typeOfFeature: String,
                                  organismName: String): Unit =
       transaction(graphDataBaseConnection){
         val listOfCCP = getOrganismCCP(graphDataBaseConnection, organismName)
-        val sortedFeatures = listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label("Feature"), Strand.unknown))
+        val sortedFeatures = listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label(typeOfFeature), Strand.unknown))
 
         def createOverlap(shortList: List[Path], feature: Path): List[Path] = {
           val end = feature.endNode().getProperty("end").toString.toInt
