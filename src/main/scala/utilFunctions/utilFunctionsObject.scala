@@ -305,10 +305,6 @@ package utilFunctions {
       }
     }
 
-    def psiExample(): Unit = {
-
-    }
-
     def addRelationship(
                          graphDataBaseConnection: GraphDatabaseService,
                          fromNode: Node,
@@ -375,12 +371,16 @@ package utilFunctions {
         }
 
         sortedFeatures.foreach(fullList => fullList.foldLeft(fullList.drop(1))((shortList, nextFeatureNumber) => createOverlap(shortList: List[Path], nextFeatureNumber: Path)))
-
-
-//        def f(full: List[Path], short: List[Path], drop: Int): Unit = {
-//          short.foreach()
-//        }
       }
+
+    def getOrganismNames(graphDataBaseConnection: GraphDatabaseService): List[String] = transaction(graphDataBaseConnection){
+      val names = graphDataBaseConnection
+        .findNodes(DynamicLabel.label("Organism"))
+        .asScala
+        .toList
+        .map(_.getProperty("name").toString)
+      names
+    }
 
     private def getOrganismCCP(
                                       graphDataBaseConnection: GraphDatabaseService,
@@ -400,27 +400,6 @@ package utilFunctions {
         .traverse(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName))
       val ccpIdList = traversalResult.asScala.toList.filter(findCCP).map(_.endNode().getId)
       ccpIdList
-//      val l = processRes.map(_.endNode().getId)
-//      l
-
-
-//      val cypherQuery = f"MATCH (org:Organism{name: '$organismName%s'})<-[:PART_OF]-(ccp) " +
-//        f"WHERE ccp:Chromosome or ccp:Plasmid or ccp:Contig " +
-//        f"RETURN id(ccp)"
-//      val cypherResult = graphDataBaseConnection.execute(cypherQuery)
-//
-//      def getIds(n: String) = {
-//        n.drop(1).dropRight(1).toLong
-//      }
-//
-//      if (cypherResult.hasNext) {
-//        val res = cypherResult.asScala.toList
-//        res.map(el => getIds(el.values().toString))
-//      }
-//      else {
-//        println("Nothing was found")
-//        List()
-//      }
     }
 
     private def orderFeatures(graphDataBaseConnection: GraphDatabaseService,
