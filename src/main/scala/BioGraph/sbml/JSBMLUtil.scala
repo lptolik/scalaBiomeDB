@@ -43,6 +43,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   var enzymeCollector: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = Map()
   var mapOfModelParameters: Map[String, Double] = Map()
 
+
   def getDataBasesNodes(dbName: String): (DBNode, Long) = transaction(graphDataBaseConnection){
     val db = DBNode(dbName)
     val dbNodeId = db.upload(graphDataBaseConnection).getId
@@ -67,26 +68,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     res
   }
 
-  def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
-    val geneNode = Option(
-      graphDataBaseConnection.findNode(
-        DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
-      )
-    ).orElse {Option(
-      graphDataBaseConnection.findNode(
-        DynamicLabel.label("Gene"), "name", geneProduct.getLabel
-      )
-    )}
-    val sbmlIdPolyPair = geneNode match {
-      case Some(gn) =>
-        val polypeptideNode = gn.getSingleRelationship(BiomeDBRelations.encodes, Direction.OUTGOING).getEndNode
-        val props = polypeptideNode.getProperties().asScala.toMap
-        Some(geneProduct.getId, polypeptideNode)
-      case None => None
-    }
-    sbmlIdPolyPair
-  }
-
   def getFBCReaction(fbcReaction: SBasePlugin): Option[FBCReactionPlugin] = {
     val reaction = fbcReaction match {
       case r:FBCReactionPlugin => Some(r)
@@ -97,6 +78,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
   @throws[IllegalArgumentException]
   def uploadModel(parsedModel: Model) = transaction(graphDataBaseConnection) {
+
+    val modelName = parsedModel.getName
 
     checkModelOrganismName(parsedModel.getName) match {
       case false => throw new IllegalArgumentException("There is no organism with the name " + parsedModel.getName)
@@ -110,6 +93,29 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 //    to do
 //    put this data from annotation to graph
 //    val tax = parsedModel.getAnnotation.getFullAnnotation.getChild(1).getChild(0).getChild(5).getChild(1).getChild(1).getAttrValue(0)
+
+    def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
+      val geneNode = Option(
+        graphDataBaseConnection.findNode(
+          DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
+        )
+      ).orElse {Option(
+        graphDataBaseConnection.findNode(
+          DynamicLabel.label("Gene"), "name", geneProduct.getLabel
+        )
+      )}
+      val sbmlIdPolyPair = geneNode match {
+        case Some(gn) =>
+          if (gn.getRelationships(BiomeDBRelations.partOf, Direction.OUTGOING).asScala.map(_.getEndNode).exists(_.getProperty("name") == modelName)) {
+            val polypeptideNode = gn.getSingleRelationship(BiomeDBRelations.encodes, Direction.OUTGOING).getEndNode
+            val props = polypeptideNode.getProperties().asScala.toMap
+            Some(geneProduct.getId, polypeptideNode)
+          }
+          else None
+        case None => None
+      }
+      sbmlIdPolyPair
+    }
 
     fbcModel match {
       case model: FBCModelPlugin =>
