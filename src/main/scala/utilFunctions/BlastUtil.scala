@@ -30,6 +30,14 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("BlastUtil object is initialized.")
 
+  def createMapOfSequences(sequenceNode: Node): (String, Long) = transaction(graphDataBaseConnection){
+    val md5 = sequenceNode.getProperties("md5").values().asScala.head.toString
+    val nodeId = sequenceNode.getId
+    (md5, nodeId)
+  }
+  //  read ID of existing Sequence and its other parameters
+  var sequenceNodeCollector = getAllSequencesNodes.asScala.map(createMapOfSequences).toMap
+
   def getAllSequencesNodes = getAllNodesByLabel("Sequence")
 
   def applyOperationToNodes(nodeIterator: ResourceIterator[Node])
@@ -91,7 +99,10 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     callUblast(ublastLocation)(command)
   }
 
-  def createSimilarRelationshipsForBlast(blastOutputFilename: String, dropSize: Int, outerBlastFlag: Boolean): Int = transaction(graphDataBaseConnection){
+  def createSimilarRelationshipsForBlast(
+                                          blastOutputFilename: String,
+                                          dropSize: Int,
+                                          outerBlastFlag: Boolean): Int = transaction(graphDataBaseConnection){
     logger.debug("Transaction in createSimilarRelationshipsForBlast")
 
     val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
@@ -106,20 +117,6 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     val source = Source.fromFile(blastOutputFilename)
     val fullReadFileIterator = source.getLines()
     val currentIterator = fullReadFileIterator.drop(dropSize)
-
-
-    def createMapOfSequences(sequenceNode: Node): (String, Long) = {
-      val md5 = sequenceNode.getProperties("md5").toString
-      val nodeId = sequenceNode.getId
-      (md5, nodeId)
-    }
-    //  read ID of existing Sequence and its other parameters
-    var sequenceNodeCollector = outerBlastFlag match {
-      case true =>
-        val sequenceNodes = getAllSequencesNodes.asScala
-        sequenceNodes.map(createMapOfSequences).toMap
-      case false => Map[String, Long]()
-    }
 
     def parseStringOfInnerBlast(currentString: String): List[String] = {
       val splitString = currentString.split('\t')
@@ -195,6 +192,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     }
 
     def getOrCreateSequenceNode(md5: String, seq: String, xrefId: String): Node = {
+      if (md5 == "ACCD217A526DB58F0DC94FAD2625013A")
+        println()
       if (sequenceNodeCollector.contains(md5)) graphDataBaseConnection.getNodeById(sequenceNodeCollector(md5))
       else {
         val sequenceNode = graphDataBaseConnection.createNode(
