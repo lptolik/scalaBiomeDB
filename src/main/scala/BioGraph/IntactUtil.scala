@@ -183,7 +183,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry]) extends TransactionSupport {
       //      reactants
 
       val listOfReactants = info.getParticipants.map(mapOfReactants).toList
-      val reaction = Reaction(
+      val reaction = BiochemicalReaction(
         name = reactionName,
         reactants = listOfReactants,
         xRefs = listOfXrefs,

@@ -17,7 +17,7 @@ object JSBMLExportApp extends App with TransactionSupport {
   val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
   val reactionsNodes = transaction(db) {
-    db.findNodes(DynamicLabel.label("Reaction")).asScala.toList
+    db.findNodes(DynamicLabel.label("BiochemicalReaction")).asScala.toList
   }
 
   val model = JSBMLExport.assembleModel(reactionsNodes, "biograph_export_model")(db)
