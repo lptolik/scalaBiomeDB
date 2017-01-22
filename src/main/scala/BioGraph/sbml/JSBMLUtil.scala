@@ -5,7 +5,7 @@ import java.io.File
 import BioGraph.{Compartment, Reaction, _}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.neo4j.graphdb.{Direction, DynamicLabel}
+import org.neo4j.graphdb.{Direction, DynamicLabel, Node}
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.SBasePlugin
 import org.sbml.jsbml.ext.fbc.{GeneProduct, _}
@@ -23,7 +23,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val logger = LogManager.getLogger(this.getClass.getName)
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   val reader = new SBMLReader()
-  var compartmentNodes = Map[String, Compartment]()
+//  var compartmentNodes = Map[String, Compartment]()
 //  get dictionary of ChEBI and Reactome XRefs
   val chebiInfo = getDataBasesNodes("CheEBI")
   val reactomeInfo = getDataBasesNodes("Reactome")
@@ -48,12 +48,10 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     (db, dbNodeId)
   }
 
-  def processSBMLFile(fileName: File): Model = transaction(graphDataBaseConnection){
+  def jsbmlModelFromFile(fileName: File): Model = transaction(graphDataBaseConnection){
 //    get one model
     val readResult = reader.readSBML(fileName)
     val parsedModel = readResult.getModel
-    val compartments = parsedModel.getListOfCompartments.asScala.toList
-    compartmentNodes = compartments.map(elem => elem.getId -> Compartment(elem.getName)).toMap
     parsedModel
   }
 
@@ -85,24 +83,40 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     reaction
   }
 
-  def uploadModels(parsedModel: Model) = transaction(graphDataBaseConnection) {
-    // try to get fbc information from the SBML model
-    val fbcModel = parsedModel.getModel.getPlugin("fbc")
-
-    fbcModel match {
-      case model: FBCModelPlugin =>
-        val listOfGeneProducts = model.getListOfGeneProducts.asScala.toList
-        geneProductCollector ++= listOfGeneProducts
-          .map { gp =>
-            getPolypeptideByLocusTag(gp)
-              .getOrElse(createPolypeptide(gp))
-          }.toMap
-
-        logger.info(s"Gene product count: ${geneProductCollector.size}")
-
-        enzymeCollector ++= getEnzymes
-      case _ =>
+  def findOrganism(name: String): Organism = {
+    def fromNode(node: Node): Organism = {
+      val props = node.getAllProperties
+      //FIXME what to do with other properties? Maybe nothing?
+      Organism(props.get("name").toString, List(props.get("source").toString), nodeId = node.getId)
     }
+
+    Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)) match {
+      case Some(o) => fromNode(o)
+      case None => throw new IllegalArgumentException(s"Organism with name '$name' not found")
+    }
+  }
+
+  def uploadModel(organismName: String)(model: Model): List[Node] = transaction(graphDataBaseConnection) {
+    val organism = findOrganism(organismName)
+    // try to get fbc information from the SBML model
+    val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
+
+    val compartmentNodes = model
+      .getListOfCompartments.asScala
+      .toList
+      .map(elem => elem.getId -> Compartment(elem.getName, organism))
+      .toMap
+
+    val listOfGeneProducts = fbcModel.getListOfGeneProducts.asScala.toList
+    geneProductCollector ++= listOfGeneProducts
+      .map { gp =>
+        getPolypeptideByLocusTag(gp)
+          .getOrElse(createPolypeptide(gp))
+      }.toMap
+
+    logger.info(s"Gene product count: ${geneProductCollector.size}")
+
+    enzymeCollector ++= getEnzymes
 
     def createPolypeptide(gp: GeneProduct) = {
       val createdGeneProduct = graphDataBaseConnection.createNode(DynamicLabel.label("Polypeptide"))
@@ -114,14 +128,14 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       (sbmlId, createdGeneProduct)
     }
 
-    val fbcReactions = parsedModel.getListOfReactions.asScala.toList.map(_.getPlugin("fbc")).flatMap(getFBCReaction)
-    val reactions = parsedModel.getListOfReactions.asScala.toList
+    val fbcReactions = model.getListOfReactions.asScala.toList.map(_.getPlugin("fbc").asInstanceOf[FBCReactionPlugin])
+    val reactions = model.getListOfReactions.asScala.toList
     val zipFBCReactions = reactions.zip(fbcReactions)
-    val currentReaction = ReactionReader(parsedModel)(_)
+    val currentReaction = ReactionReader(model)(_)
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
       val r = currentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject
+      val reactionObject = r.makeReactionObject(compartmentNodes)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
@@ -183,7 +197,9 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       compounds.distinct
     }
 
-    def makeReactantObject(speciesReference: SpeciesReference, productFlag:Boolean = false): Reactant = {
+    def makeReactantObject(speciesReference: SpeciesReference,
+                           compartmentNodes: Map[String, Compartment],
+                           productFlag:Boolean = false): Reactant = {
       val specie = parsedModel.getSpecies(speciesReference.getSpecies)
       val specieName = specie.getName
       val compartment = specie.getCompartment
@@ -231,9 +247,9 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       })
     }
 
-    def makeReactionObject: Reaction = {
-      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, false))
-      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, true))
+    def makeReactionObject(compartmentNodes: Map[String, Compartment]): Reaction = {
+      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, false))
+      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, true))
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
       //      enzyme needs name of reaction and its node or object

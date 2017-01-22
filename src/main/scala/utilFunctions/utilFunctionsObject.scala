@@ -449,9 +449,12 @@ package utilFunctions {
     }
 
     def getUploadFilesFromDirectory(directory: String, format: String): List[File] = {
-      val files = new java.io.File(directory).listFiles().toList.sortBy(- _.length)
-      val sortedFiles = files.filter(_.getName.endsWith("." + format))
-      sortedFiles
+      val files = new java.io.File(directory)
+        .listFiles()
+        .filter(_.getName.endsWith("." + format))
+        .toList
+        .sortBy(- _.length)
+      files
     }
 
     def getSequenceProperties(sequenceNode: Node): (String, Sequence) = {

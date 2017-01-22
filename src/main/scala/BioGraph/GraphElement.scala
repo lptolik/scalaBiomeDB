@@ -2,8 +2,9 @@ import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
   import org.neo4j.graphdb
-  import org.neo4j.graphdb.{Relationship, DynamicLabel, Label, GraphDatabaseService, Direction}
+  import org.neo4j.graphdb._
   import utilFunctions._
+
   import scala.util.{Failure, Success, Try}
   import scala.collection.JavaConverters._
 
@@ -1336,8 +1337,9 @@ package BioGraph {
   }
 
   case class Compartment(
-                        name: String,
-                        nodeId: Long = -1
+                          name: String,
+                          organism: Organism,
+                          nodeId: Long = -1
                         )
   extends Node(Map(), nodeId) with BioEntity{
 
@@ -1347,17 +1349,47 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       if (this.getId < 0) {
-        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Compartment"), "name", this.getName))
-        val compartmentNode = tryToFindNode match {
+        val compartmentNode = findOrganismCompartment(graphDataBaseConnection) match {
           case Some(n) => n
-          case None =>
-            val createdCompartmentNode = super.upload(graphDataBaseConnection)
-            this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdCompartmentNode.setProperty(k, v)}
-            createdCompartmentNode
+          case None => createCompartmentNode(graphDataBaseConnection)
         }
         compartmentNode
       }
       else graphDataBaseConnection.getNodeById(this.getId)
+    }
+
+    private def findOrganismCompartment(db: GraphDatabaseService): Option[org.neo4j.graphdb.Node] = {
+      Option(db.findNode(DynamicLabel.label("Compartment"), "name", this.getName))
+        .flatMap { compartmentNode =>
+          compartmentNode
+            .getRelationships(BiomeDBRelations.partOf, Direction.OUTGOING).asScala
+            .headOption
+            .flatMap { partOfRel =>
+              val linkedOrganismName = partOfRel.getEndNode.getProperty("name").toString
+              if (linkedOrganismName == organism.name)
+                Some(compartmentNode)
+              else None
+            }
+        }
+    }
+
+    private def createCompartmentNode(graphDataBaseConnection: GraphDatabaseService) = {
+      val props = Map(
+        "name" -> this.getName,
+        "organismName" -> organism.name
+      )
+
+      val createdCompartmentNode = super.upload(graphDataBaseConnection)
+      this.setProperties(props).foreach { case (k, v) => createdCompartmentNode.setProperty(k, v) }
+
+      createPartOfRelationship(createdCompartmentNode, graphDataBaseConnection.getNodeById(organism.getId))
+
+      createdCompartmentNode
+    }
+
+    private def createPartOfRelationship(createdCompartmentNode: org.neo4j.graphdb.Node,
+                                         organismNode: org.neo4j.graphdb.Node): Relationship = {
+      createdCompartmentNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
     }
   }
 
