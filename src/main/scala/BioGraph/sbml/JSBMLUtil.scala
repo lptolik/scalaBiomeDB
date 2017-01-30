@@ -2,10 +2,10 @@ package BioGraph.sbml
 
 import java.io.File
 
-import BioGraph.{Compartment, Reaction, _}
+import BioGraph.{Compartment, BiochemicalReaction, _}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.neo4j.graphdb.{Direction, DynamicLabel}
+import org.neo4j.graphdb.{Direction, DynamicLabel, Node}
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.SBasePlugin
 import org.sbml.jsbml.ext.fbc.{GeneProduct, _}
@@ -23,7 +23,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val logger = LogManager.getLogger(this.getClass.getName)
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   val reader = new SBMLReader()
-  var compartmentNodes = Map[String, Compartment]()
+//  var compartmentNodes = Map[String, Compartment]()
 //  get dictionary of ChEBI and Reactome XRefs
   val chebiInfo = getDataBasesNodes("CheEBI")
   val reactomeInfo = getDataBasesNodes("Reactome")
@@ -41,8 +41,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   var reactantCollector: Map[String, Reactant] = Map()
   var geneProductCollector: Map[String, org.neo4j.graphdb.Node] = Map()
   var enzymeCollector: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = Map()
-  var mapOfModelParameters: Map[String, Double] = Map()
-
 
   def getDataBasesNodes(dbName: String): (DBNode, Long) = transaction(graphDataBaseConnection){
     val db = DBNode(dbName)
@@ -50,87 +48,68 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     (db, dbNodeId)
   }
 
-  def processSBMLFile(fileName: File): Model = transaction(graphDataBaseConnection){
+  def jsbmlModelFromFile(fileName: File): Model = transaction(graphDataBaseConnection){
 //    get one model
     val readResult = reader.readSBML(fileName)
     val parsedModel = readResult.getModel
-    val compartments = parsedModel.getListOfCompartments.asScala.toList
-    compartmentNodes = compartments.map(elem => elem.getId -> Compartment(elem.getName)).toMap
     parsedModel
   }
 
-  private def checkModelOrganismName(organismName: String): Boolean = {
-    val searching = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName))
-    val res =  searching match {
-      case Some(o) => true
-      case None => false
+  def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
+    val geneNode = Option(
+      graphDataBaseConnection.findNode(
+        DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
+      )
+    ).orElse {Option(
+      graphDataBaseConnection.findNode(
+        DynamicLabel.label("Gene"), "name", geneProduct.getLabel
+      )
+    )}
+    val sbmlIdPolyPair = geneNode match {
+      case Some(gn) =>
+        val polypeptideNode = gn.getSingleRelationship(BiomeDBRelations.encodes, Direction.OUTGOING).getEndNode
+        val props = polypeptideNode.getProperties().asScala.toMap
+        Some(geneProduct.getId, polypeptideNode)
+      case None => None
     }
-    res
+    sbmlIdPolyPair
   }
 
-  def getFBCReaction(fbcReaction: SBasePlugin): Option[FBCReactionPlugin] = {
-    val reaction = fbcReaction match {
-      case r:FBCReactionPlugin => Some(r)
-      case _ => None
+  def findOrganism(name: String): Organism = {
+    def fromNode(node: Node): Organism = {
+      val props = node.getAllProperties
+      //FIXME what to do with other properties? Maybe nothing?
+      Organism(props.get("name").toString, List(props.get("source").toString), nodeId = node.getId)
     }
-    reaction
+
+    Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)) match {
+      case Some(o) => fromNode(o)
+      case None => throw new IllegalArgumentException(s"Organism with name '$name' not found")
+    }
   }
 
-  @throws[IllegalArgumentException]
-  def uploadModel(parsedModel: Model) = transaction(graphDataBaseConnection) {
-
-    val modelName = parsedModel.getName
-
-    checkModelOrganismName(parsedModel.getName) match {
-      case false => throw new IllegalArgumentException("There is no organism with the name " + parsedModel.getName)
-      case true =>
-    }
-
+  def uploadModel(organismName: String)(model: Model): List[Node] = transaction(graphDataBaseConnection) {
+    val organism = findOrganism(organismName)
     // try to get fbc information from the SBML model
-    val fbcModel = parsedModel.getModel.getPlugin("fbc")
-    mapOfModelParameters ++= parsedModel.getListOfParameters.asScala.map(p => (p.getId, p.getValue)).toMap
+    val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
 
-//    to do
-//    put this data from annotation to graph
-//    val tax = parsedModel.getAnnotation.getFullAnnotation.getChild(1).getChild(0).getChild(5).getChild(1).getChild(1).getAttrValue(0)
+    val compartmentNodes = model
+      .getListOfCompartments.asScala
+      .toList
+      .map(elem => elem.getId -> Compartment(elem.getName, organism))
+      .toMap
 
-    def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
-      val geneNode = Option(
-        graphDataBaseConnection.findNode(
-          DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
-        )
-      ).orElse {Option(
-        graphDataBaseConnection.findNode(
-          DynamicLabel.label("Gene"), "name", geneProduct.getLabel
-        )
-      )}
-      val sbmlIdPolyPair = geneNode match {
-        case Some(gn) =>
-          if (gn.getRelationships(BiomeDBRelations.partOf, Direction.OUTGOING).asScala.map(_.getEndNode).exists(_.getProperty("name") == modelName)) {
-            val polypeptideNode = gn.getSingleRelationship(BiomeDBRelations.encodes, Direction.OUTGOING).getEndNode
-            val props = polypeptideNode.getProperties().asScala.toMap
-            Some(geneProduct.getId, polypeptideNode)
-          }
-          else None
-        case None => None
-      }
-      sbmlIdPolyPair
-    }
+    val listOfGeneProducts = fbcModel.getListOfGeneProducts.asScala.toList
+    geneProductCollector ++= listOfGeneProducts
+      .map { gp =>
+        getPolypeptideByLocusTag(gp)
+          .getOrElse(createPolypeptide(gp))
+      }.toMap
 
-    fbcModel match {
-      case model: FBCModelPlugin =>
-        val listOfGeneProducts = model.getListOfGeneProducts.asScala.toList
-        geneProductCollector ++= listOfGeneProducts
-          .map { gp =>
-            getPolypeptideByLocusTag(gp)
-              .getOrElse(createPolypeptide(gp))
-          }.toMap
+    logger.info(s"Gene product count: ${geneProductCollector.size}")
 
-        logger.info(s"Gene product count: ${geneProductCollector.size}")
-
-        enzymeCollector ++= getEnzymes
-      case _ =>
-    }
+    //TODO take proteins from organism only
+    enzymeCollector ++= getEnzymes
 
     def createPolypeptide(gp: GeneProduct) = {
       val createdGeneProduct = graphDataBaseConnection.createNode(DynamicLabel.label("Polypeptide"))
@@ -142,14 +121,14 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       (sbmlId, createdGeneProduct)
     }
 
-    val fbcReactions = parsedModel.getListOfReactions.asScala.toList.map(_.getPlugin("fbc")).flatMap(getFBCReaction)
-    val reactions = parsedModel.getListOfReactions.asScala.toList
+    val fbcReactions = model.getListOfReactions.asScala.toList.map(_.getPlugin("fbc").asInstanceOf[FBCReactionPlugin])
+    val reactions = model.getListOfReactions.asScala.toList
     val zipFBCReactions = reactions.zip(fbcReactions)
-    val currentReaction = ReactionReader(parsedModel)(_)
+    val currentReaction = ReactionReader(model)(_)
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
       val r = currentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
@@ -158,8 +137,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val uploadedReactions = zipFBCReactions.map(processOneReaction)
     uploadedReactions
   }
-
-
 
   def getEnzymes: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = {
     graphDataBaseConnection
@@ -175,7 +152,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
   case class ReactionReader(parsedModel: Model)(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) {
     val reaction = zipFBCReaction._1
-    val fbcReaction = zipFBCReaction._2
     val reactionName = reaction.getName
     def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
       val geneNode = Option(
@@ -214,7 +190,9 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       compounds.distinct
     }
 
-    def makeReactantObject(speciesReference: SpeciesReference, productFlag:Boolean = false): Reactant = {
+    def makeReactantObject(speciesReference: SpeciesReference,
+                           compartmentNodes: Map[String, Compartment],
+                           productFlag:Boolean = false): Reactant = {
       val specie = parsedModel.getSpecies(speciesReference.getSpecies)
       val specieName = specie.getName
       val compartment = specie.getCompartment
@@ -262,9 +240,9 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       })
     }
 
-    def makeReactionObject: Reaction = {
-      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, false))
-      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, true))
+    def makeReactionObject(compartmentNodes: Map[String, Compartment], organism: Organism): BiochemicalReaction = {
+      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, false))
+      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, true))
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
       //      enzyme needs name of reaction and its node or object
@@ -272,31 +250,21 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       //      the result must be a List
       //      so it can be flattened
       //      make a special class for reaction to read it
-      val lowerFluxMap = Option(mapOfModelParameters(fbcReaction.getLowerFluxBound)) match {
-        case Some(v) => Map("lowerFluxBound" -> v)
-        case None => Map()
-      }
-
-      val upperFluxMap = Option(mapOfModelParameters(fbcReaction.getUpperFluxBound)) match {
-        case Some(v) => Map("upperFluxBound" -> v)
-        case None => Map()
-      }
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
         "metaId" -> reaction.getMetaId,
-        "sbmlId" -> reaction.getId) ++
-        upperFluxMap ++
-        lowerFluxMap
-      Reaction(
-        name = reactionName,
+        "sbmlId" -> reaction.getId)
+      BiochemicalReaction(
+        name = reaction.getName,
+        organism = Some(organism),
         reactants = listOfReactants,
         products = listOfProducts,
         properties = properties)
     }
 
     def getGeneProductsAssociations: List[org.neo4j.graphdb.Node] = {
-//      fbcReaction.getLowerFluxBound
+      val fbcReaction = zipFBCReaction._2
       val geneAssociations = reactionLoop(fbcReaction)
       geneAssociations
     }

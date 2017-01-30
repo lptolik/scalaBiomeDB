@@ -2,8 +2,9 @@ import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
 package BioGraph {
 
   import org.neo4j.graphdb
-  import org.neo4j.graphdb.{Relationship, DynamicLabel, Label, GraphDatabaseService, Direction}
+  import org.neo4j.graphdb._
   import utilFunctions._
+
   import scala.util.{Failure, Success, Try}
   import scala.collection.JavaConverters._
 
@@ -1225,21 +1226,18 @@ package BioGraph {
     }
   }
 
-  case class Reaction(
-                     name: String,
-                     reactants: List[Reactant],
-                     products: List[Reactant] = List(),
-                     xRefs: List[XRef] = List(),
-                     enzymes: List[Enzyme] = List(),
-                     experiment: String = "",
-                     properties: Map[String, Any] = Map(),
-                     nodeId: Long = -1
-                     )
-  extends Node(properties = properties, nodeId) {
-
+  case class BiochemicalReaction(name: String,
+                                 reactants: List[Reactant],
+                                 organism: Option[Organism] = None,
+                                 products: List[Reactant] = List(),
+                                 xRefs: List[XRef] = List(),
+                                 enzymes: List[Enzyme] = List(),
+                                 experiment: String = "",
+                                 properties: Map[String, Any] = Map(),
+                                 nodeId: Long = -1) extends Node(properties = properties, nodeId) {
     def getName = this.name
 
-    def getLabels = List("Reaction")
+    def getLabels = List("BiochemicalReaction")
 
     def getExperiment = this.experiment
 
@@ -1250,94 +1248,86 @@ package BioGraph {
     def getProducts = this.products
 
     override def equals(that: Any): Boolean = that match {
-      case that: Reaction =>
+      case that: BiochemicalReaction =>
         (that canEqual this) &&
           this.getName == that.getName
       case _ => false
     }
 
-    override def canEqual(that: Any) = that.isInstanceOf[Reaction]
+    override def canEqual(that: Any) = that.isInstanceOf[BiochemicalReaction]
 
     override def hashCode = 41 * name.hashCode
 
-    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+    override def upload(db: GraphDatabaseService): graphdb.Node = {
       val newProperty = this.getExperiment match {
         case e: String => this.setProperties(Map("name" -> this.getName, "experiment" -> e))
         case null => this.setProperties(Map("name" -> this.getName))
       }
 
-      val reactionNode = super.upload(graphDataBaseConnection)
+      val reactionNode = super.upload(db)
       newProperty.foreach{case (k, v) => reactionNode.setProperty(k, v)}
 
-      val xrefNodes = this.getXrefs.map(_.upload(graphDataBaseConnection))
+      val xrefNodes = this.getXrefs.map(_.upload(db))
       xrefNodes.foreach(reactionNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
-//      def createRelationshipsToReactants(reactant: Reactant): Unit = {
-//        val reactantNode = graphDataBaseConnection.getNodeById(reactant.getId)
-//        val tryFindParticipation = reactantNode.getRelationships(BiomeDBRelations.participates_in, Direction.OUTGOING).asScala.toList
-//        val zipEdgeWithReaction = tryFindParticipation.zip(tryFindParticipation.map(_.getEndNode))
-//        val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != reactionNode)
-//          tryToFindReaction.nonEmpty match {
-//          case true =>
-////            we can take head because this list will contain only this reaction
-////            or empty list
-//            val foundRelNodePair = tryToFindReaction.head
-//            foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
-//          case false =>
-//            val participatesIn = reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
-//            participatesIn.setProperty("N", 1)
-//        }
-//      }
+      //link reactants
+      val linkToReaction: (Reactant, Boolean) => Unit =
+        createRelationshipsToReactants(db, reactionNode, _, _)
+      reactants.foreach(linkToReaction(_, false))
+      products.foreach(linkToReaction(_, true))
 
-      def createRelationshipsToReactants(reactant: Reactant, productFlag: Boolean): Unit = {
-        val participationTypeAndDirection = productFlag match {
-          case true => (BiomeDBRelations.is_product, Direction.OUTGOING)
-          case false => (BiomeDBRelations.is_reactant, Direction.INCOMING)
-        }
-        val reactantNode = graphDataBaseConnection.getNodeById(reactant.getId)
-//        val tryFindParticipation = reactantNode.getRelationships(participationType, Direction.OUTGOING).asScala.toList
-//        val zipEdgeWithReaction = tryFindParticipation.zip(tryFindParticipation.map(_.getEndNode))
-//        val tryToFindReaction = zipEdgeWithReaction.dropWhile(z => z._2 != reactionNode)
-        val tryToFindReaction = utilFunctionsObject.findExistingRelationship(graphDataBaseConnection,
-                                                                              reactantNode,
-                                                                              reactionNode,
-                                                                              Direction.OUTGOING,
-                                                                              BiomeDBRelations.participates_in)
-        tryToFindReaction.nonEmpty match {
-          case true =>
-            //            we can take head because this list will contain only this reaction
-            //            or empty list
-            val foundRelNodePair = tryToFindReaction.head
-            foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
-          case false =>
-            val participationRelationship = reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
-
-            val reactantRelationship = participationTypeAndDirection._1 match {
-              case BiomeDBRelations.is_reactant => reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.is_reactant)
-              case BiomeDBRelations.is_product => reactionNode.createRelationshipTo(reactantNode, BiomeDBRelations.is_product)
-            }
-
-            participationRelationship.setProperty("N", 1)
-            reactant.getStoichiometry match {
-              case Some(stoi) => reactantRelationship.setProperty("stoichiometric_coef", stoi)
-              case None =>
-            }
-//            val props = reactantRelationship.getAllProperties
-//            reactantRelationship
-        }
-      }
-
-      reactants.foreach(createRelationshipsToReactants(_, false))
-      products.foreach(createRelationshipsToReactants(_, true))
+      //link organism
+      organism.map(organism => createPartOfRelationship(reactionNode, db.getNodeById(organism.getId)))
 
       reactionNode
     }
 
+    private def createPartOfRelationship(reactionNode: org.neo4j.graphdb.Node,
+                                         organismNode: org.neo4j.graphdb.Node): Relationship = {
+      reactionNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+    }
+
+    private def createRelationshipsToReactants(db: GraphDatabaseService,
+                                               reactionNode: org.neo4j.graphdb.Node,
+                                               reactant: Reactant,
+                                               productFlag: Boolean): Unit = {
+      val participationTypeAndDirection = productFlag match {
+        case true => (BiomeDBRelations.is_product, Direction.OUTGOING)
+        case false => (BiomeDBRelations.is_reactant, Direction.INCOMING)
+      }
+      val reactantNode = db.getNodeById(reactant.getId)
+      val tryToFindReaction = utilFunctionsObject.findExistingRelationship(db,
+        reactantNode,
+        reactionNode,
+        Direction.OUTGOING,
+        BiomeDBRelations.participates_in)
+      tryToFindReaction.nonEmpty match {
+        case true =>
+          // we can take head because this list will contain only this reaction
+          // or empty list
+          val foundRelNodePair = tryToFindReaction.head
+          foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
+        case false =>
+          val participationRelationship = reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
+
+          val reactantRelationship = participationTypeAndDirection._1 match {
+            case BiomeDBRelations.is_reactant => reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.is_reactant)
+            case BiomeDBRelations.is_product => reactionNode.createRelationshipTo(reactantNode, BiomeDBRelations.is_product)
+          }
+
+          participationRelationship.setProperty("N", 1)
+          reactant.getStoichiometry match {
+            case Some(stoi) => reactantRelationship.setProperty("stoichiometric_coef", stoi)
+            case None =>
+          }
+      }
+    }
   }
 
   case class Compartment(
-                        name: String,
-                        nodeId: Long = -1
+                          name: String,
+                          organism: Organism,
+                          nodeId: Long = -1
                         )
   extends Node(Map(), nodeId) with BioEntity{
 
@@ -1347,17 +1337,47 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       if (this.getId < 0) {
-        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Compartment"), "name", this.getName))
-        val compartmentNode = tryToFindNode match {
+        val compartmentNode = findOrganismCompartment(graphDataBaseConnection) match {
           case Some(n) => n
-          case None =>
-            val createdCompartmentNode = super.upload(graphDataBaseConnection)
-            this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdCompartmentNode.setProperty(k, v)}
-            createdCompartmentNode
+          case None => createCompartmentNode(graphDataBaseConnection)
         }
         compartmentNode
       }
       else graphDataBaseConnection.getNodeById(this.getId)
+    }
+
+    private def findOrganismCompartment(db: GraphDatabaseService): Option[org.neo4j.graphdb.Node] = {
+      Option(db.findNode(DynamicLabel.label("Compartment"), "name", this.getName))
+        .flatMap { compartmentNode =>
+          compartmentNode
+            .getRelationships(BiomeDBRelations.partOf, Direction.OUTGOING).asScala
+            .headOption
+            .flatMap { partOfRel =>
+              val linkedOrganismName = partOfRel.getEndNode.getProperty("name").toString
+              if (linkedOrganismName == organism.name)
+                Some(compartmentNode)
+              else None
+            }
+        }
+    }
+
+    private def createCompartmentNode(graphDataBaseConnection: GraphDatabaseService) = {
+      val props = Map(
+        "name" -> this.getName,
+        "organismName" -> organism.name
+      )
+
+      val createdCompartmentNode = super.upload(graphDataBaseConnection)
+      this.setProperties(props).foreach { case (k, v) => createdCompartmentNode.setProperty(k, v) }
+
+      createPartOfRelationship(createdCompartmentNode, graphDataBaseConnection.getNodeById(organism.getId))
+
+      createdCompartmentNode
+    }
+
+    private def createPartOfRelationship(createdCompartmentNode: org.neo4j.graphdb.Node,
+                                         organismNode: org.neo4j.graphdb.Node): Relationship = {
+      createdCompartmentNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
     }
   }
 
@@ -1365,9 +1385,9 @@ package BioGraph {
   case class Enzyme(
                      name: String,
                      var polypeptide: List[Polypeptide] = List(),
-//                     var complex: List[Complex] = List(),
-//                     var regulates: List[EnzymeRegulation] = List(),
-                     var catalizes: List[Reaction] = List(),
+                     //                     var complex: List[Complex] = List(),
+                     //                     var regulates: List[EnzymeRegulation] = List(),
+                     var catalizes: List[BiochemicalReaction] = List(),
                      nodeId: Long = -1,
                      properties: Map[String, Any] = Map())
     extends Node(properties = properties, nodeId)
