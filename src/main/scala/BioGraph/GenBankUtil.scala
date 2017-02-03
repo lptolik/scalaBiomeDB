@@ -83,6 +83,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val ccpLength = dnaSeq.getLength
     val descriptionForUpload = dnaSeq.getDescription
     val description = descriptionForUpload.toUpperCase
+    val locus = dnaSeq.getOriginalHeader.split(" ").filter(_.nonEmpty)(0)
     val ccpType =
       if (description.contains("COMPLETE GENOME") || description.contains("COMPLETE SEQUENCE")) "Chromosome"
       else if (description.contains("CONTIG")) "Contig"
@@ -102,21 +103,21 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
     val ccp = ccpType match{
       case "Chromosome" => Chromosome(
-        name = descriptionForUpload,
+        name = locus,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
         length = ccpLength,
         properties = Map("length" -> dnaLength))
       case "Contig" => Contig(
-        name = descriptionForUpload,
+        name = locus,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
         length = ccpLength,
         properties = Map("length" -> dnaLength))
       case "Plasmid" => Plasmid(
-        name = descriptionForUpload,
+        name = locus,
         organism = organism,
         dnaType = circularOrLinear,
         source = genbankSourceValue,
@@ -404,4 +405,5 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   def getUniqueFeatures(features: List[NucleotideFeature]) = {
     features.map(_.getType).toSet
   }
+
 }

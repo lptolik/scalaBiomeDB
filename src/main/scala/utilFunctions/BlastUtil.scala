@@ -3,9 +3,11 @@ package utilFunctions
 import java.io.{File, PrintWriter}
 import java.util
 
+import BioGraph.DBNode
 import org.apache.logging.log4j.LogManager
-import org.neo4j.graphdb.{ResourceIterator, DynamicLabel, Node, GraphDatabaseService}
+import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Node, ResourceIterator}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
+
 import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.sys.process.Process
@@ -105,7 +107,11 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
                                           outerBlastFlag: Boolean): Int = transaction(graphDataBaseConnection){
     logger.debug("Transaction in createSimilarRelationshipsForBlast")
 
-    val uniprotNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
+    val findUniprotNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot"))
+    val uniprotNode = findUniprotNode match {
+      case Some(u) => u
+      case None => DBNode("UniProtKB/Swiss-Prot").upload(graphDataBaseConnection)
+    }
     var uniprotXRefCollector: Map[String, Node] = {
       uniprotNode
         .getRelationships

@@ -26,85 +26,22 @@ object GenBankUploader extends App with TransactionSupport{
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/ADUM01000034.gb")
 //    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/"
 //    val localDir = "/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/genbank_files_for_metacyc/"
-    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files/"
+//    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/problem_files/"
+    val localDir = "/home/artem/work/2017/staphylococcus/genomes/"
 //    val localDir = "/home/artem/work/reps/GenBank/scalaUploadTest/genomes/"
 //    val localDir = "/media/artem/Elements/genomes"
 //    val remoteDir = "/home/jane/genbank/genbank_files_for_metacyc/240_bacateria"
     val remoteDir = "/home/jane/graph_new_release/genomes"
-    val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
+//    val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
+    val localDB = "/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
-    val filesToDrop = 0//1776//1425
-
-//    val db = args.nonEmpty match {
-//    case true => args(0)
-//    case _ => remoteDB
-//    }
-//
-//    val dir = args.nonEmpty match {
-//      case true => args(1)
-//      case _ => remoteDir
-//    }
+    val filesToDrop = 0
 
     val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(localDir, "gb").drop(filesToDrop)
     val dataBaseFile = new File(localDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
-
-//    def getSequenceDict(graphDatabaseConnection: GraphDatabaseService): Map[String, Sequence] = transaction(graphDataBaseConnection) {
-//
-//      def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
-//        val md5 = sequenceNode.getProperty("md5").toString
-//        val seq = new Sequence(
-//          sequence = sequenceNode.getProperty("Sequence").toString,
-//          md5 = md5,
-//          nodeId = sequenceNode.getId
-//        )
-//        md5 -> seq
-//      }
-//
-//      val sequenceNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Sequence")).asScala.toList
-//      val sequenceDict = sequenceNodes.map{node => getSequenceProperties(node)}.toMap
-//      sequenceDict
-//    }
-//
-//    def getSequenceProperties(sequenceNode: graphdb.Node): (String, Sequence) = {
-//      val md5 = sequenceNode.getProperty("md5").toString
-//      val seq = Sequence(
-//        sequence = sequenceNode.getProperty("seq").toString,
-//        md5 = md5,
-//        nodeId = sequenceNode.getId
-//      )
-//      md5 -> seq
-//    }
-//
-//    def getDBProperties(dataBaseNode: graphdb.Node): (String, DBNode) = {
-//      val name = dataBaseNode.getProperty("name").toString
-//      val db = DBNode(
-//        name = name,
-//        nodeId = dataBaseNode.getId
-//      )
-//      name -> db
-//    }
-//
-//    def getTermProperties(dataBaseNode: graphdb.Node): (String, Term) = {
-//      val text = dataBaseNode.getProperty("text").toString
-//      val term = Term(
-//        text = text,
-//        nodeId = dataBaseNode.getId
-//      )
-//      text -> term
-//    }
-//
-//    def getNodesDict[T <: Node]
-//    (graphDatabaseConnection: GraphDatabaseService)
-//    (f: graphdb.Node => (String, T), label: String): Map[String, T] = transaction(graphDataBaseConnection) {
-//      val sequenceNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
-//      val sequenceDict = sequenceNodes.map{node => f(node)}.toMap
-//      sequenceDict
-//    }
-
-    //    var totalSequenceCollector: Map[String, Sequence] = Map()
     var totalSequenceCollector: Map[String, Sequence] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")()
     var totalDBCollector: Map[String, DBNode] = getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")()
     var totalTermCollector: Map[String, Term] = getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")()

@@ -347,7 +347,7 @@ package utilFunctions {
           }
           //      for each strand and for each CCP create NEXT relationships
           sortedFeatures.foreach(typeOfStrand =>
-            typeOfStrand.foreach(listOfFeatures =>
+            typeOfStrand.filter(_.nonEmpty).foreach(listOfFeatures =>
               listOfFeatures.tail.foldLeft(listOfFeatures.head.endNode)((previousFeature, nextFeaturePath) =>
                 createNext(previousFeature: Node, nextFeaturePath: Path))))
         }
@@ -411,19 +411,18 @@ package utilFunctions {
         def getStartPosition(p: Path): Long = p.endNode().getProperty("start").toString.toInt
         getStartPosition(p1) < getStartPosition(p2)
       }
-        val traversalResult = graphDataBaseConnection
-          .traversalDescription()
-          .breadthFirst()
-          .relationships(BiomeDBRelations.partOf, Direction.INCOMING)
-          .evaluator(Evaluators.toDepth(1))
-          .traverse(graphDataBaseConnection.getNodeById(ccpID))
-        val traversedFeatures = traversalResult.asScala.toList.drop(1)
+      val traversalResult = graphDataBaseConnection
+        .traversalDescription()
+        .breadthFirst()
+        .relationships(BiomeDBRelations.partOf, Direction.INCOMING)
+        .evaluator(Evaluators.toDepth(1))
+        .traverse(graphDataBaseConnection.getNodeById(ccpID))
+      val traversedFeatures = traversalResult.asScala.toList.drop(1)
 
       val sortedFeatures = traversedFeatures.sortWith(sortByStartCoordinate)
 
       if (strand == Strand.unknown) sortedFeatures
       else sortedFeatures.filter(_.endNode().getProperty("strand") == strand.toString)
-
 
     }
 
