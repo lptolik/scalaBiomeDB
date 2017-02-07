@@ -13,8 +13,8 @@ object BlastTaskMaker extends App{
     val blastTool = new BlastUtil(dbPathLocal)
     val polySequences = blastTool.getAllSequencesNodes
 //    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/ecoli_w_and_k12.fasta")
-    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB.fasta")
-
+    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_byMD5.fasta", true)
+//    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB.fasta", false)
 
   }
   main()
