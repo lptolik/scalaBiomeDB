@@ -2,7 +2,8 @@ package BioGraph.sbml
 
 import java.io.File
 
-import BioGraph.{Compartment, BiochemicalReaction, _}
+import BioGraph.{BiochemicalReaction, Compartment, _}
+import org.apache.log4j.{Level, Logger}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.graphdb.{Direction, DynamicLabel, Node}
@@ -36,8 +37,29 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val totalReactomeCompoundCollector: Map[String, Compound] =
     getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.contains("reactome"))
       .filter(elem => elem._1.contains("reactome"))
-  var totalCompoundCollector = totalChebiCompoundCollector ++ totalReactomeCompoundCollector
-//  collectors of Reactants and GeneProducts
+  val totalSynonymsCompoundCollector = transaction(graphDataBaseConnection) {
+    graphDataBaseConnection
+      .findNodes(DynamicLabel.label("Term"))
+      .asScala
+      .flatMap { termNode =>
+        termNode
+          .getRelationships(BiomeDBRelations.hasName, Direction.INCOMING)
+          .asScala
+          .map(_.getStartNode)
+          .find(_.hasLabel(DynamicLabel.label("Compound")))
+          .map { compoundNode =>
+            val text = termNode.getProperty("text").toString
+            val compound = Compound(compoundNode.getProperty("name").toString, nodeId = compoundNode.getId)
+            text -> compound
+          }
+      }.toMap
+  }
+
+  var totalCompoundCollector = totalChebiCompoundCollector ++
+    totalReactomeCompoundCollector ++
+    totalSynonymsCompoundCollector
+
+  //  collectors of Reactants and GeneProducts
   var reactantCollector: Map[String, Reactant] = Map()
   var geneProductCollector: Map[String, org.neo4j.graphdb.Node] = Map()
   var enzymeCollector: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = Map()
@@ -173,21 +195,38 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val reactomeXRefs = specie.getCVTerms.asScala.head.getResources.asScala.toList.filter(_.contains("reactome"))
       def getOrCreateCompoundNode(xrefName: String, db: DBNode): Compound = {
         val shortXRefName = xrefName.split("/").last
-        if (totalCompoundCollector.contains(shortXRefName)) totalCompoundCollector(shortXRefName)
-        else {
+        totalCompoundCollector.getOrElse(shortXRefName, {
           logger.warn("No compound was found by XRef id:" + xrefName)
-          val createdCompound = Compound(specieName)
-          val createdXRef = XRef(shortXRefName, chebi)
+          val createdCompound = Compound(specieName, toCheck = true)
+          val createdXRef = XRef(shortXRefName, db)
           val createdCompoundNode = createdCompound.upload(graphDataBaseConnection)
           val createdXRefNode = createdXRef.upload(graphDataBaseConnection)
           createdCompoundNode.createRelationshipTo(createdXRefNode, BiomeDBRelations.evidence)
           totalCompoundCollector ++= Map(shortXRefName -> createdCompound)
           createdCompound
-        }
+        })
       }
 
-      val compounds = chebiXRefs.map(getOrCreateCompoundNode(_, chebi)) ++ reactomeXRefs.map(getOrCreateCompoundNode(_, reactome))
-      compounds.distinct
+      val compoundsByXref = chebiXRefs.map(getOrCreateCompoundNode(_, chebi)) ++
+        reactomeXRefs.map(getOrCreateCompoundNode(_, reactome))
+
+      val compoundByNameOpt = totalCompoundCollector
+        .get(specieName)
+        .orElse {
+          if (compoundsByXref.nonEmpty)
+            None
+          else {
+            val createdCompound = Compound(specieName, toCheck = true)
+            createdCompound.upload(graphDataBaseConnection)
+            totalCompoundCollector ++= Map(specieName -> createdCompound)
+            Some(createdCompound)
+          }
+        }
+
+      compoundByNameOpt
+        .map(compoundByName => compoundByName :: compoundsByXref)
+        .getOrElse(compoundsByXref)
+        .distinct
     }
 
     def makeReactantObject(speciesReference: SpeciesReference,
@@ -257,10 +296,11 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         "sbmlId" -> reaction.getId)
       BiochemicalReaction(
         name = reaction.getName,
-        organism = Some(organism),
         reactants = listOfReactants,
         products = listOfProducts,
-        properties = properties)
+        organism = Some(organism),
+        properties = properties
+      )
     }
 
     def getGeneProductsAssociations: List[org.neo4j.graphdb.Node] = {
