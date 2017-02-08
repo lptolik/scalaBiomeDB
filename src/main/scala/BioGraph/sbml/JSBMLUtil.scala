@@ -77,24 +77,19 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     parsedModel
   }
 
-  def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
-    val geneNode = Option(
-      graphDataBaseConnection.findNode(
-        DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
-      )
-    ).orElse {Option(
-      graphDataBaseConnection.findNode(
-        DynamicLabel.label("Gene"), "name", geneProduct.getLabel
-      )
-    )}
-    val sbmlIdPolyPair = geneNode match {
-      case Some(gn) =>
-        val polypeptideNode = gn.getSingleRelationship(BiomeDBRelations.encodes, Direction.OUTGOING).getEndNode
-        val props = polypeptideNode.getProperties().asScala.toMap
-        Some(geneProduct.getId, polypeptideNode)
-      case None => None
-    }
-    sbmlIdPolyPair
+  def getPolypeptideByLocusTagOrGeneName(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct, organism: Organism)
+  : Option[(String, org.neo4j.graphdb.Node)] = {
+
+    val cypher =
+      s"MATCH (o:Organism {name: '${organism.name}'})<-[:PART_OF]-(g:Gene)-[:ENCODES]->(p:Polypeptide) " +
+        s"WHERE g.locus_tag = '${geneProduct.getLabel}' OR g.name = '${geneProduct.getLabel}' " +
+        s"RETURN p"
+
+    val resultIter = graphDataBaseConnection.execute(cypher).columnAs[Node]("p")
+    if (resultIter.hasNext)
+      Some((geneProduct.getId, resultIter.next()))
+    else
+      None
   }
 
   def findOrganism(name: String): Organism = {
@@ -124,22 +119,25 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val listOfGeneProducts = fbcModel.getListOfGeneProducts.asScala.toList
     geneProductCollector ++= listOfGeneProducts
       .map { gp =>
-        getPolypeptideByLocusTag(gp)
-          .getOrElse(createPolypeptide(gp))
+        getPolypeptideByLocusTagOrGeneName(gp, organism)
+          .getOrElse(createPolypeptide(gp, organism))
       }.toMap
 
     logger.info(s"Gene product count: ${geneProductCollector.size}")
 
-    //TODO take proteins from organism only
     enzymeCollector ++= getEnzymes
 
-    def createPolypeptide(gp: GeneProduct) = {
+    def createPolypeptide(gp: GeneProduct, organism: Organism) = {
       val createdGeneProduct = graphDataBaseConnection.createNode(DynamicLabel.label("Polypeptide"))
       val sbmlId = gp.getId
       createdGeneProduct.addLabel(DynamicLabel.label("To_check"))
       createdGeneProduct.setProperty("sbmlId", sbmlId)
       createdGeneProduct.setProperty("label", gp.getLabel)
       createdGeneProduct.setProperty("metaId", gp.getMetaId)
+
+      val organismNode = graphDataBaseConnection.getNodeById(organism.getId)
+      createdGeneProduct.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+
       (sbmlId, createdGeneProduct)
     }
 
@@ -164,11 +162,10 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     graphDataBaseConnection
       .findNodes(DynamicLabel.label("Enzyme"))
       .asScala
-      .map {
-        enzymeNode =>
-          val enzymePolys = enzymeNode.getRelationships(Direction.INCOMING, BiomeDBRelations.partOf).asScala
-            .map(_.getEndNode).toSet
-          (enzymePolys, enzymeNode)
+      .map { enzymeNode =>
+        val enzymePolys = enzymeNode.getRelationships(Direction.INCOMING, BiomeDBRelations.partOf).asScala
+          .map(_.getEndNode).toSet
+        (enzymePolys, enzymeNode)
       }.toMap
   }
 
