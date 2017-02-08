@@ -306,8 +306,21 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       geneAssociations
     }
 
+    def getComplexAlternatives(associations: List[Association]): List[List[GeneProductRef]] = {
+      associations.foldLeft(List(List.empty[GeneProductRef])) {
+        case (res, next: GeneProductRef) =>
+          res.map(prev => next :: prev)
+        case (res, next: Or) =>
+          next.getListOfAssociations.asScala.toList.flatMap { case gpr: GeneProductRef =>
+              res.map(prev => gpr :: prev)
+          }
+      }
+    }
+
     def processAndOperator(listOfAssociations: List[Association]): List[org.neo4j.graphdb.Node] = {
-      val res = listOfAssociations match {
+      val alternatives = getComplexAlternatives(listOfAssociations)
+
+      alternatives.flatMap {
         case lgp: List[GeneProductRef] =>
           val polys = lgp.map(geneProduct).toSet
           if (enzymeCollector.contains(polys)) List(enzymeCollector(polys))
@@ -320,9 +333,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
           }
         case _ =>
           logger.error("Not a GeneProductRef: " + listOfAssociations)
-          List()
+          throw new Exception("Not a GeneProductRef: " + listOfAssociations)
       }
-      res
     }
 
     def geneProduct(gpa: GeneProductRef): org.neo4j.graphdb.Node = geneProductCollector(gpa.getGeneProduct)
