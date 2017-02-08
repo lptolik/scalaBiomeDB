@@ -12,15 +12,13 @@ import scala.collection.JavaConverters._
   * Created by piane_ramso on 12/27/16.
   */
 object JSBMLExportApp extends App with TransactionSupport {
-  val basePath = "/Users/piane_ramso/Ya.Disk/Yandex.Disk/Studying/PhD/thesis/pushchono_phd/"
+  val basePath = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/"
   val localDB = new File(basePath + "data/graph.db")
   val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
-  val reactionsNodes = transaction(db) {
-    db.findNodes(DynamicLabel.label("BiochemicalReaction")).asScala.toList
-  }
+  val organism = "Escherichia coli W"
 
-  val model = JSBMLExport.assembleModel(reactionsNodes, "biograph_export_model")(db)
+  val model = JSBMLExport.assembleModel(organism, "biograph_export_model")(db)
   val out = basePath + "sbml_out/out.xml"
   JSBMLExport.writeToFile(model, out)
 }

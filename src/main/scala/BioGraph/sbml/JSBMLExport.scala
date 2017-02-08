@@ -18,6 +18,16 @@ object JSBMLExport extends TransactionSupport {
   val defaultLowerBound = -1000
   val defaultUpperBound = 1000
 
+  def assembleModel(organismName: String, modelName: String)(db: GraphDatabaseService): SBMLDocument = {
+    val cypher =
+      s"MATCH (o:Organism {name: '$organismName'})<-[:PART_OF]-(br:BiochemicalReaction) " +
+        s"RETURN br"
+
+    val organismReactionNodes = db.execute(cypher).columnAs[Node]("br").asScala.toList
+
+    assembleModel(organismReactionNodes, modelName)(db)
+  }
+
   def assembleModel(reactionsNodes: List[Node], modelName: String)(db: GraphDatabaseService): SBMLDocument = {
     transaction(db) {
       val reactions = getReactionsOut(reactionsNodes)
