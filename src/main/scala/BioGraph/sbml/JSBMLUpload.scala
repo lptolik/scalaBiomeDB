@@ -23,18 +23,18 @@ object JSBMLUpload extends App with TransactionSupport {
 
   val jsbml = new JSBMLUtil(localDB)
 
-  val organism = "Escherichia coli W"
-  val uploadModelOfOrganism: Model => List[Node] = jsbml.uploadModel(organism)
   models.foreach(uploadOneModel)
+
+  def uploadOneModel(smblModelFile: File): Unit = {
+    val model = jsbml.jsbmlModelFromFile(smblModelFile)
+    val organism = model.getName
+
+    println(s"Uploading model of '$organism' organism from ${smblModelFile.getName} file")
+    jsbml.uploadModel(organism)(model)
+  }
 
   //TODO 1. check if all entities are loaded correctly
   //TODO   1. get reactions, species, flat proteins list by organism from the DB
   //TODO   2. get all the same entities from JSBML
   //TODO   3. check if (1) contains all from (2)
-
-  def uploadOneModel(smblModel: File): Unit = {
-    println(smblModel.getName)
-    val model = jsbml.jsbmlModelFromFile(smblModel)
-    uploadModelOfOrganism(model)
-  }
 }
