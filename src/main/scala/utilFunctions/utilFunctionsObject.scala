@@ -514,14 +514,6 @@ package utilFunctions {
 
     def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
 
-//    def checkSequenceAA(sequenceString: String): Boolean = {
-//      val canonicalLetters = "[^ARNDCEQGHILKMFPSTWYV]".r
-//      val res = canonicalLetters.findFirstIn(sequenceString)
-//      res match {
-//        case Some(s) => false
-//        case None => true
-//      }
-//    }
   }
 
 trait TransactionSupport {

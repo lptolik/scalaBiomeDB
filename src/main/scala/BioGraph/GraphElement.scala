@@ -946,6 +946,7 @@ package BioGraph {
   abstract class Sequence(sequence: String,
                           md5: String,
                           similarities: List[Similarity],
+                          toCheck: Boolean = false,
                           properties: Map[String, Any] = Map(),
                           nodeId: Long = -1)
     extends Node(properties, nodeId) {
@@ -970,9 +971,10 @@ package BioGraph {
                        sequence: String,
                        var md5: String = "",
                        var similarities: List[Similarity] = List(),
+                       toCheck: Boolean = false,
                        properties: Map[String, Any] = Map(),
                        nodeId: Long = -1)
-    extends Sequence(sequence, md5, similarities, properties, nodeId) {
+    extends Sequence(sequence, md5, similarities, toCheck, properties, nodeId) {
 
 //    require (start <= end, "Start coordinate cannot have bigger value than end coordinate!")
 
@@ -1018,15 +1020,19 @@ package BioGraph {
 
   case class SequenceDNA(
                           sequence: String,
-                         var md5: String = "",
-                         var similarities: List[Similarity] = List(),
-                         properties: Map[String, Any] = Map(),
-                         nodeId: Long = -1)
-    extends Sequence(sequence, md5, similarities, properties, nodeId) {
+                          var md5: String = "",
+                          var similarities: List[Similarity] = List(),
+                          translatable: Boolean = true,
+                          properties: Map[String, Any] = Map(),
+                          nodeId: Long = -1)
+    extends Sequence(sequence, md5, similarities, translatable, properties, nodeId) {
 
     if (md5.length < 32) md5 = countMD5
 
-    def getLabels = List("Sequence", "DNA_Sequence")
+    def getLabels = translatable match{
+      case true => List("Sequence", "DNA_Sequence")
+      case false => List("Sequence", "DNA_Sequence", "Untranslatable")
+    }
 
     override def getMD5: String = md5
 
