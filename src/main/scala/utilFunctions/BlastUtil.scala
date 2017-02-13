@@ -139,7 +139,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       val identity: String = splitString(1)
       val length: String = splitString(4)
       val md5: String = utilFunctionsObject.md5ToString(querySeq)
-      utilFunctionsObject.checkAASequence(targetSeq) match {
+      utilFunctionsObject.checkSequenceAA(targetSeq) match {
         case true =>
         List(
           querySeq,
@@ -165,7 +165,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       val md5: String = utilFunctionsObject.md5ToString(targetSeq)
       val uniprotXref: String = splitString(3)
       val length: String = splitString(4)
-      utilFunctionsObject.checkAASequence(targetSeq) match {
+      utilFunctionsObject.checkSequenceAA(targetSeq) match {
         case true =>
           List(
             querySeq,

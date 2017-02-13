@@ -501,14 +501,27 @@ package utilFunctions {
       tryToFindReaction
     }
 
-    def checkAASequence(sequenceString: String): Boolean = {
-      val canonicalLetters = "[^ARNDCEQGHILKMFPSTWYV]".r
-      val res = canonicalLetters.findFirstIn(sequenceString)
+    def checkSequence(alphabet: String)(sequenceString: String): Boolean = {
+      val canonicalAlphabet = s"[^$alphabet]".r
+      val res = canonicalAlphabet.findFirstIn(sequenceString)
       res match {
         case Some(s) => false
         case None => true
       }
     }
+
+    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYV")(seqeunceString)
+
+    def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
+
+//    def checkSequenceAA(sequenceString: String): Boolean = {
+//      val canonicalLetters = "[^ARNDCEQGHILKMFPSTWYV]".r
+//      val res = canonicalLetters.findFirstIn(sequenceString)
+//      res match {
+//        case Some(s) => false
+//        case None => true
+//      }
+//    }
   }
 
 trait TransactionSupport {

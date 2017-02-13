@@ -132,7 +132,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     features
   }
 
-  def processFeatures(orgAndCCP: (Organism, Node with CCP, DNASequence))(listOfFeatures: List[NucleotideFeature]) = {
+  def processFeatures(orgAndCCP: (Organism, Node with CCP, DNASequence))(listOfFeatures: List[NucleotideFeature]): List[Any] = {
     listOfFeatures.map(processFeature(orgAndCCP: (Organism, Node with CCP, DNASequence))(_))
   }
 
@@ -149,7 +149,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   def makeMiscFeature(
                        miscFeature: NucleotideFeature,
                        miscFeatureType: String,
-                       orgAndCCP: (Organism, Node with CCP, DNASequence)): (Feature with DNA) = {
+                       orgAndCCP: (Organism, Node with CCP, DNASequence)): (Option[Feature with DNA]) = {
     def getMiscFeatureAdditionalProperties: Try[String] = {
       Try(miscFeature.getQualifiers.get("note").get(0).getValue)
     }
@@ -166,13 +166,13 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       source = genbankSourceValue,
       properties = properties
     )
-    misc
+    Some(misc)
   }
 
   def makePseudoGene(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)) = {
     if (feature.getQualifiers.containsKey("pseudo")) {
       val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
-      gene
+      Option(gene)
 //      gene.copy(properties = Map("comment" -> "pseudo"))
     }
   }
@@ -245,9 +245,12 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     gene
   }
 
-  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, SequenceAA, Polypeptide) = {
+  def makeGenePolypeptideSequence(
+                                   feature: NucleotideFeature,
+                                   orgCCPSeq: (Organism, Node with CCP, DNASequence)):
+  (Option[Gene], Option[SequenceAA], Option[Polypeptide]) = {
 
-    def makeTranslation(feature: NucleotideFeature): SequenceAA = {
+    def makeTranslation(feature: NucleotideFeature): Option[SequenceAA] = {
       val tryGetTranslation = Try(feature.getQualifiers.get("translation").get(0).getValue)
       val sequenceToCheck: String = tryGetTranslation match {
         case Success(seq) => tryGetTranslation.get.toUpperCase
@@ -259,39 +262,53 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
             coordinates.getStrand)
           DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase.replaceAll("\\*", "")
       }
-      val sequenceObject = SequenceAA(sequence = sequenceToCheck)
-      val md5 = sequenceObject.getMD5
-      if (sequenceCollector.contains(md5)) sequenceCollector(md5)
-      else {
-        sequenceCollector = sequenceCollector ++ Map(md5 -> sequenceObject)
-        sequenceObject
+      if (sequenceToCheck.nonEmpty) {
+        val sequenceObject = SequenceAA(sequence = sequenceToCheck)
+        val md5 = sequenceObject.getMD5
+        val outputSequence = sequenceCollector.contains(md5) match {
+          case true => sequenceCollector(md5)
+          case false =>
+            sequenceCollector = sequenceCollector ++ Map(md5 -> sequenceObject)
+            sequenceObject
+        }
+        Option(outputSequence)
       }
+      else None
     }
 
     val sequence = makeTranslation(feature)
     val gene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2)
 
-    val proteinId = Option(feature.getQualifiers.get("protein_id"))
-    val listOfXrefs = proteinId match {
-      case Some(p) => makeListOfXrefs(feature) ++ List(makeXref("NCBI:" + p.get(0).getValue))
-      case None => makeListOfXrefs(feature)
-    }
+    val polypeptide = sequence match {
+      case Some(s) =>
+        val proteinId = Option(feature.getQualifiers.get("protein_id"))
+        val listOfXrefs = proteinId match {
+          case Some(p) => makeListOfXrefs(feature) ++ List(makeXref("NCBI:" + p.get(0).getValue))
+          case None => makeListOfXrefs(feature)
+        }
+        val product = getProduct(feature)
+        val polypeptideTerms = getTermForGeneProduct(product, gene) ++ gene.getTerms
 
-    val product = getProduct(feature)
-    val polypeptideTerms = getTermForGeneProduct(product, gene) ++ gene.getTerms
-    val polypeptide = Polypeptide(
-      name = gene.getName,
-      xRefs = listOfXrefs,
-      sequence = sequence,
-      terms = polypeptideTerms.distinct,
-      gene = gene,
-      organism = orgCCPSeq._1,
-      properties = product
-    )
-    (gene, sequence, polypeptide)
+        Option(Polypeptide(
+          name = gene.getName,
+          xRefs = listOfXrefs,
+          sequence = s,
+          terms = polypeptideTerms.distinct,
+          gene = gene,
+          organism = orgCCPSeq._1,
+          properties = product
+          )
+        )
+      case None => None
+    }
+    (Some(gene), sequence, polypeptide)
   }
 
-  def makeGeneAndRNA(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence), rnaType: String): (Gene, RNA) = {
+  def makeGeneAndRNA(
+                      feature: NucleotideFeature,
+                      orgAndCCP: (Organism, Node with CCP, DNASequence),
+                      rnaType: String):
+  (Option[Gene], Option[RNA]) = {
     val properRNAType = rnaType match {
       case "ncRNA" => "sRNA"
       case _ => rnaType
@@ -306,10 +323,12 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       source = genbankSourceValue,
       properties = getProduct(feature)
     )
-    (gene, rna)
+    (Some(gene), Some(rna))
   }
 
-  def makeSourceNodes(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)): CCP = {
+  def makeSourceNodes(
+                       feature: NucleotideFeature,
+                       orgAndCCP: (Organism, Node with CCP, DNASequence)): Option[CCP] = {
     val organism = Organism(
       name = feature.getQualifiers.get("organism").get(0).getValue,
       source = genbankSourceValue)
@@ -331,7 +350,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         length = orgAndCCP._2.getLength
       )
     }
-    ccp
+    Some(ccp)
   }
 
   private def getCoordinates(feature: NucleotideFeature): Coordinates = {

@@ -60,11 +60,13 @@ object GenBankUploader extends App with TransactionSupport{
 
       val readGenBankObjects = zipFeaturesAndInitialOrganismData.map(pair => gbReader.processFeatures(pair._1)(pair._2))
 
-      val processReadGenBankObjects = readGenBankObjects.map(_.filter((el) => el.toString != "()").flatMap {
-        case (a, b, c) => List(a, b, c)
-        case (a, b) => List(a, b)
-        case (a) => List(a)
-      })
+      val processReadGenBankObjects = readGenBankObjects
+        .map(_.filter((el) => el.toString != "()")
+        .flatMap {
+          case (a, b, c) => List(a, b, c)
+          case (a, b) => List(a, b)
+          case (a) => List(a)
+        })
 
 
       def uploader(inits: Iterable[(Organism, Node with CCP, DNASequence)], features: Iterator[List[Any]]): Unit = {
@@ -75,7 +77,7 @@ object GenBankUploader extends App with TransactionSupport{
           val ccpNode = nextOrgAndCCP._2.upload(graphDataBaseConnection)
           nextOrgAndCCP._2.setId(ccpNode.getId)
 
-          features.next().foreach({ case elem: Node => elem.upload(graphDataBaseConnection) })
+          features.next().foreach({ case elem: Option[Node] => elem.get.upload(graphDataBaseConnection) })
           uploader(inits.tail, features)
         }
       }

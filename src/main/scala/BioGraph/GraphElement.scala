@@ -939,15 +939,15 @@ package BioGraph {
   }
 
   abstract class Sequence(sequence: String,
-                          var md5: String = "",
-                          var similarities: List[Similarity] = List(),
+                          md5: String,
+                          similarities: List[Similarity],
                           properties: Map[String, Any] = Map(),
                           nodeId: Long = -1)
     extends Node(properties, nodeId) {
 
     require (sequence.forall(_.isUpper), "Sequence must be written in upper case: " + sequence)
 
-    if (md5.length < 32) md5 = countMD5
+//    if (md5.length < 32) md5 = countMD5
 
     def getSequence = sequence
 
@@ -963,13 +963,15 @@ package BioGraph {
 
   case class SequenceAA(
                        sequence: String,
-                       override var md5: String = "",
-                       override var similarities: List[Similarity] = List(),
+                       var md5: String = "",
+                       var similarities: List[Similarity] = List(),
                        properties: Map[String, Any] = Map(),
                        nodeId: Long = -1)
     extends Sequence(sequence, md5, similarities, properties, nodeId) {
 
 //    require (start <= end, "Start coordinate cannot have bigger value than end coordinate!")
+
+    if (md5.length < 32) md5 = countMD5
 
     def getLabels = List("Sequence", "AA_Sequence")
 
@@ -1009,11 +1011,13 @@ package BioGraph {
 
   case class SequenceDNA(
                           sequence: String,
-                         override var md5: String = "",
-                         override var similarities: List[Similarity] = List(),
+                         var md5: String = "",
+                         var similarities: List[Similarity] = List(),
                          properties: Map[String, Any] = Map(),
                          nodeId: Long = -1)
     extends Sequence(sequence, md5, similarities, properties, nodeId) {
+
+    if (md5.length < 32) md5 = countMD5
 
     def getLabels = List("Sequence", "DNA_Sequence")
 
