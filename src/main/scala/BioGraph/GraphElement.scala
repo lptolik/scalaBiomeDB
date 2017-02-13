@@ -951,7 +951,7 @@ package BioGraph {
 
     def getSequence = sequence
 
-    def getMD5 = md5
+    def getMD5: String
 
     def getSimilarities = similarities
 
@@ -974,6 +974,8 @@ package BioGraph {
     if (md5.length < 32) md5 = countMD5
 
     def getLabels = List("Sequence", "AA_Sequence")
+
+    override def getMD5: String = md5
 
     override def equals(that: Any) = that match {
       case that: SequenceAA =>
@@ -1020,6 +1022,8 @@ package BioGraph {
     if (md5.length < 32) md5 = countMD5
 
     def getLabels = List("Sequence", "DNA_Sequence")
+
+    override def getMD5: String = md5
 
     override def equals(that: Any) = that match {
       case that: SequenceDNA =>
