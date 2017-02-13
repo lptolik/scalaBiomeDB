@@ -34,7 +34,7 @@ package utilFunctions {
       case _ => throw new Exception("Length must of Int type!")
     }
 
-    def readBlastResultFile(readFunction: (Iterator[String], Map[Int, Sequence], Source) => Map[Int, Sequence])(resultFileName: String): Map[Int, Sequence] = {
+    def readBlastResultFile(readFunction: (Iterator[String], Map[Int, SequenceAA], Source) => Map[Int, SequenceAA])(resultFileName: String): Map[Int, SequenceAA] = {
       val source = Source.fromFile(resultFileName)
       val currentLines = source.getLines()
       readFunction(currentLines, Map(), source)
@@ -42,7 +42,7 @@ package utilFunctions {
 
     def insideBlastReadLoop(
                              currentLines: Iterator[String],
-                             blastedSequences: Map[Int, Sequence], source: Source): Map[Int, Sequence] = {
+                             blastedSequences: Map[Int, SequenceAA], source: Source): Map[Int, SequenceAA] = {
       if (currentLines.hasNext) {
         val line = currentLines.next()
         val queryMD5: String = line.split('\t')(0).split('|')(0)
@@ -54,9 +54,9 @@ package utilFunctions {
         val identity: Double = line.split('\t')(1).toDouble
         val currentSeq =
           if (blastedSequences contains querySeqId) blastedSequences(querySeqId)
-          else Sequence(sequence = querySeq, md5 = queryMD5, nodeId = querySeqId)
+          else SequenceAA(sequence = querySeq, md5 = queryMD5, nodeId = querySeqId)
         for (targetSeqId <- line.split('\t')(3).split('|').tail) {
-          val similarSeq = Sequence(
+          val similarSeq = SequenceAA(
             sequence = targetSeq,
             md5 = targetMD5,
             nodeId = targetSeqId.toInt)
@@ -72,7 +72,7 @@ package utilFunctions {
 
     def outsideBlastReadLoop(
                               currentLines: Iterator[String],
-                              blastedSequences: Map[Int, Sequence], source: Source): Map[Int, Sequence] = {
+                              blastedSequences: Map[Int, SequenceAA], source: Source): Map[Int, SequenceAA] = {
       if (currentLines.hasNext) {
         val line = currentLines.next()
         val splitString: Array[String] = line.split('\t')
@@ -83,8 +83,8 @@ package utilFunctions {
         val identity: Double = splitString(1).toDouble
         val currentSeq =
           if (blastedSequences contains querySeqId) blastedSequences(querySeqId)
-          else Sequence(sequence = querySeq, nodeId = querySeqId)
-        val similarSeq = Sequence(sequence = targetSeq)
+          else SequenceAA(sequence = querySeq, nodeId = querySeqId)
+        val similarSeq = SequenceAA(sequence = targetSeq)
         currentSeq.addSimilarity(Similarity(similarSeq, evalue, identity))
         outsideBlastReadLoop(currentLines, blastedSequences + (querySeqId -> currentSeq), source)
       }
@@ -94,9 +94,9 @@ package utilFunctions {
       }
     }
 
-    def readInsideBlastResultFile(name: String): Map[Int, Sequence] = readBlastResultFile(insideBlastReadLoop)(name)
+    def readInsideBlastResultFile(name: String): Map[Int, SequenceAA] = readBlastResultFile(insideBlastReadLoop)(name)
 
-    def readOutsideBlastResultFile(name: String): Map[Int, Sequence] = readBlastResultFile(outsideBlastReadLoop)(name)
+    def readOutsideBlastResultFile(name: String): Map[Int, SequenceAA] = readBlastResultFile(outsideBlastReadLoop)(name)
 
     //  def readOutsideBlastResultFile(name: String): Map[Int, Sequence] = readBlastResultFile(outsideBlastReadLoop, name)
 
@@ -435,9 +435,9 @@ package utilFunctions {
       files
     }
 
-    def getSequenceProperties(sequenceNode: Node): (String, Sequence) = {
+    def getSequenceProperties(sequenceNode: Node): (String, SequenceAA) = {
       val md5 = sequenceNode.getProperty("md5").toString
-      val seq = Sequence(
+      val seq = SequenceAA(
         sequence = sequenceNode.getProperty("seq").toString.toUpperCase,
         md5 = md5,
         nodeId = sequenceNode.getId

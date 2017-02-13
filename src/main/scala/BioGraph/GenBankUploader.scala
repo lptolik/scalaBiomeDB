@@ -42,7 +42,7 @@ object GenBankUploader extends App with TransactionSupport{
     val dataBaseFile = new File(localDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
-    var totalSequenceCollector: Map[String, Sequence] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")()
+    var totalSequenceCollector: Map[String, SequenceAA] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")()
     var totalDBCollector: Map[String, DBNode] = getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")()
     var totalTermCollector: Map[String, Term] = getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")()
 

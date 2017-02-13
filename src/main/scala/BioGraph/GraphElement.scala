@@ -1,4 +1,4 @@
-import BioGraph.{DBNode, Node, XRef, Sequence, Rel, BioEntity}
+import BioGraph.{DBNode, Node, XRef, SequenceAA, Rel, BioEntity}
 package BioGraph {
 
   import org.neo4j.graphdb
@@ -582,7 +582,7 @@ package BioGraph {
     def getStandardName = term
 
     def addTU(tu: TU): Unit = {
-      var newTus = List(tu) ::: tus
+      val newTus = List(tu) ::: tus
       tus = newTus
     }
   }
@@ -866,7 +866,7 @@ package BioGraph {
   case class Polypeptide(
                           name: String,
                           xRefs: List[XRef],
-                          sequence: Sequence,
+                          sequence: SequenceAA,
                           terms: List[Term],
                           gene: Gene,
                           organism: Organism,
@@ -938,20 +938,16 @@ package BioGraph {
     }
   }
 
-  case class Sequence(
-                       sequence: String,
-                       var md5: String = "",
-                       var similarities: List[Similarity] = List(),
-                       properties: Map[String, Any] = Map(),
-                       nodeId: Long = -1)
+  abstract class Sequence(sequence: String,
+                          var md5: String = "",
+                          var similarities: List[Similarity] = List(),
+                          properties: Map[String, Any] = Map(),
+                          nodeId: Long = -1)
     extends Node(properties, nodeId) {
 
     require (sequence.forall(_.isUpper), "Sequence must be written in upper case: " + sequence)
-//    require (start <= end, "Start coordinate cannot have bigger value than end coordinate!")
 
     if (md5.length < 32) md5 = countMD5
-
-    def getLabels = List("Sequence", "AA_Sequence")
 
     def getSequence = sequence
 
@@ -961,14 +957,30 @@ package BioGraph {
 
     def countMD5 = utilFunctionsObject.md5ToString(sequence)
 
+    def addSimilarity(similarity: Similarity): Unit
+
+  }
+
+  case class SequenceAA(
+                       sequence: String,
+                       override var md5: String = "",
+                       override var similarities: List[Similarity] = List(),
+                       properties: Map[String, Any] = Map(),
+                       nodeId: Long = -1)
+    extends Sequence(sequence, md5, similarities, properties, nodeId) {
+
+//    require (start <= end, "Start coordinate cannot have bigger value than end coordinate!")
+
+    def getLabels = List("Sequence", "AA_Sequence")
+
     override def equals(that: Any) = that match {
-      case that: Sequence =>
+      case that: SequenceAA =>
         (that canEqual this) &&
         this.getMD5 == that.getMD5
       case _ => false
     }
 
-    override def canEqual(that: Any) = that.isInstanceOf[Sequence]
+    override def canEqual(that: Any) = that.isInstanceOf[SequenceAA]
 
     override def hashCode: Int = {
       41 * md5.hashCode
@@ -984,38 +996,60 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
 
-//      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("Sequence"), "md5", this.getMD5)
-//      if (tryToFindNode == null) {
-//        val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
-//        val sequenceNode = super.upload(graphDataBaseConnection)
-//        newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
-//        sequenceNode
-//      }
-//      else {
-//        this.setId(tryToFindNode.getId)
-//        tryToFindNode
-//      }
-
-      if (this.getId < 0) {
-//        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Sequence"), "md5", this.getMD5))
-//        val sequenceNode = tryToFindNode match {
-//          case Some(n) => n
-//          case None =>
+     if (this.getId < 0) {
           val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
           val sequenceNode = super.upload(graphDataBaseConnection)
           newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
           sequenceNode
-//        }
-//        this.setId(sequenceNode.getId)
-//        sequenceNode
+      }
+      else graphDataBaseConnection.getNodeById(this.getId)
+    }
+
+  }
+
+  case class SequenceDNA(
+                          sequence: String,
+                         override var md5: String = "",
+                         override var similarities: List[Similarity] = List(),
+                         properties: Map[String, Any] = Map(),
+                         nodeId: Long = -1)
+    extends Sequence(sequence, md5, similarities, properties, nodeId) {
+
+    def getLabels = List("Sequence", "DNA_Sequence")
+
+    override def equals(that: Any) = that match {
+      case that: SequenceDNA =>
+        (that canEqual this) &&
+          this.getMD5 == that.getMD5
+      case _ => false
+    }
+
+    override def canEqual(that: Any) = that.isInstanceOf[SequenceDNA]
+
+    override def hashCode: Int = {
+      41 * md5.hashCode
+    }
+
+    def addSimilarity(similarity: Similarity): Unit = {
+      if (!similarities.contains(similarity)) {
+        val newSimilarity = List(similarity) ::: similarities
+        similarities = newSimilarity
+        similarity.getSequence.addSimilarity(Similarity(this, similarity.getEvalue, similarity.getIdentity))
+      }
+    }
+
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+
+      if (this.getId < 0) {
+        val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+        val sequenceNode = super.upload(graphDataBaseConnection)
+        newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
+        sequenceNode
       }
       else graphDataBaseConnection.getNodeById(this.getId)
     }
 
 
-
-
-  //  override def toString = md5
   }
 
   case class Taxon(
@@ -1536,7 +1570,7 @@ package BioGraph {
 
   }
 
-  case class Similar(start: Sequence, end: Sequence, identity: Float, evalue: Double, relId: Long = -1) extends Rel(relId, start, end, Map()) {
+  case class Similar(start: SequenceAA, end: SequenceAA, identity: Float, evalue: Double, relId: Long = -1) extends Rel(relId, start, end, Map()) {
 
     def getLabel = "SIMILAR"
 

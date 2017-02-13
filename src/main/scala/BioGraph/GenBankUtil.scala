@@ -28,7 +28,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   val genbankSourceValue = List("GenBank")
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("Start processing " + gbFile.getName)
-  var sequenceCollector: Map[String, Sequence] = Map()
+  var sequenceCollector: Map[String, SequenceAA] = Map()
   var termCollector: Map[String, Term] = Map()
   var externalDataBasesCollector: Map[String, DBNode] = Map()
 
@@ -245,9 +245,9 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     gene
   }
 
-  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, Sequence, Polypeptide) = {
+  def makeGenePolypeptideSequence(feature: NucleotideFeature, orgCCPSeq: (Organism, Node with CCP, DNASequence)): (Gene, SequenceAA, Polypeptide) = {
 
-    def makeTranslation(feature: NucleotideFeature): Sequence = {
+    def makeTranslation(feature: NucleotideFeature): SequenceAA = {
       val tryGetTranslation = Try(feature.getQualifiers.get("translation").get(0).getValue)
       val sequenceToCheck: String = tryGetTranslation match {
         case Success(seq) => tryGetTranslation.get.toUpperCase
@@ -259,7 +259,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
             coordinates.getStrand)
           DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase.replaceAll("\\*", "")
       }
-      val sequenceObject = Sequence(sequence = sequenceToCheck)
+      val sequenceObject = SequenceAA(sequence = sequenceToCheck)
       val md5 = sequenceObject.getMD5
       if (sequenceCollector.contains(md5)) sequenceCollector(md5)
       else {
