@@ -63,6 +63,7 @@ object GenBankUploader extends App with TransactionSupport{
       val processReadGenBankObjects = readGenBankObjects
         .map(_.filter((el) => el.toString != "()")
         .flatMap {
+          case (a, b, c, d) => List(a, b, c, d)
           case (a, b, c) => List(a, b, c)
           case (a, b) => List(a, b)
           case (a) => List(a)
@@ -77,7 +78,9 @@ object GenBankUploader extends App with TransactionSupport{
           val ccpNode = nextOrgAndCCP._2.upload(graphDataBaseConnection)
           nextOrgAndCCP._2.setId(ccpNode.getId)
 
-          features.next().foreach({ case elem: Option[Node] => elem.get.upload(graphDataBaseConnection) })
+          features.next().foreach({
+            case elem: Some[Node] => elem.get.upload(graphDataBaseConnection)
+            case None => })
           uploader(inits.tail, features)
         }
       }

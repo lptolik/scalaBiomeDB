@@ -171,13 +171,13 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
   def makePseudoGene(feature: NucleotideFeature, orgAndCCP: (Organism, Node with CCP, DNASequence)) = {
     if (feature.getQualifiers.containsKey("pseudo")) {
-      val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
-      Option(gene)
+      val geneAndSeq = makeGene(feature, orgAndCCP._1, orgAndCCP._2, orgAndCCP._3)
+      (Some(geneAndSeq._1), Some(geneAndSeq._2))
 //      gene.copy(properties = Map("comment" -> "pseudo"))
     }
   }
 
-  private def makeGene(feature: NucleotideFeature, organism: Organism, ccp: CCP): Gene = {
+  private def makeGene(feature: NucleotideFeature, organism: Organism, ccp: CCP, genome: DNASequence): (SequenceDNA, Gene) = {
     val tryGetLocusTag = Try(feature.getQualifiers.get("locus_tag").get(0).getValue)
     val locusTag = tryGetLocusTag match {
       case Success(properLocusTag) => tryGetLocusTag.get
@@ -234,6 +234,8 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val geneName = getGeneName
     val geneTermList = getECNumber ++ List(Term(locusTag)) ++ List(Term(geneName)) ++ getGeneSynonymNames
 
+    val geneSeq = SequenceDNA(getDNASequence(genome, feature))
+
     val gene = Gene(
       name = geneName,
       terms = checkTermsForDuplicates(geneTermList),
@@ -241,26 +243,30 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       organism = organism,
       ccp = ccp,
       source = genbankSourceValue,
+      sequence = geneSeq,
       properties = Map("locus_tag" -> locusTag))
-    gene
+    (geneSeq, gene)
   }
 
   def makeGenePolypeptideSequence(
                                    feature: NucleotideFeature,
                                    orgCCPSeq: (Organism, Node with CCP, DNASequence)):
-  (Option[Gene], Option[SequenceAA], Option[Polypeptide]) = {
+  (Option[SequenceDNA], Option[Gene], Option[SequenceAA], Option[Polypeptide]) = {
 
     def makeTranslation(feature: NucleotideFeature): Option[SequenceAA] = {
       val tryGetTranslation = Try(feature.getQualifiers.get("translation").get(0).getValue)
       val sequenceToCheck: String = tryGetTranslation match {
         case Success(seq) => tryGetTranslation.get.toUpperCase
         case Failure(except) =>
-          val coordinates = feature.getLocations
-          val dnaSeqForTranslation = orgCCPSeq._3.getSequenceAsString(
-            coordinates.getStart.getPosition,
-            coordinates.getEnd.getPosition,
-            coordinates.getStrand)
-          DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase.replaceAll("\\*", "")
+          val dnaSeqForTranslation = getDNASequence(orgCCPSeq._3, feature)
+          val translatedSequence = DNATools.toProtein(DNATools.createDNA(dnaSeqForTranslation)).seqString.toUpperCase
+          if (!translatedSequence.contains('*')) translatedSequence
+          else if (translatedSequence.groupBy(identity)('*').length == 1 && translatedSequence.endsWith("*")) translatedSequence.replace("*", "")
+          else {
+            val locus_tag = feature.getQualifiers.get("locus_tag").get(0).getValue
+            logger.warn(s"DNA sequence was not translated properly. Locus tag: $locus_tag")
+            ""
+          }
       }
       if (sequenceToCheck.nonEmpty) {
         val sequenceObject = SequenceAA(sequence = sequenceToCheck)
@@ -277,7 +283,9 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     }
 
     val sequence = makeTranslation(feature)
-    val gene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2)
+    val geneSeqAndGene = makeGene(feature, orgCCPSeq._1, orgCCPSeq._2, orgCCPSeq._3)
+    val geneSeq = geneSeqAndGene._1
+    val gene = geneSeqAndGene._2
 
     val polypeptide = sequence match {
       case Some(s) =>
@@ -301,19 +309,21 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         )
       case None => None
     }
-    (Some(gene), sequence, polypeptide)
+    (Some(geneSeq), Some(gene), sequence, polypeptide)
   }
 
   def makeGeneAndRNA(
                       feature: NucleotideFeature,
                       orgAndCCP: (Organism, Node with CCP, DNASequence),
                       rnaType: String):
-  (Option[Gene], Option[RNA]) = {
+  (Option[SequenceDNA], Option[Gene], Option[RNA]) = {
     val properRNAType = rnaType match {
       case "ncRNA" => "sRNA"
       case _ => rnaType
     }
-    val gene = makeGene(feature, orgAndCCP._1, orgAndCCP._2)
+    val geneSeqAndGene = makeGene(feature, orgAndCCP._1, orgAndCCP._2, orgAndCCP._3)
+    val geneSeq = geneSeqAndGene._1
+    val gene = geneSeqAndGene._2
     val rna = RNA(
       name = gene.getName,
       gene = gene,
@@ -323,7 +333,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       source = genbankSourceValue,
       properties = getProduct(feature)
     )
-    (Some(gene), Some(rna))
+    (Some(geneSeq), Some(gene), Some(rna))
   }
 
   def makeSourceNodes(
@@ -351,6 +361,20 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       )
     }
     Some(ccp)
+  }
+
+  private def getDNASequence(genome: DNASequence, feature: NucleotideFeature): String = {
+    val coordinates = feature.getLocations
+    val start = coordinates.getStart.getPosition
+    val end = coordinates.getEnd.getPosition
+    val strand = coordinates.getStrand
+    val dnaSeqForTranslation = genome
+      .getSequenceAsString(
+        start,
+        end,
+        strand)
+      .toUpperCase()
+    dnaSeqForTranslation
   }
 
   private def getCoordinates(feature: NucleotideFeature): Coordinates = {

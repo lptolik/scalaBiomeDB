@@ -48,11 +48,11 @@ class GraphElementsTest extends FunSuite {
     val coordinates4 = Coordinates(1753, 1917, Strand.forward)
     val coordinates5 = Coordinates(524, 729, Strand.reverse)
 
-    val gene1 = Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = List("GenBank"), Map("source" -> "GenBank"))
-    val gene2 = Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = List("GenBank"))
-    val gene3 = Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = List("GenBank"), Map("source" -> "GenBank"))
-    val gene4 = Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
-    val gene5 = Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = List("GenBank"), Map("source" -> "GenBank"))
+    val gene1 = Gene("Super name", coordinates1, plasmid1, List(geneTerm), organism, source = List("GenBank"), SequenceDNA("ATGC"), Map("source" -> "GenBank"))
+    val gene2 = Gene("Such name", coordinates2, plasmid1, List(geneTerm2), organism, source = List("GenBank"), SequenceDNA("ATGC"))
+    val gene3 = Gene("Super long gene name", coordinates3, plasmid1, List(geneTerm3), organism, source = List("GenBank"), SequenceDNA("ATGC"), Map("source" -> "GenBank"))
+    val gene4 = Gene("Super long gene name on forward strand", coordinates4, plasmid1, List(geneTerm4), organism, source = List("GenBank"), SequenceDNA("ATGC"), Map("source" -> "GenBank"))
+    val gene5 = Gene("Super long gene name in another organism", coordinates4, contig1, List(geneTerm4), organism, source = List("GenBank"), SequenceDNA("ATGC"), Map("source" -> "GenBank"))
 
     val evidence = new Evidence(gene1, xref)
 

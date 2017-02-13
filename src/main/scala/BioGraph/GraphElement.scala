@@ -443,6 +443,7 @@ package BioGraph {
                    terms: List[Term],
                    organism: Organism,
                    source: List[String],
+                   sequence: SequenceDNA,
                    properties: Map[String, Any] = Map(),
                    nodeId: Long = -1)
     extends Feature(coordinates, properties, ccp, source, nodeId)
@@ -459,6 +460,8 @@ package BioGraph {
 
     def getTerms = terms
 
+    def getSeq = sequence
+
     override def equals(that: Any): Boolean = that match {
       case that: Gene =>
         (that canEqual this) &&
@@ -470,7 +473,7 @@ package BioGraph {
 
     override def canEqual(that: Any) = that.isInstanceOf[Gene]
 
-    override def hashCode = 41 * coordinates.hashCode
+    override def hashCode = 41 * (41 + coordinates.hashCode) + sequence.hashCode
 
     def getOrganism = organism
 
@@ -485,8 +488,10 @@ package BioGraph {
       termNodes.foreach(geneNode.createRelationshipTo(_, BiomeDBRelations.hasName))
       geneNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getOrganism.getId), BiomeDBRelations.partOf)
       geneNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getCCP.getId), BiomeDBRelations.partOf)
+      geneNode.createRelationshipTo(graphDataBaseConnection.getNodeById(this.getSeq.getId), BiomeDBRelations.isA)
       geneNode
     }
+
   }
 
   case class Terminator(
