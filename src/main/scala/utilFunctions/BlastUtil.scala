@@ -3,7 +3,7 @@ package utilFunctions
 import java.io.{File, PrintWriter}
 import java.util
 
-import BioGraph.DBNode
+import BioGraph.{DBNode, SequenceAA, XRef}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Node, ResourceIterator}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
@@ -38,9 +38,11 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     (md5, nodeId)
   }
   //  read ID of existing Sequence and its other parameters
-  var sequenceNodeCollector = getAllSequencesNodes.asScala.map(createMapOfSequences).toMap
+  var sequenceNodeCollector = getAllAASequencesNodes.asScala.map(createMapOfSequences).toMap
 
-  def getAllSequencesNodes = getAllNodesByLabel("Sequence")
+  def getAllAASequencesNodes = getAllNodesByLabel("AA_Sequence")
+
+  def getAllDNASequencesNodes = getAllNodesByLabel("DNA_Sequence")
 
   def applyOperationToNodes(nodeIterator: ResourceIterator[Node])
                            (makeSomethingWithNodes: (Node) => Unit): Unit = transaction(graphDataBaseConnection){
@@ -112,11 +114,14 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
                                           byMD5: Boolean = false): Int = transaction(graphDataBaseConnection){
     logger.debug("Transaction in createSimilarRelationshipsForBlast")
 
-    val findUniprotNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot"))
-    val uniprotNode = findUniprotNode match {
-      case Some(u) => u
-      case None => DBNode("UniProtKB/Swiss-Prot").upload(graphDataBaseConnection)
-    }
+    val uniprot = DBNode("UniProtKB/Swiss-Prot")
+    val uniprotNode = uniprot.upload(graphDataBaseConnection)
+
+//    val findUniprotNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot"))
+//    val uniprotNode = findUniprotNode match {
+//      case Some(u) => u
+//      case None => DBNode("UniProtKB/Swiss-Prot").upload(graphDataBaseConnection)
+//    }
     var uniprotXRefCollector: Map[String, Node] = {
       uniprotNode
         .getRelationships
@@ -190,7 +195,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
             lineList.head,
             lineList(2)
           )
-        case false => graphDataBaseConnection.getNodeById (lineList (1).toLong)
+        case false => graphDataBaseConnection.getNodeById(lineList (1).toLong)
       }
 
       val targetSeqNode = outerBlastFlag match {
@@ -215,25 +220,28 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     def getOrCreateSequenceNode(md5: String, seq: String, xrefId: String): Node = {
       if (sequenceNodeCollector.contains(md5)) graphDataBaseConnection.getNodeById(sequenceNodeCollector(md5))
       else {
-        val sequenceNode = graphDataBaseConnection.createNode(
-          DynamicLabel.label("AA_Sequence"),
-          DynamicLabel.label("Sequence")
-        )
         def getOrCreateXRef = {
           if (uniprotXRefCollector.contains(xrefId)) uniprotXRefCollector(xrefId)
           else {
-            val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
-            xrefNode.setProperty("id", xrefId)
+            val xref = XRef(xrefId, uniprot)
+            val xrefNode = xref.upload(graphDataBaseConnection)
+//            val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
+//            xrefNode.setProperty("id", xrefId)
             uniprotXRefCollector ++= Map(xrefId -> xrefNode)
             xrefNode
           }
         }
-        sequenceNode.setProperty("md5", md5)
-        sequenceNode.setProperty("seq", seq)
+        val sequence = SequenceAA(sequence = seq, md5 = md5)
+        val sequenceNode = sequence.upload(graphDataBaseConnection)
+//        val sequenceNode = graphDataBaseConnection.createNode(
+//          DynamicLabel.label("AA_Sequence"),
+//          DynamicLabel.label("Sequence")
+//        )
+//        sequenceNode.setProperty("md5", md5)
+//        sequenceNode.setProperty("seq", seq)
         sequenceNodeCollector ++= Map(md5 -> sequenceNode.getId)
         val xrefNode = getOrCreateXRef
         sequenceNode.createRelationshipTo(xrefNode, BiomeDBRelations.evidence)
-        xrefNode.createRelationshipTo(uniprotNode, BiomeDBRelations.linkTo)
         sequenceNode
       }
     }
@@ -268,8 +276,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     loop(0)
   }
 
-  def makeInnerBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean) = makeBlast(blastOutputFilename, dropSize, byMD5)(false)
+  def makePolyInnerBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean) = makeBlast(blastOutputFilename, dropSize, byMD5)(false)
 
-  def makeOuterBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean) = makeBlast(blastOutputFilename, dropSize, byMD5)(true)
+  def makePolyOuterBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean) = makeBlast(blastOutputFilename, dropSize, byMD5)(true)
 
 }
