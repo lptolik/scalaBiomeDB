@@ -3,7 +3,7 @@ package utilFunctions
 import java.io.{File, PrintWriter}
 import java.util
 
-import BioGraph.{DBNode, SequenceAA, XRef}
+import BioGraph.{DBNode, SequenceAA, SequenceDNA, XRef}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Node, ResourceIterator}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
@@ -110,20 +110,20 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   def createSimilarRelationshipsForBlast(
                                           blastOutputFilename: String,
                                           dropSize: Int,
-                                          outerBlastFlag: Boolean,
-                                          byMD5: Boolean = false): Int = transaction(graphDataBaseConnection){
-    logger.debug("Transaction in createSimilarRelationshipsForBlast")
+                                          outerBlastFlag: Boolean)
+                                        (byMD5: Boolean = false)
+                                        (polyFlag: Boolean): Int = transaction(graphDataBaseConnection){
+    if (polyFlag) logger.debug("Transaction in createSimilarRelationshipsForBlast for Polypeptides")
+    else logger.debug("Transaction in createSimilarRelationshipsForBlast for Genes")
 
-    val uniprot = DBNode("UniProtKB/Swiss-Prot")
-    val uniprotNode = uniprot.upload(graphDataBaseConnection)
+    val db = polyFlag match {
+      case true => DBNode("UniProtKB/Swiss-Prot")
+      case false => DBNode("RefSeq")
+    }
+    val dbNode = db.upload(graphDataBaseConnection)
 
-//    val findUniprotNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot"))
-//    val uniprotNode = findUniprotNode match {
-//      case Some(u) => u
-//      case None => DBNode("UniProtKB/Swiss-Prot").upload(graphDataBaseConnection)
-//    }
-    var uniprotXRefCollector: Map[String, Node] = {
-      uniprotNode
+    var dbXRefCollector: Map[String, Node] = {
+      dbNode
         .getRelationships
         .asScala
         .map(elem => elem.getStartNode.getProperty("id").toString -> elem.getStartNode)
@@ -133,58 +133,6 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     val source = Source.fromFile(blastOutputFilename)
     val fullReadFileIterator = source.getLines()
     val currentIterator = fullReadFileIterator.drop(dropSize)
-
-    def parseStringOfInnerBlast(currentString: String): List[String] = {
-      val splitString = currentString.split('\t')
-      val querySeqId: String = splitString(0)
-      val querySeq: String = splitString.last.toUpperCase
-      val targetSeq: String = splitString(2).toUpperCase
-      val targetSeqId: String = splitString(3)
-      val evalue: String = splitString(10)
-      val identity: String = splitString(1)
-      val length: String = splitString(4)
-      val md5: String = utilFunctionsObject.md5ToString(querySeq)
-      utilFunctionsObject.checkSequenceAA(targetSeq) match {
-        case true =>
-        List(
-          querySeq,
-          querySeqId,
-          querySeq,
-          targetSeq,
-          targetSeqId,
-          evalue,
-          identity,
-          length
-        )
-        case false => List(targetSeq)
-      }
-    }
-
-    def parseStringOfOuterBlast(currentString: String): List[String] = {
-      val splitString = currentString.split('\t')
-      val querySeqId: String = splitString(0)
-      val querySeq: String = splitString.last.toUpperCase
-      val targetSeq: String = splitString(2).toUpperCase
-      val evalue: String = splitString(10)
-      val identity: String = splitString(1)
-      val md5: String = utilFunctionsObject.md5ToString(targetSeq)
-      val uniprotXref: String = splitString(3)
-      val length: String = splitString(4)
-      utilFunctionsObject.checkSequenceAA(targetSeq) match {
-        case true =>
-          List(
-            querySeq,
-            querySeqId,
-            uniprotXref,
-            targetSeq,
-            md5,
-            evalue,
-            identity,
-            length
-          )
-        case false => List(targetSeq)
-      }
-    }
 
     def createBlastSimilarRelationship(lineList: List[String]): Unit = {
 
@@ -217,35 +165,31 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
       }
     }
 
+
+
     def getOrCreateSequenceNode(md5: String, seq: String, xrefId: String): Node = {
       if (sequenceNodeCollector.contains(md5)) graphDataBaseConnection.getNodeById(sequenceNodeCollector(md5))
       else {
         def getOrCreateXRef = {
-          if (uniprotXRefCollector.contains(xrefId)) uniprotXRefCollector(xrefId)
+          if (dbXRefCollector.contains(xrefId)) dbXRefCollector(xrefId)
           else {
-            val xref = XRef(xrefId, uniprot)
+            val xref = XRef(xrefId, db)
             val xrefNode = xref.upload(graphDataBaseConnection)
-//            val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
-//            xrefNode.setProperty("id", xrefId)
-            uniprotXRefCollector ++= Map(xrefId -> xrefNode)
+            dbXRefCollector ++= Map(xrefId -> xrefNode)
             xrefNode
           }
         }
-        val sequence = SequenceAA(sequence = seq, md5 = md5)
+        val sequence = polyFlag match {
+          case true => SequenceAA(sequence = seq, md5 = md5)
+          case false => SequenceDNA(sequence = seq, md5 = md5)
+        }
         val sequenceNode = sequence.upload(graphDataBaseConnection)
-//        val sequenceNode = graphDataBaseConnection.createNode(
-//          DynamicLabel.label("AA_Sequence"),
-//          DynamicLabel.label("Sequence")
-//        )
-//        sequenceNode.setProperty("md5", md5)
-//        sequenceNode.setProperty("seq", seq)
         sequenceNodeCollector ++= Map(md5 -> sequenceNode.getId)
         val xrefNode = getOrCreateXRef
         sequenceNode.createRelationshipTo(xrefNode, BiomeDBRelations.evidence)
         sequenceNode
       }
     }
-
 
     def createBlastRelationships(currentString: String): Unit = {
       val lineList = outerBlastFlag match {
@@ -266,18 +210,77 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     dropSize
   }
 
-  def makeBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean)(outerBlastFlag: Boolean): Unit = {
+  private def parseStringOfInnerBlast(currentString: String): List[String] = {
+    val splitString = currentString.split('\t')
+    val querySeqId: String = splitString(0)
+    val querySeq: String = splitString.last.toUpperCase
+    val targetSeq: String = splitString(2).toUpperCase
+    val targetSeqId: String = splitString(3)
+    val evalue: String = splitString(10)
+    val identity: String = splitString(1)
+    val length: String = splitString(4)
+    val md5: String = utilFunctionsObject.md5ToString(querySeq)
+    utilFunctionsObject.checkSequenceAA(targetSeq) match {
+      case true =>
+        List(
+          querySeq,
+          querySeqId,
+          querySeq,
+          targetSeq,
+          targetSeqId,
+          evalue,
+          identity,
+          length
+        )
+      case false => List(targetSeq)
+    }
+  }
+
+  private def parseStringOfOuterBlast(currentString: String): List[String] = {
+    val splitString = currentString.split('\t')
+    val querySeqId: String = splitString(0)
+    val querySeq: String = splitString.last.toUpperCase
+    val targetSeq: String = splitString(2).toUpperCase
+    val evalue: String = splitString(10)
+    val identity: String = splitString(1)
+    val md5: String = utilFunctionsObject.md5ToString(targetSeq)
+    val uniprotXref: String = splitString(3)
+    val length: String = splitString(4)
+    utilFunctionsObject.checkSequenceAA(targetSeq) match {
+      case true =>
+        List(
+          querySeq,
+          querySeqId,
+          uniprotXref,
+          targetSeq,
+          md5,
+          evalue,
+          identity,
+          length
+        )
+      case false => List(targetSeq)
+    }
+  }
+
+  def makeBlast(blastOutputFilename: String, dropSize: Int)(byMD5: Boolean)(outerBlastFlag: Boolean)(polyFlag: Boolean): Unit = {
     val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
     logger.debug("Number of lines: " + iteratorSize)
     def loop(res: Int): Unit = {
-      val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag, byMD5)
+      val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag)(byMD5)(polyFlag)
       if (nextRes < iteratorSize) loop(nextRes + 500000)
     }
     loop(0)
   }
 
-  def makePolyInnerBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean) = makeBlast(blastOutputFilename, dropSize, byMD5)(false)
+  def makePolyInnerBlastByMD5(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = true)(outerBlastFlag =  false)(polyFlag =  true)
+  def makePolyInnerBlastByID(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = false)(outerBlastFlag =  false)(polyFlag =  true)
 
-  def makePolyOuterBlast(blastOutputFilename: String, dropSize: Int, byMD5: Boolean) = makeBlast(blastOutputFilename, dropSize, byMD5)(true)
+  def makePolyOuterBlastByMD5(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = true)(outerBlastFlag = true)(polyFlag = true)
+  def makePolyOuterBlastByID(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = false)(outerBlastFlag = true)(polyFlag = true)
 
+  def makeGeneInnerBlastByMD5(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = true)(outerBlastFlag = false)(polyFlag = false)
+  def makeGeneInnerBlastByID(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = false)(outerBlastFlag = false)(polyFlag = false)
+
+  def makeGeneOuterBlastByMD5(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = true)(outerBlastFlag = true)(polyFlag = false)
+  def makeGeneOuterBlastByID(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = false)(outerBlastFlag = true)(polyFlag = false)
 }

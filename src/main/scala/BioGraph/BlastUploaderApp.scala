@@ -12,8 +12,9 @@ object BlastUploaderApp extends App{
     val blastTool = new BlastUtil(dbPathLocal)
 //    blastTool.makeOuterBlast("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/outer_blast_result_ecoli_w_and_k12.txt", 0)
 //    blastTool.makeInnerBlast("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/inner_blast_result_ecoli_w_and_k12.txt", 0)
-    blastTool.makePolyOuterBlast("/home/artem/work/2017/staphylococcus/staphylococcusDB_byMD5_outer_blast_result.txt", 0, true)
-    blastTool.makePolyInnerBlast("/home/artem/work/2017/staphylococcus/staphylococcusDB_byMD5_inner_blast_result.txt", 0, true)
+    blastTool.makePolyOuterBlastByMD5("/home/artem/work/2017/staphylococcus/staphylococcusDB_byMD5_outer_blast_result.txt", 0)
+    blastTool.makePolyInnerBlastByMD5("/home/artem/work/2017/staphylococcus/staphylococcusDB_byMD5_inner_blast_result.txt", 0)
+    blastTool.makeGeneInnerBlastByMD5("/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byMD5_inner_blast_result.txt", 0)
   }
   main()
 }
