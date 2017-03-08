@@ -972,6 +972,7 @@ package BioGraph {
                        var md5: String = "",
                        var similarities: List[Similarity] = List(),
                        toCheck: Boolean = false,
+                       manuallyTranslated: Boolean = false,
                        properties: Map[String, Any] = Map(),
                        nodeId: Long = -1)
     extends Sequence(sequence, md5, similarities, toCheck, properties, nodeId) {
@@ -1007,10 +1008,21 @@ package BioGraph {
       }
     }
 
+    private def manuallyTranslatedToString: String = {
+      manuallyTranslated match {
+        case true => "manual"
+        case false => "automatic"
+      }
+    }
+
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
 
      if (this.getId < 0) {
-          val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+          val newProperties = this.setProperties(Map(
+            "md5" -> this.getMD5,
+            "seq" -> this.getSequence,
+            "translation" -> this.manuallyTranslatedToString)
+          )
           val sequenceNode = super.upload(graphDataBaseConnection)
           newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
           sequenceNode
@@ -1061,10 +1073,21 @@ package BioGraph {
       }
     }
 
+    private def translatableToString: String = {
+      translatable match {
+        case true => "translatable"
+        case false => "non-translatable"
+      }
+    }
+
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
 
       if (this.getId < 0) {
-        val newProperties = this.setProperties(Map("md5" -> this.getMD5, "seq" -> this.getSequence))
+        val newProperties = this.setProperties(Map(
+          "md5" -> this.getMD5,
+          "seq" -> this.getSequence,
+          "translatable" -> this.translatableToString)
+        )
         val sequenceNode = super.upload(graphDataBaseConnection)
         newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
         sequenceNode

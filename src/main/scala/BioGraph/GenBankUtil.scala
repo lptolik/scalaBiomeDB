@@ -259,8 +259,8 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   (Option[SequenceDNA], Option[Gene], Option[SequenceAA], Option[Polypeptide]) = {
 
     def makeTranslation(translatable: Boolean): Option[SequenceAA] = {
-      val tryGetTranslation = Try(feature.getQualifiers.get("translation").get(0).getValue)
       val coordinates = getFeatureCoordinates(feature)
+      val tryGetTranslation = Try(feature.getQualifiers.get("translation").get(0).getValue)
       val sequenceToCheck: String = tryGetTranslation match {
         case Success(seq) => tryGetTranslation.get.toUpperCase
         case Failure(except) =>
