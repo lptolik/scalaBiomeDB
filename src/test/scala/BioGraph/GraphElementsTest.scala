@@ -431,7 +431,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test utilFunctionsObject.readInsideBlastResultFile result") {
     new TestNodesAndRels {
-      val blastedSequences: Map[Int, SequenceAA] = utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text.txt")
+      val blastedSequences: Map[Int, SequenceAA] = utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text_upper.txt")
       assert(blastedSequences.size === 242)
     }
   }

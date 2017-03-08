@@ -23,8 +23,9 @@ import scala.util.{Failure, Success, Try}
   * Created by artem on 25.04.16.
   */
 class GenBankUtil(gbFile: File) extends TransactionSupport{
-//  val geneList = List[Gene]()
+
   type NucleotideFeature = FeatureInterface[AbstractSequence[_root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound], _root_.org.biojava.nbio.core.sequence.compound.NucleotideCompound]
+
   val genbankSourceValue = List("GenBank")
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("Start processing " + gbFile.getName)
@@ -199,7 +200,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       val name = tryGetGeneName match {
         case Some(properName) => properName.get(0).getValue
         case None =>
-          logger.warn("Gene " + feature + " has no gene-name")
+          logger.warn("Gene " + feature.getLocations + " has no gene-name in " + gbFile.getName)
           locusTag
       }
       name

@@ -38,8 +38,8 @@ object GenBankUploader extends App with TransactionSupport{
 
     val filesToDrop = 0
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(localDir, "gb").drop(filesToDrop)
-    val dataBaseFile = new File(localDB)
+    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(remoteDir, "gb").drop(filesToDrop)
+    val dataBaseFile = new File(remoteDB)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
     var totalSequenceCollector: Map[String, SequenceAA] = getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")()

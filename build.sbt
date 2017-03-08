@@ -2,7 +2,7 @@ import sbtassembly.AssemblyPlugin.autoImport._
 
 name := "BioGraph"
 
-version := "1.0"
+version := "3.0"
 
 scalaVersion := "2.11.7"
 

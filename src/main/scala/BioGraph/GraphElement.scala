@@ -959,7 +959,7 @@ package BioGraph {
 
     def getMD5: String
 
-    def getSimilarities = similarities
+    def getSimilarities: List[Similarity]
 
     def countMD5 = utilFunctionsObject.md5ToString(sequence)
 
@@ -996,6 +996,8 @@ package BioGraph {
     override def hashCode: Int = {
       41 * md5.hashCode
     }
+
+    def getSimilarities = similarities
 
     def addSimilarity(similarity: Similarity): Unit = {
       if (!similarities.contains(similarity)) {
@@ -1048,6 +1050,8 @@ package BioGraph {
     override def hashCode: Int = {
       41 * md5.hashCode
     }
+
+    def getSimilarities = similarities
 
     def addSimilarity(similarity: Similarity): Unit = {
       if (!similarities.contains(similarity)) {
