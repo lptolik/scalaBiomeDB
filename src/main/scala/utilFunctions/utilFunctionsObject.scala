@@ -514,6 +514,8 @@ package utilFunctions {
 
     def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
 
+    def readConfigurationFile(filename: String): Array[String] = Source.fromFile(filename).getLines().toArray
+
   }
 
 trait TransactionSupport {
