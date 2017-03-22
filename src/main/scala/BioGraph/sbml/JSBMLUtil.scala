@@ -105,7 +105,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     }
   }
 
-  def uploadModel(organismName: String)(model: Model): List[Node] = transaction(graphDataBaseConnection) {
+  def uploadModel(organismName: String, spontaneousReactionsIds: Set[String])
+                 (model: Model): List[Node] = transaction(graphDataBaseConnection) {
     val organism = findOrganism(organismName)
     // try to get fbc information from the SBML model
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
@@ -150,7 +151,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
       val r = currentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters)
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsIds)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
@@ -271,18 +272,17 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       }).copy(stoichiometry = Some(stoi))
     }
 
-    def makeReactionObject(compartmentNodes: Map[String, Compartment], organism: Organism, parameters: Map[String, Double])
-    : BiochemicalReaction = {
+    def makeReactionObject(compartmentNodes: Map[String, Compartment],
+                           organism: Organism,
+                           parameters: Map[String, Double],
+                           spontaneousReactionsIds: Set[String]): BiochemicalReaction = {
 
       val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = false))
       val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = true))
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
-      //      enzyme needs name of reaction and its node or object
-      //      so it can have relationship with it
-      //      the result must be a List
-      //      so it can be flattened
-      //      make a special class for reaction to read it
+
+      val isSpontaneous = reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds)
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
@@ -296,8 +296,21 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         reactants = listOfReactants,
         products = listOfProducts,
         organism = Some(organism),
-        properties = properties
+        properties = properties,
+        isSpontaneous = isSpontaneous
       )
+    }
+
+    def reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds: Set[String]): Boolean = {
+      Try(zipFBCReaction._2.getGeneProductAssociation.getAssociation)
+        .toOption.exists {
+          case gpr: GeneProductRef => spontaneousReactionsIds.contains(gpr.getGeneProduct)
+          case or: Or => or
+            .getListOfAssociations.asScala
+            .flatMap(a => Try(a.asInstanceOf[GeneProductRef]).toOption)
+            .exists(gpr => spontaneousReactionsIds.contains(gpr.getGeneProduct))
+          case _ => false
+      }
     }
 
     def getGeneProductsAssociations: List[org.neo4j.graphdb.Node] = {

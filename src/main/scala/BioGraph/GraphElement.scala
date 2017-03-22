@@ -1300,10 +1300,11 @@ package BioGraph {
                                  enzymes: List[Enzyme] = List(),
                                  experiment: String = "",
                                  properties: Map[String, Any] = Map(),
+                                 isSpontaneous: Boolean = false,
                                  nodeId: Long = -1) extends Node(properties = properties, nodeId) {
     def getName = this.name
 
-    def getLabels = List("BiochemicalReaction")
+    def getLabels = "BiochemicalReaction" :: (if (!isSpontaneous) Nil else "SpontaneousReaction" :: Nil)
 
     def getExperiment = this.experiment
 

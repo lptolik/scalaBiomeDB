@@ -30,11 +30,6 @@ object JSBMLUpload extends App with TransactionSupport {
     val organism = model.getName
 
     println(s"Uploading model of '$organism' organism from ${smblModelFile.getName} file")
-    jsbml.uploadModel(organism)(model)
+    jsbml.uploadModel(organism, Set("G_s0001"))(model)
   }
-
-  //TODO 1. check if all entities are loaded correctly
-  //TODO   1. get reactions, species, flat proteins list by organism from the DB
-  //TODO   2. get all the same entities from JSBML
-  //TODO   3. check if (1) contains all from (2)
 }
