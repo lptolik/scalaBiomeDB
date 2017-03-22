@@ -14,7 +14,7 @@ import scala.collection.mutable
   * Created by piane_ramso on 12/16/16.
   */
 object JSBMLExport extends TransactionSupport {
-  val logger = LogManager.getLogger(this.getClass.getName)
+  private val logger = LogManager.getLogger(this.getClass.getName)
   val defaultNil = 0
   val defaultLowerBound = -1000
   val defaultUpperBound = 1000
@@ -216,7 +216,7 @@ object JSBMLExport extends TransactionSupport {
                          model: Model,
                          compartmentNameToCompartment: Map[String, Compartment]) = {
     species.map { s =>
-      val sbmlS = new Species(s.metaId, 3, 1)
+      val sbmlS = new Species(s.sbmlId, 3, 1)
       sbmlS.setMetaId(s.metaId)
       sbmlS.setName(s.name)
       sbmlS.setConstant(false)
@@ -285,7 +285,8 @@ object ReactionOut {
   }
 }
 
-case class SpeciesOut(metaId: String,
+case class SpeciesOut(sbmlId: String,
+                      metaId: String,
                       name: String,
                       chemicalFormula: String,
                       compartment: String,
@@ -298,7 +299,7 @@ object SpeciesOut {
     val getProp = (k: String) => props.getOrDefault(k, "").toString
     val compartment = reactantNode.getRelationships(locates_in).asScala.head.getEndNode.getProperty("name").toString
 
-    SpeciesOut(getProp("metaId"), getProp("name"), getProp("chemical_formula"), compartment,
+    SpeciesOut(getProp("sbmlId"), getProp("metaId"), getProp("name"), getProp("chemical_formula"), compartment,
       getProp("charge").toInt, getProp("sboTerm").toInt)
   }
 }
