@@ -2,16 +2,21 @@ import BioGraph._
 package utilFunctions {
 
   import java.util
+
   import org.neo4j.graphdb.traversal.Evaluators
-  import org.neo4j.graphdb.{Path, RelationshipType, GraphDatabaseService, Label, Relationship, Direction, Result, ResourceIterator, DynamicLabel, Transaction, Node}
+  import org.neo4j.graphdb.{Direction, DynamicLabel, GraphDatabaseService, Label, Node, Path, Relationship, RelationshipType, ResourceIterator, Result, Transaction}
   import java.security.MessageDigest
-  import java.io.File
+  import java.io.{File, PrintWriter}
+
   import org.neo4j.graphdb.factory.GraphDatabaseFactory
+
   import scala.collection.immutable.Map
   import scala.collection.parallel.immutable.ParHashMap
   import scala.io.Source
   import scala.collection.JavaConverters._
   import BioGraph._
+  import org.biojava.nbio.core.sequence.DNASequence
+  import org.biojava.nbio.core.sequence.io.{FastaReaderHelper, FastaWriter}
 
   /**
     * Created by artem on 12.02.16.
@@ -514,7 +519,55 @@ package utilFunctions {
 
     def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
 
-    def readConfigurationFile(filename: String): Array[String] = Source.fromFile(filename).getLines().toArray
+    def readConfigurationFile(filename: String): Array[String] = {
+      val reader = Source.fromFile(filename)
+      val lines = reader.getLines().toArray
+      reader.close()
+      lines
+    }
+
+    def addMD5ToFastaHeaders(inputFile: String, outputFile: String): Unit = {
+      //todo make rewrite
+      val reader = Source.fromFile(inputFile)
+      val stringsIterator = reader.getLines
+      val writer = new PrintWriter(new File(outputFile))
+//      val fr = FastaReaderHelper.readFastaDNASequence(new File(inputFile), true).asScala.iterator
+
+      def writeSeq(header: String, seq: String) = {
+//        val md5 = md5ToString(seq)
+        val splitHeader = header.split(" ")
+        val seqLen = seq.length
+//        val newHeader = Array(splitHeader.head + s"md5|$md5") ++ splitHeader.tail ++ "\n"
+        val newHeader = Array(splitHeader.head + s"size|$seqLen") ++ splitHeader.tail ++ "\n"
+        println(newHeader.mkString(" "))
+        writer.write(newHeader.mkString(" "))
+        writer.write(seq + "\n")
+      }
+
+      def writingLoop(stringIterator: Iterator[String], seq: String, header: String): Unit = {
+        if (stringsIterator.nonEmpty) {
+          val currentString = stringsIterator.next()
+          if (currentString.startsWith(">")) {
+            println(currentString)
+            writeSeq(header, seq)
+            val nextHeader = currentString
+            val nextSeq = stringsIterator.next()
+            writingLoop(stringsIterator, nextSeq, nextHeader)
+          }
+          else {
+//            val nextString = stringsIterator.next(
+            writingLoop(stringsIterator, seq + currentString, header)
+          }
+        }
+        else {
+          writeSeq(header, seq)
+        }
+      }
+      val firstHeader = stringsIterator.next()
+      writingLoop(stringsIterator, "", firstHeader)
+      reader.close()
+      writer.close()
+    }
 
   }
 
