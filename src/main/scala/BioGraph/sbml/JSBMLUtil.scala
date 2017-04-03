@@ -105,7 +105,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     }
   }
 
-  def uploadModel(organismName: String)(model: Model): List[Node] = transaction(graphDataBaseConnection) {
+  def uploadModel(organismName: String, spontaneousReactionsIds: Set[String])
+                 (model: Model): List[Node] = transaction(graphDataBaseConnection) {
     val organism = findOrganism(organismName)
     // try to get fbc information from the SBML model
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
@@ -115,6 +116,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       .toList
       .map(elem => elem.getId -> Compartment(elem.getName, organism))
       .toMap
+
+    val modelParameters = model.getListOfParameters.asScala.map(p => (p.getId, p.getValue)).toMap
 
     val listOfGeneProducts = fbcModel.getListOfGeneProducts.asScala.toList
     geneProductCollector ++= listOfGeneProducts
@@ -148,7 +151,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
       val r = currentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject(compartmentNodes, organism)
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsIds)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
@@ -228,24 +231,17 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def makeReactantObject(speciesReference: SpeciesReference,
                            compartmentNodes: Map[String, Compartment],
-                           productFlag:Boolean = false): Reactant = {
+                           isProduct:Boolean = false): Reactant = {
       val specie = parsedModel.getSpecies(speciesReference.getSpecies)
       val specieName = specie.getName
       val compartment = specie.getCompartment
-      val stoi = speciesReference.getStoichiometry
+      val stoi = if (isProduct) speciesReference.getStoichiometry else -speciesReference.getStoichiometry
       val metaId = specie.getMetaId
       val sbmlId = specie.getId
       val specieFBC = specie.getPlugin("fbc")
-      val stoiFactor = productFlag match {
-        case true => 1
-        case false => -1
-      }
 
       val compounds = makeCompoundObject(specie, specieName)
-      val toCheck = compounds.isEmpty match {
-        case true => true
-        case false => false
-      }
+      val toCheck = compounds.isEmpty
 
       reactantCollector.getOrElse(sbmlId, {
         //      make return as reactant and several compounds
@@ -259,7 +255,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         }
         val r = Reactant(
           name = specieName,
-          stoichiometry = Some(stoiFactor * stoi),
+          stoichiometry = Some(stoi),
           compartment = Some(compartmentNodes(compartment)),
           compounds = compounds,
           formula = formula,
@@ -271,33 +267,50 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
             "sboTerm" -> specie.getSBOTerm
           )
         )
-        reactantCollector ++= Map(sbmlId -> r)
+        reactantCollector += sbmlId -> r
         r
-      })
+      }).copy(stoichiometry = Some(stoi))
     }
 
-    def makeReactionObject(compartmentNodes: Map[String, Compartment], organism: Organism): BiochemicalReaction = {
-      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, false))
-      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, true))
+    def makeReactionObject(compartmentNodes: Map[String, Compartment],
+                           organism: Organism,
+                           parameters: Map[String, Double],
+                           spontaneousReactionsIds: Set[String]): BiochemicalReaction = {
+
+      val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = false))
+      val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = true))
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
-      //      enzyme needs name of reaction and its node or object
-      //      so it can have relationship with it
-      //      the result must be a List
-      //      so it can be flattened
-      //      make a special class for reaction to read it
+
+      val isSpontaneous = reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds)
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
         "metaId" -> reaction.getMetaId,
-        "sbmlId" -> reaction.getId)
+        "sbmlId" -> reaction.getId,
+        "lowerFluxBound" -> parameters(zipFBCReaction._2.getLowerFluxBound),
+        "upperFluxBound" -> parameters(zipFBCReaction._2.getUpperFluxBound)
+      )
       BiochemicalReaction(
         name = reaction.getName,
         reactants = listOfReactants,
         products = listOfProducts,
         organism = Some(organism),
-        properties = properties
+        properties = properties,
+        isSpontaneous = isSpontaneous
       )
+    }
+
+    def reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds: Set[String]): Boolean = {
+      Try(zipFBCReaction._2.getGeneProductAssociation.getAssociation)
+        .toOption.exists {
+          case gpr: GeneProductRef => spontaneousReactionsIds.contains(gpr.getGeneProduct)
+          case or: Or => or
+            .getListOfAssociations.asScala
+            .flatMap(a => Try(a.asInstanceOf[GeneProductRef]).toOption)
+            .exists(gpr => spontaneousReactionsIds.contains(gpr.getGeneProduct))
+          case _ => false
+      }
     }
 
     def getGeneProductsAssociations: List[org.neo4j.graphdb.Node] = {

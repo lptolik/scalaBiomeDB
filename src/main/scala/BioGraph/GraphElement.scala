@@ -1327,10 +1327,11 @@ package BioGraph {
                                  enzymes: List[Enzyme] = List(),
                                  experiment: String = "",
                                  properties: Map[String, Any] = Map(),
+                                 isSpontaneous: Boolean = false,
                                  nodeId: Long = -1) extends Node(properties = properties, nodeId) {
     def getName = this.name
 
-    def getLabels = List("BiochemicalReaction")
+    def getLabels = "BiochemicalReaction" :: (if (!isSpontaneous) Nil else "SpontaneousReaction" :: Nil)
 
     def getExperiment = this.experiment
 
@@ -1364,15 +1365,13 @@ package BioGraph {
       xrefNodes.foreach(biochemReactionNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
       //link reactants
-      val linkToReaction: (Reactant, Boolean) => Unit =
-        createRelationshipsToReactants(db, biochemReactionNode, _, _)
+      val linkToReaction: (Reactant, Boolean) => Unit = createRelationshipsToReactants(db, biochemReactionNode, _, _)
       reactants.foreach(linkToReaction(_, false))
       products.foreach(linkToReaction(_, true))
 
       //link organism
       organism.map(organism => createPartOfRelationship(biochemReactionNode, db.getNodeById(organism.getId)))
 
-      //TODO check if all this shit works!
       val chemReaction = getOrCreateChemicalReaction(reactants, products, db)
       biochemReactionNode.createRelationshipTo(db.getNodeById(chemReaction.getId), BiomeDBRelations.isA)
 
@@ -1460,25 +1459,22 @@ package BioGraph {
         reactionNode,
         Direction.OUTGOING,
         BiomeDBRelations.participates_in)
-      tryToFindReaction.nonEmpty match {
-        case true =>
-          // we can take head because this list will contain only this reaction
-          // or empty list
-          val foundRelNodePair = tryToFindReaction.head
-          foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
-        case false =>
-          val participationRelationship = reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
+      if (tryToFindReaction.nonEmpty) {
+        val foundRelNodePair = tryToFindReaction.head
+        foundRelNodePair._1.setProperty("N", foundRelNodePair._1.getProperty("N").toString.toInt + 1)
+      } else {
+        val participationRelationship = reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.participates_in)
 
-          val reactantRelationship = if (productFlag)
-            reactionNode.createRelationshipTo(reactantNode, BiomeDBRelations.is_product)
-          else
-            reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.is_reactant)
+        val reactantRelationship = if (productFlag)
+          reactionNode.createRelationshipTo(reactantNode, BiomeDBRelations.is_product)
+        else
+          reactantNode.createRelationshipTo(reactionNode, BiomeDBRelations.is_reactant)
 
-          participationRelationship.setProperty("N", 1)
-          reactant.getStoichiometry match {
-            case Some(stoi) => reactantRelationship.setProperty("stoichiometric_coef", stoi)
-            case None =>
-          }
+        participationRelationship.setProperty("N", 1)
+        reactant.getStoichiometry match {
+          case Some(stoi) => reactantRelationship.setProperty("stoichiometric_coef", stoi)
+          case None =>
+        }
       }
     }
   }
