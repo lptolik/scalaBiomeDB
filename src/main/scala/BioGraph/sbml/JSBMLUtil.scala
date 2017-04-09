@@ -95,7 +95,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   def findOrganism(name: String): Organism = {
     def fromNode(node: Node): Organism = {
       val props = node.getAllProperties
-      //FIXME what to do with other properties? Maybe nothing?
       Organism(props.get("name").toString, List(props.get("source").toString), nodeId = node.getId)
     }
 
@@ -105,9 +104,10 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     }
   }
 
-  def uploadModel(organismName: String, spontaneousReactionsIds: Set[String])
+  def uploadModel(organismName: String, spontaneousReactionsIds: Set[String], sourceDB: String)
                  (model: Model): List[Node] = transaction(graphDataBaseConnection) {
     val organism = findOrganism(organismName)
+    val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
     // try to get fbc information from the SBML model
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
 
@@ -147,16 +147,18 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val fbcReactions = model.getListOfReactions.asScala.toList.map(_.getPlugin("fbc").asInstanceOf[FBCReactionPlugin])
     val reactions = model.getListOfReactions.asScala.toList
     val zipFBCReactions = reactions.zip(fbcReactions)
-    val currentReaction = ReactionReader(model)(_)
+    val getCurrentReaction = ReactionReader(model)(_)
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
-      val r = currentReaction(zipFBCReaction)
+      val r = getCurrentReaction(zipFBCReaction)
       val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsIds)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
+      reactionNode.createRelationshipTo(modelNode, BiomeDBRelations.partOf)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
       reactionNode
     }
+
     val uploadedReactions = zipFBCReactions.map(processOneReaction)
     uploadedReactions
   }

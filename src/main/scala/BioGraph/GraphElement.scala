@@ -310,6 +310,27 @@ package BioGraph {
 
   }
 
+  case class ModelNode(sourceDBId: String,
+                       sourceDBName: String,
+                       properties: Map[String, String] = Map(),
+                       nodeId: Long = -1) extends Node(properties, nodeId) {
+    override def getLabels: List[String] = List("Model")
+
+    override def upload(db: GraphDatabaseService): graphdb.Node = {
+      if (this.getId < 0) {
+        val modelNode = super.upload(db)
+        modelNode.setProperty("sourceDBId", sourceDBId)
+        val sourceDB = DBNode(sourceDBName)
+        val xRef = XRef(sourceDBId, sourceDB).upload(db)
+        modelNode.createRelationshipTo(xRef, BiomeDBRelations.evidence)
+        modelNode
+      }
+      else {
+        db.getNodeById(this.getId)
+      }
+    }
+  }
+
   case class DBNode(
                      name: String,
                      properties: Map[String, String] = Map(),
@@ -333,17 +354,6 @@ package BioGraph {
 
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-//      if (this.getId < 0) {
-//        val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName)
-//        if (tryToFindNode == null) {
-//          val createdDbNode = super.upload(graphDataBaseConnection)
-//          this.setProperties(Map("name" -> this.getName)).foreach { case (k, v) => createdDbNode.setProperty(k, v) }
-//          createdDbNode
-//        }
-//        else tryToFindNode
-//      }
-//      else graphDataBaseConnection.getNodeById(this.getId)
-
       if (this.getId < 0) {
         val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName))
         val dbNode = tryToFindNode match {
