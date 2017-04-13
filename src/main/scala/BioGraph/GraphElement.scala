@@ -957,6 +957,8 @@ package BioGraph {
 
     def getSequence = sequence
 
+    def getLength: Int = sequence.length
+
     def getMD5: String
 
     def getSimilarities: List[Similarity]
@@ -1021,7 +1023,9 @@ package BioGraph {
           val newProperties = this.setProperties(Map(
             "md5" -> this.getMD5,
             "seq" -> this.getSequence,
-            "translation" -> this.manuallyTranslatedToString)
+            "translation" -> this.manuallyTranslatedToString,
+            "length" -> this.getLength
+          )
           )
           val sequenceNode = super.upload(graphDataBaseConnection)
           newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
@@ -1086,7 +1090,9 @@ package BioGraph {
         val newProperties = this.setProperties(Map(
           "md5" -> this.getMD5,
           "seq" -> this.getSequence,
-          "translatable" -> this.translatableToString)
+          "translatable" -> this.translatableToString,
+          "length" -> this.getLength
+        )
         )
         val sequenceNode = super.upload(graphDataBaseConnection)
         newProperties.foreach{case (k, v) => sequenceNode.setProperty(k, v)}
