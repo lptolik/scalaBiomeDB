@@ -234,29 +234,24 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     def makeReactantObject(speciesReference: SpeciesReference,
                            compartmentNodes: Map[String, Compartment],
                            isProduct:Boolean = false): Reactant = {
-      val specie = parsedModel.getSpecies(speciesReference.getSpecies)
-      val specieName = specie.getName
-      val compartment = specie.getCompartment
+      val species = parsedModel.getSpecies(speciesReference.getSpecies)
+      val sbmlId = species.getId
       val stoi = if (isProduct) speciesReference.getStoichiometry else -speciesReference.getStoichiometry
-      val metaId = specie.getMetaId
-      val sbmlId = specie.getId
-      val specieFBC = specie.getPlugin("fbc")
-
-      val compounds = makeCompoundObject(specie, specieName)
-      val toCheck = compounds.isEmpty
 
       reactantCollector.getOrElse(sbmlId, {
+
+        val speciesName = species.getName
+        val compounds = makeCompoundObject(species, speciesName)
+        val toCheck = compounds.isEmpty
+        val speciesFBC = species.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
+        val compartment = species.getCompartment
+        val metaId = species.getMetaId
+
         //      make return as reactant and several compounds
-        val formula = specieFBC match {
-          case fbc: FBCSpeciesPlugin => Some(fbc.getChemicalFormula)
-          case _ => None
-        }
-        val charge = specieFBC match {
-          case fbc: FBCSpeciesPlugin => Some(fbc.getCharge)
-          case _ => None
-        }
+        val formula = Try(speciesFBC.getChemicalFormula).toOption
+        val charge = Try(speciesFBC.getCharge).toOption
         val r = Reactant(
-          name = specieName,
+          name = speciesName,
           stoichiometry = Some(stoi),
           compartment = Some(compartmentNodes(compartment)),
           compounds = compounds,
@@ -266,7 +261,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
           properties = Map(
             "sbmlId" -> sbmlId,
             "metaId" -> metaId,
-            "sboTerm" -> specie.getSBOTerm
+            "sboTerm" -> species.getSBOTerm
           )
         )
         reactantCollector += sbmlId -> r

@@ -9,6 +9,7 @@ import utilFunctions.TransactionSupport
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.util.Try
 
 /**
   * Created by piane_ramso on 12/16/16.
@@ -225,7 +226,7 @@ object JSBMLExport extends TransactionSupport {
       sbmlS.setBoundaryCondition(false)
       sbmlS.setSBOTerm(s.sboTerm)
       val speciesFBC = sbmlS.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
-      speciesFBC.setCharge(s.charge)
+      s.charge.foreach(ch => speciesFBC.setCharge(ch))
       speciesFBC.setChemicalFormula(s.chemicalFormula)
 
       model.addSpecies(sbmlS)
@@ -290,7 +291,7 @@ case class SpeciesOut(sbmlId: String,
                       name: String,
                       chemicalFormula: String,
                       compartment: String,
-                      charge: Int,
+                      charge: Option[Int],
                       sboTerm: Int)
 case class ReactantOut(speciesOut: SpeciesOut, stoichiometry: Double)
 object SpeciesOut {
@@ -300,7 +301,7 @@ object SpeciesOut {
     val compartment = reactantNode.getRelationships(locates_in).asScala.head.getEndNode.getProperty("name").toString
 
     SpeciesOut(getProp("sbmlId"), getProp("metaId"), getProp("name"), getProp("chemical_formula"), compartment,
-      getProp("charge").toInt, getProp("sboTerm").toInt)
+      Try(getProp("charge").toInt).toOption, getProp("sboTerm").toInt)
   }
 }
 

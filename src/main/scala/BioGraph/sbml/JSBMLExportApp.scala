@@ -18,7 +18,8 @@ object JSBMLExportApp extends App with TransactionSupport {
 //  val localDB = new File(basePath + "neo4j-community-2.3.1/data/graph.db")
   val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
-  val organism = "Escherichia coli W"
+//  val organism = "Escherichia coli W"
+  val organism = "Escherichia coli str. K-12 substr. MG1655"
 //  val organism = "Staphylococcus aureus subsp. aureus N315"
 
   val model = JSBMLExport.assembleModel(organism, "biograph_export_model")(db)
