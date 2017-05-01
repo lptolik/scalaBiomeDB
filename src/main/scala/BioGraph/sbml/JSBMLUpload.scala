@@ -22,7 +22,7 @@ object JSBMLUpload extends App with TransactionSupport {
 //    val remoteDir = "/home/jane/graph_new_release/sbmlModels"
 //    val remoteDB = new File("/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db")
 
-  val spontaneousReactionsIds = Set("G_s0001")
+  val spontaneousReactionsGeneProductsIds = Set("G_s0001")
   val sourceDB = "BiGG"
 
   val models = getUploadFilesFromDirectory(localDir, "xml")
@@ -36,6 +36,6 @@ object JSBMLUpload extends App with TransactionSupport {
     val organism = model.getName
 
     println(s"Uploading model of '$organism' organism from ${smblModelFile.getName} file")
-    jsbml.uploadModel(organism, spontaneousReactionsIds, sourceDB)(model)
+    jsbml.uploadModel(organism, spontaneousReactionsGeneProductsIds, sourceDB)(model)
   }
 }

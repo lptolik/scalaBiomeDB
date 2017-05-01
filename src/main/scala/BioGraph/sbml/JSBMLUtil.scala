@@ -104,7 +104,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     }
   }
 
-  def uploadModel(organismName: String, spontaneousReactionsIds: Set[String], sourceDB: String)
+  def uploadModel(organismName: String, spontaneousReactionsGeneProductsIds: Set[String], sourceDB: String)
                  (model: Model): List[Node] = transaction(graphDataBaseConnection) {
     val organism = findOrganism(organismName)
     val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
@@ -151,7 +151,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
       val r = getCurrentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsIds)
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsGeneProductsIds)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       reactionNode.createRelationshipTo(modelNode, BiomeDBRelations.partOf)
