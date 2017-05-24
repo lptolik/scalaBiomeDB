@@ -47,6 +47,8 @@ libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
 
 libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
 
+libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.1"
+
 //sbt-assembly
 //assemblySettings
 assemblyMergeStrategy in assembly := {

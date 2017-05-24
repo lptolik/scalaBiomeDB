@@ -217,6 +217,18 @@ package utilFunctions {
       }
     }
 
+    def matchRelationExistenceWithoutDirection(nodeA: Node, nodeB: Node): List[Node] = {
+      def relationshipLoop(relationshipIterator: util.Iterator[Relationship]): List[Node] = {
+        if (relationshipIterator.hasNext) {
+          if (relationshipIterator.next.getOtherNode(nodeA) equals nodeB) List(nodeA, nodeB)
+          else relationshipLoop(relationshipIterator)
+        }
+        else List()
+      }
+      val nodeARelationships = nodeA.getRelationships().iterator()
+      relationshipLoop(nodeARelationships)
+    }
+
     def checkRelationExistenceWithoutDirection(nodeA: Node, nodeB: Node): Boolean = {
       def relationshipLoop(relationshipIterator: util.Iterator[Relationship]): Boolean = {
         if (relationshipIterator.hasNext) {
