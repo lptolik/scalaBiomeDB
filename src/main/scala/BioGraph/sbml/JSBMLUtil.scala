@@ -95,7 +95,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   def findOrganism(name: String): Organism = {
     def fromNode(node: Node): Organism = {
       val props = node.getAllProperties
-      //FIXME what to do with other properties? Maybe nothing?
       Organism(props.get("name").toString, List(props.get("source").toString), nodeId = node.getId)
     }
 
@@ -105,9 +104,10 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     }
   }
 
-  def uploadModel(organismName: String, spontaneousReactionsIds: Set[String])
+  def uploadModel(organismName: String, spontaneousReactionsGeneProductsIds: Set[String], sourceDB: String)
                  (model: Model): List[Node] = transaction(graphDataBaseConnection) {
     val organism = findOrganism(organismName)
+    val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
     // try to get fbc information from the SBML model
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
 
@@ -147,16 +147,18 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val fbcReactions = model.getListOfReactions.asScala.toList.map(_.getPlugin("fbc").asInstanceOf[FBCReactionPlugin])
     val reactions = model.getListOfReactions.asScala.toList
     val zipFBCReactions = reactions.zip(fbcReactions)
-    val currentReaction = ReactionReader(model)(_)
+    val getCurrentReaction = ReactionReader(model)(_)
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
-      val r = currentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsIds)
+      val r = getCurrentReaction(zipFBCReaction)
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsGeneProductsIds)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
+      reactionNode.createRelationshipTo(modelNode, BiomeDBRelations.partOf)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
       reactionNode
     }
+
     val uploadedReactions = zipFBCReactions.map(processOneReaction)
     uploadedReactions
   }
@@ -232,29 +234,24 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     def makeReactantObject(speciesReference: SpeciesReference,
                            compartmentNodes: Map[String, Compartment],
                            isProduct:Boolean = false): Reactant = {
-      val specie = parsedModel.getSpecies(speciesReference.getSpecies)
-      val specieName = specie.getName
-      val compartment = specie.getCompartment
+      val species = parsedModel.getSpecies(speciesReference.getSpecies)
+      val sbmlId = species.getId
       val stoi = if (isProduct) speciesReference.getStoichiometry else -speciesReference.getStoichiometry
-      val metaId = specie.getMetaId
-      val sbmlId = specie.getId
-      val specieFBC = specie.getPlugin("fbc")
-
-      val compounds = makeCompoundObject(specie, specieName)
-      val toCheck = compounds.isEmpty
 
       reactantCollector.getOrElse(sbmlId, {
+
+        val speciesName = species.getName
+        val compounds = makeCompoundObject(species, speciesName)
+        val toCheck = compounds.isEmpty
+        val speciesFBC = species.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
+        val compartment = species.getCompartment
+        val metaId = species.getMetaId
+
         //      make return as reactant and several compounds
-        val formula = specieFBC match {
-          case fbc: FBCSpeciesPlugin => Some(fbc.getChemicalFormula)
-          case _ => None
-        }
-        val charge = specieFBC match {
-          case fbc: FBCSpeciesPlugin => Some(fbc.getCharge)
-          case _ => None
-        }
+        val formula = Try(speciesFBC.getChemicalFormula).toOption
+        val charge = Try(speciesFBC.getCharge).toOption
         val r = Reactant(
-          name = specieName,
+          name = speciesName,
           stoichiometry = Some(stoi),
           compartment = Some(compartmentNodes(compartment)),
           compounds = compounds,
@@ -264,7 +261,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
           properties = Map(
             "sbmlId" -> sbmlId,
             "metaId" -> metaId,
-            "sboTerm" -> specie.getSBOTerm
+            "sboTerm" -> species.getSBOTerm
           )
         )
         reactantCollector += sbmlId -> r

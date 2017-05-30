@@ -12,15 +12,18 @@ import utilFunctions.utilFunctionsObject._
   */
 object JSBMLUpload extends App with TransactionSupport {
 //    val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
-//  val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/data/graph.db")
-//    val localDir = "/home/artem/work/2016/JSBML/models/"
-//  val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
+//  val localDir = "/home/artem/work/2016/JSBML/models/"
+  val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/data/graph.db")
+  val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
 
-  val localDB = new File("/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/")
-  val localDir = "/home/artem/work/2017/staphylococcus/sbml/"
+//  val localDB = new File("/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/")
+//  val localDir = "/home/artem/work/2017/staphylococcus/sbml/"
 
 //    val remoteDir = "/home/jane/graph_new_release/sbmlModels"
 //    val remoteDB = new File("/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db")
+
+  val spontaneousReactionsGeneProductsIds = Set("G_s0001")
+  val sourceDB = "BiGG"
 
   val models = getUploadFilesFromDirectory(localDir, "xml")
 
@@ -33,6 +36,6 @@ object JSBMLUpload extends App with TransactionSupport {
     val organism = model.getName
 
     println(s"Uploading model of '$organism' organism from ${smblModelFile.getName} file")
-    jsbml.uploadModel(organism, Set("G_s0001"))(model)
+    jsbml.uploadModel(organism, spontaneousReactionsGeneProductsIds, sourceDB)(model)
   }
 }
