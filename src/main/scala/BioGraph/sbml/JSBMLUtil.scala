@@ -103,6 +103,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       case None => throw new IllegalArgumentException(s"Organism with name '$name' not found")
     }
   }
+  //TODO create method for searching tax_id
 
   def uploadModel(organismName: String, spontaneousReactionsGeneProductsIds: Set[String], sourceDB: String)
                  (model: Model): List[Node] = transaction(graphDataBaseConnection) {
@@ -112,7 +113,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
 
     val compartmentNodes = model
-      .getListOfCompartments.asScala
+      .getListOfCompartments
+      .asScala
       .toList
       .map(elem => elem.getId -> Compartment(elem.getName, organism))
       .toMap
@@ -144,7 +146,12 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       (sbmlId, createdGeneProduct)
     }
 
-    val fbcReactions = model.getListOfReactions.asScala.toList.map(_.getPlugin("fbc").asInstanceOf[FBCReactionPlugin])
+    val fbcReactions = model
+      .getListOfReactions
+      .asScala
+      .toList
+      .map(_.getPlugin("fbc")
+      .asInstanceOf[FBCReactionPlugin])
     val reactions = model.getListOfReactions.asScala.toList
     val zipFBCReactions = reactions.zip(fbcReactions)
     val getCurrentReaction = ReactionReader(model)(_)
@@ -168,10 +175,14 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       .findNodes(DynamicLabel.label("Enzyme"))
       .asScala
       .map { enzymeNode =>
-        val enzymePolys = enzymeNode.getRelationships(Direction.INCOMING, BiomeDBRelations.partOf).asScala
-          .map(_.getEndNode).toSet
+        val enzymePolys = enzymeNode
+          .getRelationships(Direction.INCOMING, BiomeDBRelations.partOf)
+          .asScala
+          .map(_.getEndNode)
+          .toSet
         (enzymePolys, enzymeNode)
-      }.toMap
+      }
+      .toMap
   }
 
   case class ReactionReader(parsedModel: Model)(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) {

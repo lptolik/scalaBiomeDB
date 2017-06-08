@@ -21,9 +21,9 @@ object ActorQueriesApp extends App {
     val organisms = getOrganismNames(aqu.graphDataBaseConnection)
     val orgsAndSeqs = aqu.getOrganismsPolySequences(organisms)
 //    val compared = aqu.compareSequences()
-    val compared = aqu.compareSequences(orgsAndSeqs)
+//    val compared = aqu.compareSequences(orgsAndSeqs)(aqu.ComparePolyMessage)
+    val different = aqu.compareSequences(orgsAndSeqs)(aqu.MatchSequencesDifferenceMessage)
     system.terminate()
-    compared
 
 //    val uniqueKeys = compared
 //      .head

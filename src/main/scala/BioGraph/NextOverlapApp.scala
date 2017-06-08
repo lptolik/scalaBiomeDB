@@ -20,5 +20,5 @@ object NextOverlapApp extends App{
     names.foreach(utilFunctionsObject.makeNextRelationship(graphDataBaseConnection, featureType, _))
     names.foreach(utilFunctionsObject.makeOverlapRelationship(graphDataBaseConnection, featureType, _))
   }
-
+  main("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 }
