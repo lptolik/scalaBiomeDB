@@ -92,22 +92,82 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       None
   }
 
-  def findOrganism(name: String): Organism = {
-    def fromNode(node: Node): Organism = {
-      val props = node.getAllProperties
-      Organism(props.get("name").toString, List(props.get("source").toString), nodeId = node.getId)
-    }
+  private def createOrganismObject(node: Node): Organism = {
+    val props = node.getAllProperties
+    val res = Organism(props.get("name").toString, List(props.get("source").toString), nodeId = node.getId)
+    res
+  }
 
-    Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)) match {
-      case Some(o) => fromNode(o)
-      case None => throw new IllegalArgumentException(s"Organism with name '$name' not found")
+  def findOrganismByName(name: String): Option[Organism] = {
+    val warnMessage = s"Organism with name '$name' not found"
+    val res = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)) match {
+      case Some(o) => Option(createOrganismObject(o))
+      case None =>
+        logger.warn(warnMessage)
+        println(warnMessage)
+        None
+    }
+    res
+  }
+
+  def findOrganismByTaxon(taxonID: Int): Option[Organism] = {
+    val warnMessage = s"Taxon with tax_id '$taxonID' not found"
+    Option(graphDataBaseConnection.findNode(DynamicLabel.label("Taxon"), "tax_id", taxonID)) match {
+      case Some(t) =>
+        Option(createOrganismObject(t
+          .getSingleRelationship(BiomeDBRelations.isA, Direction.INCOMING)
+          .getStartNode))
+      case None =>
+        logger.warn(warnMessage)
+        println(warnMessage)
+        None
     }
   }
-  //TODO create method for searching tax_id
 
-  def uploadModel(organismName: String, spontaneousReactionsGeneProductsIds: Set[String], sourceDB: String)
-                 (model: Model): List[Node] = transaction(graphDataBaseConnection) {
-    val organism = findOrganism(organismName)
+  def getTaxonFromModel(model: Model): Int = {
+    val taxonID = model
+      .getAnnotation
+      .getListOfCVTerms
+      .asScala
+      .map(_.getResources)
+      .filter(_.toString.contains("taxonomy"))
+      .toString
+      .split("taxonomy/")(1)
+      .dropRight(2)
+      .toInt
+    taxonID
+  }
+
+  def uploader(sourceDB: String, model: Model): scala.Unit = transaction(graphDataBaseConnection) {
+    val organismName = model.getName
+    val organismByName = findOrganismByName(organismName)
+    val organismByTaxon = findOrganismByTaxon(getTaxonFromModel(model))
+
+    val organism = organismByTaxon match {
+      case Some(byTaxon) =>
+        logger.info("Model matched by taxon.")
+        byTaxon
+      case None => organismByName match {
+        case Some(byName) =>
+          logger.info("Model matched by organism name.")
+          byName
+        case None =>
+          println(s"Organism for model ${model.getName} not found")
+          logger.warn(s"Organism for model ${model.getName} not found")
+          None
+      }
+    }
+
+    organism match {
+      case o: Organism => uploadModel(o, sourceDB)(model)
+      case None =>
+    }
+
+  }
+
+  private def uploadModel(organism: Organism, sourceDB: String)
+                 (model: Model): scala.Unit = transaction(graphDataBaseConnection) {
+
     val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
     // try to get fbc information from the SBML model
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
@@ -115,7 +175,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val compartmentNodes = model
       .getListOfCompartments
       .asScala
-      .toList
+      //.toList
       .map(elem => elem.getId -> Compartment(elem.getName, organism))
       .toMap
 
@@ -149,25 +209,25 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val fbcReactions = model
       .getListOfReactions
       .asScala
-      .toList
+      //.toList
       .map(_.getPlugin("fbc")
       .asInstanceOf[FBCReactionPlugin])
-    val reactions = model.getListOfReactions.asScala.toList
+    val reactions = model.getListOfReactions.asScala//.toList
     val zipFBCReactions = reactions.zip(fbcReactions)
     val getCurrentReaction = ReactionReader(model)(_)
 
-    def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)) = {
+    def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)): scala.Unit = {
       val r = getCurrentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsGeneProductsIds)
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       reactionNode.createRelationshipTo(modelNode, BiomeDBRelations.partOf)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
-      reactionNode
+//      reactionNode
     }
-
-    val uploadedReactions = zipFBCReactions.map(processOneReaction)
-    uploadedReactions
+    zipFBCReactions.foreach(processOneReaction)
+//    val uploadedReactions = zipFBCReactions.map(processOneReaction)
+//    uploadedReactions
   }
 
   def getEnzymes: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = {
@@ -282,15 +342,14 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def makeReactionObject(compartmentNodes: Map[String, Compartment],
                            organism: Organism,
-                           parameters: Map[String, Double],
-                           spontaneousReactionsIds: Set[String]): BiochemicalReaction = {
+                           parameters: Map[String, Double]): BiochemicalReaction = {
 
       val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = false))
       val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = true))
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
 
-      val isSpontaneous = reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds)
+      val isSpontaneous = reactionHasSpontaneousGeneProductRefCheck || reactionName.toLowerCase.contains("spontaneous")
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
@@ -300,7 +359,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         "upperFluxBound" -> parameters(zipFBCReaction._2.getUpperFluxBound)
       )
       BiochemicalReaction(
-        name = reaction.getName,
+        name = reactionName,
         reactants = listOfReactants,
         products = listOfProducts,
         organism = Some(organism),
@@ -309,10 +368,25 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       )
     }
 
+    def reactionHasSpontaneousGeneProductRefCheck: Boolean = {
+      Try(zipFBCReaction._2.getGeneProductAssociation.getAssociation)
+        .toOption
+        .exists {
+        case gpr: GeneProductRef => true //spontaneousReactionsIds.contains(gpr.getGeneProduct)
+        case or: Or => or
+          .getListOfAssociations
+          .asScala
+          .flatMap(a => Try(a.asInstanceOf[GeneProductRef]).toOption)
+          .exists(gpr => gpr.getGeneProduct.nonEmpty)
+        case _ => false
+      }
+    }
+
     def reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds: Set[String]): Boolean = {
       Try(zipFBCReaction._2.getGeneProductAssociation.getAssociation)
         .toOption.exists {
-          case gpr: GeneProductRef => spontaneousReactionsIds.contains(gpr.getGeneProduct)
+          case gpr: GeneProductRef => spontaneousReactionsIds
+            .contains(gpr.getGeneProduct)
           case or: Or => or
             .getListOfAssociations.asScala
             .flatMap(a => Try(a.asInstanceOf[GeneProductRef]).toOption)
