@@ -32,11 +32,14 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val reactome = reactomeInfo._1
 //  create dictionaries of Compounds and their Chebi and Reactome XRefs
   val totalChebiCompoundCollector: Map[String, Compound] =
-    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.contains("CHEBI:"))
-      .filter(elem => elem._1.contains("CHEBI"))
+    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.toLowerCase.contains("chebi"))
+//      .filter(elem => elem._1.toLowerCase.contains("chebi"))
   val totalReactomeCompoundCollector: Map[String, Compound] =
-    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.contains("reactome"))
-      .filter(elem => elem._1.contains("reactome"))
+    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.toLowerCase.contains("reactome"))
+//      .filter(elem => elem._1.toLowerCase.contains("reactome"))
+  var totalCompoundNameCollector: Map[String, Compound] =
+    utilFunctions.utilFunctionsObject.makeNameCompoundsDict(graphDataBaseConnection)
+
   val totalSynonymsCompoundCollector = transaction(graphDataBaseConnection) {
     graphDataBaseConnection
       .findNodes(DynamicLabel.label("Term"))
@@ -57,7 +60,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
   var totalCompoundCollector = totalChebiCompoundCollector ++
     totalReactomeCompoundCollector ++
-    totalSynonymsCompoundCollector
+    totalSynonymsCompoundCollector ++
+    totalCompoundNameCollector
 
   //  collectors of Reactants and GeneProducts
   var reactantCollector: Map[String, Reactant] = Map()
@@ -100,11 +104,13 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
   def findOrganismByName(name: String): Option[Organism] = {
     val warnMessage = s"Organism with name '$name' not found"
-    val res = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)) match {
-      case Some(o) => Option(createOrganismObject(o))
+    val res  = Try(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)).toOption match {
+      case Some(o: Node) => Option(createOrganismObject(o))
+      case Some(null) =>
+        logger.warn(warnMessage)
+        None
       case None =>
         logger.warn(warnMessage)
-        println(warnMessage)
         None
     }
     res
@@ -113,13 +119,15 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   def findOrganismByTaxon(taxonID: Int): Option[Organism] = {
     val warnMessage = s"Taxon with tax_id '$taxonID' not found"
     Option(graphDataBaseConnection.findNode(DynamicLabel.label("Taxon"), "tax_id", taxonID)) match {
-      case Some(t) =>
-        Option(createOrganismObject(t
+      case Some(t: Node) =>
+        Try(createOrganismObject(t
           .getSingleRelationship(BiomeDBRelations.isA, Direction.INCOMING)
-          .getStartNode))
+          .getStartNode)).toOption
+      case Some(null) =>
+        logger.warn(warnMessage)
+        None
       case None =>
         logger.warn(warnMessage)
-        println(warnMessage)
         None
     }
   }
@@ -264,8 +272,47 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     }
 
     def makeCompoundObject(specie: Species, specieName: String): List[Compound] = transaction(graphDataBaseConnection) {
-      val chebiXRefs = specie.getCVTerms.asScala.head.getResources.asScala.toList.filter(_.contains("CHEBI:"))
-      val reactomeXRefs = specie.getCVTerms.asScala.head.getResources.asScala.toList.filter(_.contains("reactome"))
+      val chebiXRefs = Try(
+        specie
+          .getCVTerms
+          .asScala
+          .head
+          .getResources
+          .asScala
+          .toList
+          .filter(ref => ref.toLowerCase().contains("chebi"))
+      ).toOption match {
+        case Some(o:List[String]) => o
+        case _ => List()
+      }
+      val reactomeXRefs = Try(
+        specie
+          .getCVTerms
+          .asScala
+          .head
+          .getResources
+          .asScala
+          .toList
+          .filter(_.toLowerCase.contains("reactome"))
+      ).toOption match {
+        case Some(o: List[String]) => o
+        case _ => List()
+      }
+
+//todo make search of compounds by name
+//      val compoundsByName = chebiXRefs.isEmpty && reactomeXRefs.isEmpty  match {
+//        case true =>
+//          logger.warn("Compound has no refs.")
+//          totalCompoundCollector.getOrElse(specieName, {
+//            logger.warn(s"No compound was found by name $specieName")
+//            val createdCompound = Compound(specieName, toCheck = true)
+//            createdCompound.upload(graphDataBaseConnection)
+//            totalCompoundCollector ++= Map(specieName -> createdCompound)
+//            createdCompound
+//          })
+//        case false => Map()
+//      }
+
       def getOrCreateCompoundNode(xrefName: String, db: DBNode): Compound = {
         val shortXRefName = xrefName.split("/").last
         totalCompoundCollector.getOrElse(shortXRefName, {
@@ -349,7 +396,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
 
-      val isSpontaneous = reactionHasSpontaneousGeneProductRefCheck || reactionName.toLowerCase.contains("spontaneous")
+      val isSpontaneous = reactionName.toLowerCase.contains("spontaneous")// ||reactionHasSpontaneousGeneProductRefCheck
 
       val properties = Map(
         "reversible" -> reaction.isReversible,

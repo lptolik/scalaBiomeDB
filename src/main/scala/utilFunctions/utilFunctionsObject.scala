@@ -496,6 +496,15 @@ package utilFunctions {
       xrefId -> compound
     }
 
+    def makeNameCompoundsDict(graphDataBaseConnection: GraphDatabaseService): Map[String, Compound] = transaction(graphDataBaseConnection) {
+      val compoundNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Compound")).asScala
+      compoundNodes
+        .map{c =>
+        val name = c.getProperty("name").toString
+        name -> Compound(name, nodeId = c.getId)}
+        .toMap
+    }
+
     def getNodesDict[T <: BioGraph.Node]
     (graphDataBaseConnection: GraphDatabaseService)
     (f: Node => (String, T), label: String)
