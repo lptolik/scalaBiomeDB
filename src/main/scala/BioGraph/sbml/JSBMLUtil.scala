@@ -299,20 +299,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         case _ => List()
       }
 
-//todo make search of compounds by name
-//      val compoundsByName = chebiXRefs.isEmpty && reactomeXRefs.isEmpty  match {
-//        case true =>
-//          logger.warn("Compound has no refs.")
-//          totalCompoundCollector.getOrElse(specieName, {
-//            logger.warn(s"No compound was found by name $specieName")
-//            val createdCompound = Compound(specieName, toCheck = true)
-//            createdCompound.upload(graphDataBaseConnection)
-//            totalCompoundCollector ++= Map(specieName -> createdCompound)
-//            createdCompound
-//          })
-//        case false => Map()
-//      }
-
       def getOrCreateCompoundNode(xrefName: String, db: DBNode): Compound = {
         val shortXRefName = xrefName.split("/").last
         totalCompoundCollector.getOrElse(shortXRefName, {
