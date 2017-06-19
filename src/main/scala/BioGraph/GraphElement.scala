@@ -9,6 +9,7 @@ package BioGraph {
 
   import scala.util.{Failure, Success, Try}
   import scala.collection.JavaConverters._
+  import scala.collection.immutable.HashSet
 
   /**
   * created by artem on 11.02.16.
@@ -1388,7 +1389,7 @@ package BioGraph {
       //link organism
       organism.map(organism => createPartOfRelationship(biochemReactionNode, db.getNodeById(organism.getId)))
 
-      val chemReaction = getOrCreateChemicalReaction(reactants, products, db)
+      val chemReaction = getOrCreateChemicalReaction(reactants, products, name, db)
       biochemReactionNode.createRelationshipTo(db.getNodeById(chemReaction.getId), BiomeDBRelations.isA)
 
       biochemReactionNode
@@ -1414,21 +1415,30 @@ package BioGraph {
 
     private def getOrCreateChemicalReaction(reactants: List[Reactant],
                                             products: List[Reactant],
+                                            reactionName: String,
                                             db: GraphDatabaseService): ChemicalReaction = {
 
       val reactantsCompounds = findCompounds(reactants, db)
-      val reactantsChemicalReactions = findReactions(reactantsCompounds, OUTGOING, is_reactant)
+      val reactantsCompoundsIds = HashSet(reactantsCompounds.map(_.getId):_*)
+      val reactantsChemicalReactions = findReactantsReactions(reactantsCompounds)
 
       val productsCompounds = findCompounds(products, db)
-      val productsChemicalReactions = findReactions(productsCompounds, INCOMING, is_product)
+      val productsCompoundsIds = HashSet(productsCompounds.map(_.getId):_*)
+      val productsChemicalReactions = findProductsReactions(productsCompounds)
 
-      val reactionsToConsider = if (products.nonEmpty)
-        reactantsChemicalReactions.intersect(productsChemicalReactions)
+      val reactionsToConsider = if (products.nonEmpty) {
+        val productsChemicalReactionsIds = productsChemicalReactions.map(_.getId)
+        reactantsChemicalReactions.filter(rcr => productsChemicalReactionsIds.contains(rcr.getId))
+      }
       else //transport reactions don't have products
         reactantsChemicalReactions
 
       reactionsToConsider
-        .headOption
+        .find { chemReactionNode =>
+          //reaction with the same reactants and products
+          findReactionReactants(chemReactionNode).forall(r => reactantsCompoundsIds.contains(r.getId)) &&
+            findReactionProducts(chemReactionNode).forall(r => productsCompoundsIds.contains(r.getId))
+        }
         .map { chemReactionNode =>
           val chemReactants = reactantsCompounds.map(Compound.apply)
           val chemProducts = productsCompounds.map(Compound.apply)
@@ -1441,12 +1451,25 @@ package BioGraph {
         .getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, db))
     }
 
-    private def findReactions(compounds: List[org.neo4j.graphdb.Node],
-                              direction: Direction,
-                              relationshipType: RelationshipType): Set[org.neo4j.graphdb.Node] = {
+    private def findReactionReactants(reaction: org.neo4j.graphdb.Node): Set[org.neo4j.graphdb.Node] = {
+      reaction.getRelationships(INCOMING, is_reactant).asScala.map(_.getStartNode).toSet
+    }
+    private def findReactionProducts(reaction: org.neo4j.graphdb.Node): Set[org.neo4j.graphdb.Node] = {
+      reaction.getRelationships(OUTGOING, is_product).asScala.map(_.getEndNode).toSet
+    }
+
+    private def findProductsReactions(compounds: List[org.neo4j.graphdb.Node]): Set[org.neo4j.graphdb.Node] = {
       compounds.flatMap { compound =>
         compound
-          .getRelationships(direction, relationshipType).asScala
+          .getRelationships(INCOMING, is_product).asScala
+          .map(_.getStartNode)
+      }.toSet
+    }
+
+    private def findReactantsReactions(compounds: List[org.neo4j.graphdb.Node]): Set[org.neo4j.graphdb.Node] = {
+      compounds.flatMap { compound =>
+        compound
+          .getRelationships(OUTGOING, is_reactant).asScala
           .map(_.getEndNode)
       }.toSet
     }

@@ -81,17 +81,33 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     parsedModel
   }
 
-  def getPolypeptideByLocusTagOrGeneName(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct, organism: Organism)
+  def getPolypeptideByLocusTagOrGeneName(locusTagOrGeneName: String, organismName: String, id: String)
   : Option[(String, org.neo4j.graphdb.Node)] = {
 
     val cypher =
-      s"MATCH (o:Organism {name: '${organism.name}'})<-[:PART_OF]-(g:Gene)-[:ENCODES]->(p:Polypeptide) " +
-        s"WHERE g.locus_tag = '${geneProduct.getLabel}' OR g.name = '${geneProduct.getLabel}' " +
+      s"MATCH (o:Organism {name: '$organismName'})<-[:PART_OF]-(g:Gene)-[:ENCODES]->(p:Polypeptide) " +
+        s"WHERE g.locus_tag = '$locusTagOrGeneName' OR g.name = '$locusTagOrGeneName' " +
         s"RETURN p"
 
     val resultIter = graphDataBaseConnection.execute(cypher).columnAs[Node]("p")
     if (resultIter.hasNext)
-      Some((geneProduct.getId, resultIter.next()))
+      Some((id, resultIter.next()))
+    else
+      None
+  }
+
+  def getPolypeptideBySequenceIdentity(locusTagOrGeneName: String, organismName: String, id: String)
+  : Option[(String, org.neo4j.graphdb.Node)] = {
+
+    val cypher =
+      s"MATCH (g:Gene)-[:ENCODES]->(:Polypeptide)-[:IS_A]->(:AA_Sequence)<-[:IS_A]-(p:Polypeptide)" +
+        s"-[:PART_OF]->(o:Organism {name: '$organismName'}) " +
+        s"WHERE g.locus_tag = '$locusTagOrGeneName' OR g.name = '$locusTagOrGeneName' " +
+        s"RETURN p"
+
+    val resultIter = graphDataBaseConnection.execute(cypher).columnAs[Node]("p")
+    if (resultIter.hasNext)
+      Some((id, resultIter.next()))
     else
       None
   }
@@ -146,34 +162,35 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     taxonID
   }
 
-  def uploader(sourceDB: String, model: Model): scala.Unit = transaction(graphDataBaseConnection) {
-    val organismName = model.getName
-    val organismByName = findOrganismByName(organismName)
-    val organismByTaxon = findOrganismByTaxon(getTaxonFromModel(model))
+  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String]): scala.Unit =
+    transaction(graphDataBaseConnection) {
+      val organismName = model.getName
+      val organismByName = findOrganismByName(organismName)
+      val organismByTaxon = findOrganismByTaxon(getTaxonFromModel(model))
 
-    val organism = organismByTaxon match {
-      case Some(byTaxon) =>
-        logger.info("Model matched by taxon.")
-        byTaxon
-      case None => organismByName match {
-        case Some(byName) =>
-          logger.info("Model matched by organism name.")
-          byName
-        case None =>
-          println(s"Organism for model ${model.getName} not found")
-          logger.warn(s"Organism for model ${model.getName} not found")
-          None
+      val organism = organismByTaxon match {
+        case Some(byTaxon) =>
+          logger.info("Model matched by taxon.")
+          byTaxon
+        case None => organismByName match {
+          case Some(byName) =>
+            logger.info("Model matched by organism name.")
+            byName
+          case None =>
+            println(s"Organism for model ${model.getName} not found")
+            logger.warn(s"Organism for model ${model.getName} not found")
+            None
+        }
       }
+
+      organism match {
+        case o: Organism => uploadModel(o, sourceDB, spontaneousReactionsIds)(model)
+        case None =>
+      }
+
     }
 
-    organism match {
-      case o: Organism => uploadModel(o, sourceDB)(model)
-      case None =>
-    }
-
-  }
-
-  private def uploadModel(organism: Organism, sourceDB: String)
+  private def uploadModel(organism: Organism, sourceDB: String, spontaneousReactionsIds: Set[String])
                  (model: Model): scala.Unit = transaction(graphDataBaseConnection) {
 
     val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
@@ -192,7 +209,12 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val listOfGeneProducts = fbcModel.getListOfGeneProducts.asScala.toList
     geneProductCollector ++= listOfGeneProducts
       .map { gp =>
-        getPolypeptideByLocusTagOrGeneName(gp, organism)
+        getPolypeptideByLocusTagOrGeneName(gp.getLabel, organism.name, gp.getId)
+          .orElse(getPolypeptideByLocusTagOrGeneName(gp.getLabel.replace("Y7U", "Y75"), organism.name, gp.getId))
+          .orElse(getPolypeptideByLocusTagOrGeneName(gp.getName, organism.name, gp.getId))
+          .orElse(getPolypeptideBySequenceIdentity(gp.getLabel, organism.name, gp.getId))
+          .orElse(getPolypeptideBySequenceIdentity(gp.getLabel.replace("Y7U", "Y75"), organism.name, gp.getId))
+          .orElse(getPolypeptideBySequenceIdentity(gp.getName, organism.name, gp.getId))
           .getOrElse(createPolypeptide(gp, organism))
       }.toMap
 
@@ -226,7 +248,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def processOneReaction(zipFBCReaction: (org.sbml.jsbml.Reaction, FBCReactionPlugin)): scala.Unit = {
       val r = getCurrentReaction(zipFBCReaction)
-      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters)
+      val reactionObject = r.makeReactionObject(compartmentNodes, organism, modelParameters, spontaneousReactionsIds)
       val associationsNodes = r.getGeneProductsAssociations
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       reactionNode.createRelationshipTo(modelNode, BiomeDBRelations.partOf)
@@ -375,14 +397,16 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
     def makeReactionObject(compartmentNodes: Map[String, Compartment],
                            organism: Organism,
-                           parameters: Map[String, Double]): BiochemicalReaction = {
+                           parameters: Map[String, Double],
+                           spontaneousReactionsIds: Set[String]): BiochemicalReaction = {
 
       val listOfReactants = reaction.getListOfReactants.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = false))
       val listOfProducts = reaction.getListOfProducts.asScala.toList.map(makeReactantObject(_, compartmentNodes, isProduct = true))
       listOfReactants.foreach(_.upload(graphDataBaseConnection))
       listOfProducts.foreach(_.upload(graphDataBaseConnection))
 
-      val isSpontaneous = reactionName.toLowerCase.contains("spontaneous")// ||reactionHasSpontaneousGeneProductRefCheck
+      val isSpontaneous = reactionName.toLowerCase.contains("spontaneous") ||
+        reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds)
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
@@ -399,20 +423,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         properties = properties,
         isSpontaneous = isSpontaneous
       )
-    }
-
-    def reactionHasSpontaneousGeneProductRefCheck: Boolean = {
-      Try(zipFBCReaction._2.getGeneProductAssociation.getAssociation)
-        .toOption
-        .exists {
-        case gpr: GeneProductRef => true //spontaneousReactionsIds.contains(gpr.getGeneProduct)
-        case or: Or => or
-          .getListOfAssociations
-          .asScala
-          .flatMap(a => Try(a.asInstanceOf[GeneProductRef]).toOption)
-          .exists(gpr => gpr.getGeneProduct.nonEmpty)
-        case _ => false
-      }
     }
 
     def reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds: Set[String]): Boolean = {

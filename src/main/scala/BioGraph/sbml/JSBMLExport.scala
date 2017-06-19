@@ -5,7 +5,7 @@ import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Label, Node}
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.fbc._
 import utilFunctions.BiomeDBRelations._
-import utilFunctions.TransactionSupport
+import utilFunctions.{BiomeDBRelations, TransactionSupport}
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -22,7 +22,7 @@ object JSBMLExport extends TransactionSupport {
 
   def assembleModel(organismName: String, modelName: String)(db: GraphDatabaseService): SBMLDocument = {
     val cypher =
-      s"MATCH (o:Organism {name: '$organismName'})<-[:PART_OF]-(br:BiochemicalReaction) " +
+      s"MATCH (o:Organism {name: '$organismName'})<-[:${BiomeDBRelations.partOf}]-(br:BiochemicalReaction) " +
         s"RETURN br"
 
     val organismReactionNodes = db.execute(cypher).columnAs[Node]("br").asScala.toList
@@ -30,9 +30,51 @@ object JSBMLExport extends TransactionSupport {
     assembleModel(organismReactionNodes, modelName)(db)
   }
 
-  def assembleModel(reactionsNodes: List[Node], modelName: String)(db: GraphDatabaseService): SBMLDocument = {
+  def assembleHomologyModel(organismName: String, modelName: String, biomassReactionId: String)
+                           (db: GraphDatabaseService): SBMLDocument = {
+    val sourceOrganismName = "Escherichia coli str. K-12 substr. W3110"
+
+    val qSimilar = s"MATCH (:Organism {name: '$organismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]->" +
+      s"(:AA_Sequence)<-[:${BiomeDBRelations.isA.name()}]-(:Polypeptide)-[:${BiomeDBRelations.catalyzes.name()}]->" +
+      s"(brs:BiochemicalReaction)" +
+      s"-[:${BiomeDBRelations.partOf.name()}]->(:Organism {name: '$sourceOrganismName'})" + //TODO remove this line later
+      s"RETURN DISTINCT brs"
+
+    val qSame = s"MATCH (:Organism {name: '$organismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)" +
+      s"<-[:${BiomeDBRelations.isA.name()}]-(:Polypeptide)-[:${BiomeDBRelations.catalyzes.name()}]->" +
+      s"(brs:BiochemicalReaction)" +
+      s"-[:${BiomeDBRelations.partOf.name()}]->(:Organism {name: '$sourceOrganismName'})" + //TODO remove this line later
+      s"RETURN DISTINCT brs"
+
+    val qBiomass = s"MATCH (n:BiochemicalReaction {sbmlId: '$biomassReactionId'}) RETURN n"
+
+    val qSpontaneous = s"MATCH (s:SpontaneousReaction) RETURN s"
+
+    val qTransport = s"MATCH (n:BiochemicalReaction)" +
+      s"-[:${BiomeDBRelations.partOf.name()}]->(:Organism {name: '$sourceOrganismName'}) " + //TODO remove this line later
+      s"WHERE NOT (n)<-[:${BiomeDBRelations.catalyzes.name()}]-() RETURN n"
+
+    //TODO Add one more query (or set of queries/code) to get protein complexes by homology
+
+    val sameReactionsNodes = db.execute(qSame).columnAs[Node]("brs").asScala.toList
+    val similarReactionsNodes = db.execute(qSimilar).columnAs[Node]("brs").asScala.toList
+    val spontaneousReactionNodes = db.execute(qSpontaneous).columnAs[Node]("s").asScala.toList
+    val transportReactionNodes = db.execute(qTransport).columnAs[Node]("n").asScala.toList
+    val biomassNode = db.execute(qBiomass).columnAs[Node]("n").asScala.toList
+
+//    throw new Exception()
+
+    assembleModel(
+      biomassNode ++ sameReactionsNodes ++ similarReactionsNodes ++ spontaneousReactionNodes ++ transportReactionNodes
+      , modelName)(db)
+  }
+
+  def assembleModel(biochemicalReactionsNodes: List[Node], modelName: String)
+                   (db: GraphDatabaseService): SBMLDocument = {
     transaction(db) {
-      val reactions = getReactionsOut(reactionsNodes)
+      val reactions = getReactionsOut(biochemicalReactionsNodes)
       val species = reactions.flatMap(r => r._1.products.map(_.speciesOut) ++ r._1.reactants.map(_.speciesOut)).distinct
       val geneProducts = reactions.flatMap(_._2.allGeneProducts).distinct
 
@@ -134,66 +176,70 @@ object JSBMLExport extends TransactionSupport {
 
     def getParam(value: Double) = params.getOrAdd(value)
 
+    val added = new mutable.HashSet[String]()
+
     reactions.foreach { case (reaction, gpa) =>
-      val sbmlR = new Reaction(reaction.metaId, 3, 1)
-      if (reaction.metaId.nonEmpty) {
-        sbmlR.setMetaId(reaction.metaId)
+      if (!added.contains(reaction.sbmlId)) {
+        val sbmlR = new Reaction(reaction.metaId, 3, 1)
+        if (reaction.metaId.nonEmpty) {
+          sbmlR.setMetaId(reaction.metaId)
+        }
+        sbmlR.setId(reaction.sbmlId)
+        sbmlR.setName(reaction.name)
+        sbmlR.setReversible(reaction.reversible)
+        sbmlR.setFast(false)
+
+        val reactionFBC = sbmlR.getPlugin("fbc").asInstanceOf[FBCReactionPlugin]
+
+        reactionFBC.setUpperFluxBound(getParam(reaction.upperFluxBound))
+        reactionFBC.setLowerFluxBound(getParam(reaction.lowerFluxBound))
+
+        gpa match {
+          case GeneProductRefOut(geneProduct) =>
+            val sbmlGPA = new GeneProductAssociation(3, 1)
+            val association: GeneProductRef = getRefAssociation(geneProduct)
+            sbmlGPA.setAssociation(association)
+            reactionFBC.setGeneProductAssociation(sbmlGPA)
+
+          case OrOut(geneProducts) =>
+            val sbmlGPA = new GeneProductAssociation(3, 1)
+            val association = new Or(3, 1)
+            geneProducts.foreach {
+              case GeneProductRefOut(gp) =>
+                val innerAssociation: GeneProductRef = getRefAssociation(gp)
+                association.addAssociation(innerAssociation)
+              case AndOut(gps) =>
+                val innerAssociation: And = getAndAssociation(gps)
+                association.addAssociation(innerAssociation)
+            }
+            sbmlGPA.setAssociation(association)
+            reactionFBC.setGeneProductAssociation(sbmlGPA)
+
+          case AndOut(geneProducts) =>
+            val sbmlGPA = new GeneProductAssociation(3, 1)
+            val association: And = getAndAssociation(geneProducts)
+            sbmlGPA.setAssociation(association)
+            reactionFBC.setGeneProductAssociation(sbmlGPA)
+
+          case NoAssociations =>
+        }
+
+        reaction.reactants.foreach { r =>
+          val sr = new SpeciesReference(speciesToSbmlSpecies(r.speciesOut))
+          sr.setStoichiometry(r.stoichiometry)
+          sr.setConstant(true)
+          sbmlR.addReactant(sr)
+        }
+        reaction.products.foreach { r =>
+          val sr = new SpeciesReference(speciesToSbmlSpecies(r.speciesOut))
+          sr.setStoichiometry(r.stoichiometry)
+          sr.setConstant(true)
+          sbmlR.addProduct(sr)
+        }
+
+        model.addReaction(sbmlR)
+        added.add(reaction.sbmlId)
       }
-      sbmlR.setId(reaction.sbmlId)
-      sbmlR.setName(reaction.name)
-      sbmlR.setReversible(reaction.reversible)
-      sbmlR.setFast(false)
-
-      val reactionFBC = sbmlR.getPlugin("fbc").asInstanceOf[FBCReactionPlugin]
-
-      reactionFBC.setUpperFluxBound(getParam(reaction.upperFluxBound))
-      reactionFBC.setLowerFluxBound(getParam(reaction.lowerFluxBound))
-
-      gpa match {
-        case GeneProductRefOut(geneProduct) =>
-          val sbmlGPA = new GeneProductAssociation(3, 1)
-          val association: GeneProductRef = getRefAssociation(geneProduct)
-          sbmlGPA.setAssociation(association)
-          reactionFBC.setGeneProductAssociation(sbmlGPA)
-
-        case OrOut(geneProducts) =>
-          val sbmlGPA = new GeneProductAssociation(3, 1)
-          val association = new Or(3, 1)
-          geneProducts.foreach {
-            case GeneProductRefOut(gp) =>
-              val innerAssociation: GeneProductRef = getRefAssociation(gp)
-              association.addAssociation(innerAssociation)
-            case AndOut(gps) =>
-              val innerAssociation: And = getAndAssociation(gps)
-              association.addAssociation(innerAssociation)
-          }
-          sbmlGPA.setAssociation(association)
-          reactionFBC.setGeneProductAssociation(sbmlGPA)
-
-        case AndOut(geneProducts) =>
-          val sbmlGPA = new GeneProductAssociation(3, 1)
-          val association: And = getAndAssociation(geneProducts)
-          sbmlGPA.setAssociation(association)
-          reactionFBC.setGeneProductAssociation(sbmlGPA)
-
-        case NoAssociations =>
-      }
-
-      reaction.reactants.foreach { r =>
-        val sr = new SpeciesReference(speciesToSbmlSpecies(r.speciesOut))
-        sr.setStoichiometry(r.stoichiometry)
-        sr.setConstant(true)
-        sbmlR.addReactant(sr)
-      }
-      reaction.products.foreach { r =>
-        val sr = new SpeciesReference(speciesToSbmlSpecies(r.speciesOut))
-        sr.setStoichiometry(r.stoichiometry)
-        sr.setConstant(true)
-        sbmlR.addProduct(sr)
-      }
-
-      model.addReaction(sbmlR)
-      sbmlR
     }
 
     def getRefAssociation(geneProduct: GeneProductOut) = {
@@ -216,21 +262,28 @@ object JSBMLExport extends TransactionSupport {
   private def addSpecies(species: List[SpeciesOut],
                          model: Model,
                          compartmentNameToCompartment: Map[String, Compartment]) = {
-    species.map { s =>
-      val sbmlS = new Species(s.sbmlId, 3, 1)
-      sbmlS.setMetaId(s.metaId)
-      sbmlS.setName(s.name)
-      sbmlS.setConstant(false)
-      sbmlS.setCompartment(compartmentNameToCompartment(s.compartment))
-      sbmlS.setHasOnlySubstanceUnits(false)
-      sbmlS.setBoundaryCondition(false)
-      sbmlS.setSBOTerm(s.sboTerm)
-      val speciesFBC = sbmlS.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
-      s.charge.foreach(ch => speciesFBC.setCharge(ch))
-      speciesFBC.setChemicalFormula(s.chemicalFormula)
 
-      model.addSpecies(sbmlS)
-      (s, sbmlS)
+    val added = new mutable.HashMap[String, Species]()
+
+    species.map { s =>
+      added.get(s.sbmlId).map(sbmlS => (s, sbmlS)).getOrElse {
+        val sbmlS = new Species(s.sbmlId, 3, 1)
+        sbmlS.setMetaId(s.metaId)
+        sbmlS.setName(s.name)
+        sbmlS.setConstant(false)
+        sbmlS.setCompartment(compartmentNameToCompartment(s.compartment))
+        sbmlS.setHasOnlySubstanceUnits(false)
+        sbmlS.setBoundaryCondition(false)
+        sbmlS.setSBOTerm(s.sboTerm)
+        val speciesFBC = sbmlS.getPlugin("fbc").asInstanceOf[FBCSpeciesPlugin]
+        s.charge.foreach(ch => speciesFBC.setCharge(ch))
+        speciesFBC.setChemicalFormula(s.chemicalFormula)
+
+        model.addSpecies(sbmlS)
+        added.put(s.sbmlId, sbmlS)
+
+        (s, sbmlS)
+      }
     }.toMap
   }
 
