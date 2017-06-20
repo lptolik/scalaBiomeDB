@@ -496,11 +496,11 @@ package utilFunctions {
       xrefId -> compound
     }
 
-    def makeNameCompoundsDict(graphDataBaseConnection: GraphDatabaseService): Map[String, Compound] = transaction(graphDataBaseConnection) {
-      val compoundNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Compound")).asScala
+    def makeNodesDict(nodeLabel: String, nodeProperty: String)(graphDataBaseConnection: GraphDatabaseService): Map[String, Compound] = transaction(graphDataBaseConnection) {
+      val compoundNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(nodeLabel)).asScala
       compoundNodes
         .map{c =>
-        val name = c.getProperty("name").toString
+        val name = c.getProperty(nodeProperty).toString
         name -> Compound(name, nodeId = c.getId)}
         .toMap
     }
@@ -509,7 +509,7 @@ package utilFunctions {
     (graphDataBaseConnection: GraphDatabaseService)
     (f: Node => (String, T), label: String)
     (filterFunc: Node => Boolean = _ => true): Map[String, T] = transaction(graphDataBaseConnection) {
-      val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
+      val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala//.toList
       val dict = nodes.filter(filterFunc)
       val res = dict.map{node => f(node)}.toMap
       res
