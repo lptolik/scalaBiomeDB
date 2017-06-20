@@ -1436,8 +1436,13 @@ package BioGraph {
       reactionsToConsider
         .find { chemReactionNode =>
           //reaction with the same reactants and products
-          findReactionReactants(chemReactionNode).forall(r => reactantsCompoundsIds.contains(r.getId)) &&
-            findReactionProducts(chemReactionNode).forall(r => productsCompoundsIds.contains(r.getId))
+          val reactionReactants = findReactionReactants(chemReactionNode)
+          val reactionProducts = findReactionProducts(chemReactionNode)
+
+          reactionReactants.size == reactantsCompoundsIds.size &&
+            reactionProducts.size == productsCompoundsIds.size &&
+          reactionReactants.forall(r => reactantsCompoundsIds.contains(r.getId)) &&
+            reactionProducts.forall(r => productsCompoundsIds.contains(r.getId))
         }
         .map { chemReactionNode =>
           val chemReactants = reactantsCompounds.map(Compound.apply)
