@@ -1,5 +1,6 @@
 package BioGraph.sbml
 
+import BioGraph.sbml.Test.graphDataBaseConnection
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Label, Node}
 import org.sbml.jsbml._
@@ -56,8 +57,6 @@ object JSBMLExport extends TransactionSupport {
       s"-[:${BiomeDBRelations.partOf.name()}]->(:Organism {name: '$sourceOrganismName'}) " + //TODO remove this line later
       s"WHERE NOT (n)<-[:${BiomeDBRelations.catalyzes.name()}]-() RETURN n"
 
-    //TODO Add one more query (or set of queries/code) to get protein complexes by homology
-
     val sameReactionsNodes = db.execute(qSame).columnAs[Node]("brs").asScala.toList
     val similarReactionsNodes = db.execute(qSimilar).columnAs[Node]("brs").asScala.toList
     val spontaneousReactionNodes = db.execute(qSpontaneous).columnAs[Node]("s").asScala.toList
@@ -66,10 +65,57 @@ object JSBMLExport extends TransactionSupport {
 
 //    throw new Exception()
 
-    assembleModel(
-      biomassNode ++ sameReactionsNodes ++ similarReactionsNodes ++ spontaneousReactionNodes ++ transportReactionNodes
-      , modelName)(db)
+    val targetReactions = (biomassNode
+      ++ sameReactionsNodes
+      ++ similarReactionsNodes
+      ++ spontaneousReactionNodes
+      ++ transportReactionNodes
+      ++ getComplexesRectionsByHomology(organismName, sourceOrganismName)(db))
+
+      assembleModel( targetReactions, modelName)(db)
   }
+
+  private def getComplexesRectionsByHomology(organismName: String, sourceOrganismName: String)(db: GraphDatabaseService)
+  : Iterable[Node] = {
+
+    val qSimilar = s"MATCH (:Organism {name: '$organismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]->" +
+      s"(:AA_Sequence)<-[:${BiomeDBRelations.isA.name()}]-(p:Polypeptide)" +
+      s"-[:${BiomeDBRelations.partOf.name()}]->(:Organism {name: '$sourceOrganismName'})" + //TODO remove this line later
+      s"RETURN DISTINCT p"
+
+    val qSame = s"MATCH (:Organism {name: '$organismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)" +
+      s"<-[:${BiomeDBRelations.isA.name()}]-(p:Polypeptide)" +
+      s"-[:${BiomeDBRelations.partOf.name()}]->(:Organism {name: '$sourceOrganismName'})" + //TODO remove this line later
+      s"RETURN DISTINCT p"
+
+    val sourceHomologousPolypeptidesIds = (db.execute(qSame).columnAs[Node]("p").asScala ++
+      db.execute(qSimilar).columnAs[Node]("p").asScala).map(_.getId).toSeq
+
+    getSourceComplexesReactionsNodes(sourceOrganismName)(db).flatMap { complexReaction =>
+      if (complexReaction.complexPolypeptidesIds.forall(sourceHomologousPolypeptidesIds.contains))
+        Some(complexReaction.reaction)
+      else
+        None
+    }
+  }
+
+  private def getSourceComplexesReactionsNodes(sourceOrganismName: String)(db: GraphDatabaseService)
+  : Iterable[ComplexBiochemicalReaction] = {
+
+    val qResult = db
+      .execute("MATCH (r:BiochemicalReaction)<-[:CATALYZES]-(e:Enzyme)<-[:PART_OF]-(p:Polypeptide) return r, p")
+
+    (qResult.columnAs[Node]("r").asScala.toSeq zip qResult.columnAs[Node]("p").asScala.toSeq)
+      .toSeq
+      .groupBy(_._1)
+      .map { case (r, rsps) =>
+        ComplexBiochemicalReaction(rsps.map(_._2.getId), r)
+      }.toSet
+  }
+
+  case class ComplexBiochemicalReaction(complexPolypeptidesIds: Seq[Long], reaction: Node)
 
   def assembleModel(biochemicalReactionsNodes: List[Node], modelName: String)
                    (db: GraphDatabaseService): SBMLDocument = {
