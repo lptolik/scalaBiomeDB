@@ -17,11 +17,11 @@ object JSBMLUpload extends App with TransactionSupport {
 //    val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //    val localDir = "/home/artem/work/2016/JSBML/models/"
 //    val localDir = "/home/artem/work/2017/Timofei/AGORA-1.01-Reconstructions/"
-      val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/data/graph.db")
-      val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
+//      val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/data/graph.db")
+//      val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
 
-    //  val localDB = new File("/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/")
-    //  val localDir = "/home/artem/work/2017/staphylococcus/sbml/"
+      val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db/")
+      val localDir = "/home/artem/work/2017/Timofei/AGORA_HEAD/"
 
 //    val remoteDir = "/home/jane/graph_new_release/sbmlModels/AGORA/"
 //    val remoteDB = new File("/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db")

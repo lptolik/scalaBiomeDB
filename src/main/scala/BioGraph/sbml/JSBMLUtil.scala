@@ -3,12 +3,10 @@ package BioGraph.sbml
 import java.io.File
 
 import BioGraph.{BiochemicalReaction, Compartment, _}
-import org.apache.log4j.{Level, Logger}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.graphdb.{Direction, DynamicLabel, Node}
 import org.sbml.jsbml._
-import org.sbml.jsbml.ext.SBasePlugin
 import org.sbml.jsbml.ext.fbc.{GeneProduct, _}
 import utilFunctions.{BiomeDBRelations, TransactionSupport}
 import utilFunctions.utilFunctionsObject._
@@ -30,38 +28,33 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val reactomeInfo = getDataBasesNodes("Reactome")
   val chebi = chebiInfo._1
   val reactome = reactomeInfo._1
-//  create dictionaries of Compounds and their Chebi and Reactome XRefs
-  val totalChebiCompoundCollector: Map[String, Compound] =
-    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.toLowerCase.contains("chebi"))
+  val totalReactomeAndChebiCompoundCollector: Map[String, Compound] =
+    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef"){
+      x =>
+        val xrefID = x.getProperty("id").toString.toLowerCase
+        xrefID.contains("reactome") || xrefID.contains("chebi")
+    }
 
-  val totalReactomeCompoundCollector: Map[String, Compound] =
-    getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.toLowerCase.contains("reactome"))
-
-  var totalCompoundNameCollector: Map[String, Compound] =
-    utilFunctions.utilFunctionsObject.makeNameCompoundsDict(graphDataBaseConnection)
+  val totalCompoundNameCollector: Map[String, Compound] =
+    utilFunctions.utilFunctionsObject.makeNodesDict("Compound", "name", n => n.toLowerCase.trim)(graphDataBaseConnection)
 
   val totalSynonymsCompoundCollector = transaction(graphDataBaseConnection) {
-    graphDataBaseConnection
-      .findNodes(DynamicLabel.label("Term"))
+    graphDataBaseConnection.findNodes(DynamicLabel.label("Compound"))
       .asScala
-      .flatMap { termNode =>
-        termNode
-          .getRelationships(BiomeDBRelations.hasName, Direction.INCOMING)
-          .asScala
-          .map(_.getStartNode)
-          .find(_.hasLabel(DynamicLabel.label("Compound")))
-          .map { compoundNode =>
-            val text = termNode.getProperty("text").toString
-            val compound = Compound(compoundNode.getProperty("name").toString, nodeId = compoundNode.getId)
-            text -> compound
-          }
+      .flatMap{cn =>
+        val compoundObject = Compound(cn)
+        cn.getRelationships(BiomeDBRelations.hasName, Direction.OUTGOING)
+        .asScala
+        .map(_.getEndNode)
+        .map(t =>
+          t.getProperty("text").toString -> compoundObject)//Compound(compoundName, nodeId = compoundId))
       }.toMap
   }
 
-  var totalCompoundCollector = totalChebiCompoundCollector ++
-    totalReactomeCompoundCollector ++
+  var totalCompoundCollector =
+    (totalReactomeAndChebiCompoundCollector ++
     totalSynonymsCompoundCollector ++
-    totalCompoundNameCollector
+    totalCompoundNameCollector).par
 
   //  collectors of Reactants and GeneProducts
   var reactantCollector: Map[String, Reactant] = Map()

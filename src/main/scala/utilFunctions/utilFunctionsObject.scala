@@ -496,20 +496,23 @@ package utilFunctions {
       xrefId -> compound
     }
 
-    def makeNameCompoundsDict(graphDataBaseConnection: GraphDatabaseService): Map[String, Compound] = transaction(graphDataBaseConnection) {
-      val compoundNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Compound")).asScala
-      compoundNodes
-        .map{c =>
-        val name = c.getProperty("name").toString
-        name.toLowerCase.trim -> Compound(name, nodeId = c.getId)}
-        .toMap
-    }
+    def makeNodesDict(nodeLabel: String, nodeProperty: String, processKey: String => String = {a: String => a})
+                     (graphDataBaseConnection: GraphDatabaseService): Map[String, Compound] =
+      transaction(graphDataBaseConnection) {
+        val compoundNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(nodeLabel)).asScala
+        compoundNodes
+          .map { c =>
+            val name = c.getProperty(nodeProperty).toString
+            processKey(name) -> Compound(name, nodeId = c.getId)
+          }
+          .toMap
+      }
 
     def getNodesDict[T <: BioGraph.Node]
     (graphDataBaseConnection: GraphDatabaseService)
     (f: Node => (String, T), label: String)
     (filterFunc: Node => Boolean = _ => true): Map[String, T] = transaction(graphDataBaseConnection) {
-      val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala.toList
+      val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala//.toList
       val dict = nodes.filter(filterFunc)
       val res = dict.map{node => f(node)}.toMap
       res
