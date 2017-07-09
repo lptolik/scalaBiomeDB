@@ -501,7 +501,7 @@ package utilFunctions {
       compoundNodes
         .map{c =>
         val name = c.getProperty("name").toString
-        name -> Compound(name, nodeId = c.getId)}
+        name.toLowerCase.trim -> Compound(name, nodeId = c.getId)}
         .toMap
     }
 

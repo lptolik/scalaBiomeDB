@@ -26,17 +26,17 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val reader = new SBMLReader()
 //  var compartmentNodes = Map[String, Compartment]()
 //  get dictionary of ChEBI and Reactome XRefs
-  val chebiInfo = getDataBasesNodes("CheEBI")
+  val chebiInfo = getDataBasesNodes("ChEBI")
   val reactomeInfo = getDataBasesNodes("Reactome")
   val chebi = chebiInfo._1
   val reactome = reactomeInfo._1
 //  create dictionaries of Compounds and their Chebi and Reactome XRefs
   val totalChebiCompoundCollector: Map[String, Compound] =
     getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.toLowerCase.contains("chebi"))
-//      .filter(elem => elem._1.toLowerCase.contains("chebi"))
+
   val totalReactomeCompoundCollector: Map[String, Compound] =
     getNodesDict(graphDataBaseConnection)(getCompoundPropertiesByXRefs, "XRef")(_.getProperty("id").toString.toLowerCase.contains("reactome"))
-//      .filter(elem => elem._1.toLowerCase.contains("reactome"))
+
   var totalCompoundNameCollector: Map[String, Compound] =
     utilFunctions.utilFunctionsObject.makeNameCompoundsDict(graphDataBaseConnection)
 
@@ -253,11 +253,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val reactionNode = reactionObject.upload(graphDataBaseConnection)
       reactionNode.createRelationshipTo(modelNode, BiomeDBRelations.partOf)
       associationsNodes.foreach(_.createRelationshipTo(reactionNode, BiomeDBRelations.catalyzes))
-//      reactionNode
     }
     zipFBCReactions.foreach(processOneReaction)
-//    val uploadedReactions = zipFBCReactions.map(processOneReaction)
-//    uploadedReactions
   }
 
   def getEnzymes: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = {
@@ -293,7 +290,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       sbmlIdPolyPair
     }
 
-    def makeCompoundObject(specie: Species, specieName: String): List[Compound] = transaction(graphDataBaseConnection) {
+    def makeCompoundObject(specie: Species, speciesName: String): List[Compound] = transaction(graphDataBaseConnection) {
       val chebiXRefs = Try(
         specie
           .getCVTerms
@@ -321,40 +318,53 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         case _ => List()
       }
 
-      def getOrCreateCompoundNode(xrefName: String, db: DBNode): Compound = {
+      //Logic of the code below is the following:
+      //1. Find compound by XRefs without creation (for now) of new nodes
+      //2. If compounds were found by XRefs, all ok
+      //3. If no compounds were found by XRefs, then find it by name
+      //4. If no compounds were found by name and there are links to chebi or reactome, then create compound by XRefs
+      //5. If there are no links to chebi or reactome, create it by name
+
+      def createToCheckCompound(xrefName: String, db: DBNode) = {
         val shortXRefName = xrefName.split("/").last
-        totalCompoundCollector.getOrElse(shortXRefName, {
-          logger.warn("No compound was found by XRef id:" + xrefName)
-          val createdCompound = Compound(specieName, toCheck = true)
-          val createdXRef = XRef(shortXRefName, db)
-          val createdCompoundNode = createdCompound.upload(graphDataBaseConnection)
-          val createdXRefNode = createdXRef.upload(graphDataBaseConnection)
-          createdCompoundNode.createRelationshipTo(createdXRefNode, BiomeDBRelations.evidence)
-          totalCompoundCollector ++= Map(shortXRefName -> createdCompound)
-          createdCompound
-        })
+        logger.warn("No compound was found by XRef id:" + xrefName)
+        val createdCompound = Compound(speciesName, toCheck = true)
+        val createdXRef = XRef(shortXRefName, db)
+        val createdCompoundNode = createdCompound.upload(graphDataBaseConnection)
+        val createdXRefNode = createdXRef.upload(graphDataBaseConnection)
+        createdCompoundNode.createRelationshipTo(createdXRefNode, BiomeDBRelations.evidence)
+        totalCompoundCollector ++= Map(shortXRefName -> createdCompound)
+        createdCompound
       }
 
-      val compoundsByXref = chebiXRefs.map(getOrCreateCompoundNode(_, chebi)) ++
-        reactomeXRefs.map(getOrCreateCompoundNode(_, reactome))
+      val foundByXRefs = chebiXRefs.flatMap(xref => totalCompoundCollector.get(xref.split("/").last)) ++
+        reactomeXRefs.flatMap(xref => totalCompoundCollector.get(xref.split("/").last)).distinct
 
-      val compoundByNameOpt = totalCompoundCollector
-        .get(specieName)
-        .orElse {
-          if (compoundsByXref.nonEmpty)
-            None
-          else {
-            val createdCompound = Compound(specieName, toCheck = true)
-            createdCompound.upload(graphDataBaseConnection)
-            totalCompoundCollector ++= Map(specieName -> createdCompound)
-            Some(createdCompound)
+      val finalRes = if (foundByXRefs.nonEmpty)
+        foundByXRefs
+      else {
+        totalCompoundCollector
+          .get(speciesName.toLowerCase.trim)
+          .map(List(_))
+          .getOrElse {
+            val toCheckByXRefCompounds = chebiXRefs.map(createToCheckCompound(_, chebi)) ++
+              reactomeXRefs.map(createToCheckCompound(_, reactome))
+
+            if (toCheckByXRefCompounds.nonEmpty)
+              toCheckByXRefCompounds
+            else {
+              logger.warn("No compound was found by name: " + speciesName)
+              val toCheckByNameCompound = Compound(speciesName, toCheck = true)
+              toCheckByNameCompound.upload(graphDataBaseConnection)
+              totalCompoundCollector ++= Map(speciesName.toLowerCase.trim -> toCheckByNameCompound)
+              List(toCheckByNameCompound)
+            }
           }
-        }
+      }
 
-      compoundByNameOpt
-        .map(compoundByName => compoundByName :: compoundsByXref)
-        .getOrElse(compoundsByXref)
-        .distinct
+      require(finalRes.nonEmpty, "No compounds were found or created (which means that the code contains stupid bugs)")
+
+      finalRes
     }
 
     def makeReactantObject(speciesReference: SpeciesReference,
