@@ -1389,9 +1389,8 @@ package BioGraph {
       //link organism
       organism.map(organism => createPartOfRelationship(biochemReactionNode, db.getNodeById(organism.getId)))
 
-      getOrCreateChemicalReaction(reactants, products, name, db).map { chemReaction =>
-        biochemReactionNode.createRelationshipTo(db.getNodeById(chemReaction.getId), BiomeDBRelations.isA)
-      }
+      val chemReaction = getOrCreateChemicalReaction(reactants, products, name, db)
+      biochemReactionNode.createRelationshipTo(db.getNodeById(chemReaction.getId), BiomeDBRelations.isA)
 
       biochemReactionNode
     }
@@ -1417,7 +1416,7 @@ package BioGraph {
     private def getOrCreateChemicalReaction(reactants: List[Reactant],
                                             products: List[Reactant],
                                             reactionName: String,
-                                            db: GraphDatabaseService): Option[ChemicalReaction] = {
+                                            db: GraphDatabaseService): ChemicalReaction = {
 
       val reactantsCompounds = findCompounds(reactants, db)
       val reactantsCompoundsIds = HashSet(reactantsCompounds.map(_.getId):_*)
@@ -1454,14 +1453,7 @@ package BioGraph {
             chemReactionNode.getId
           )
         }
-        .orElse {
-          //don't create ChemicalReaction if there are reactants with "To_check",
-          //it will be created on To_check fixing step
-          if (reactants.exists(_.toCheck) || products.exists(_.toCheck))
-            None
-          else
-            Some(createChemicalReaction(reactantsCompounds, productsCompounds, db))
-        }
+        .getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, db))
     }
 
     private def findReactionReactants(reaction: org.neo4j.graphdb.Node): Set[org.neo4j.graphdb.Node] = {

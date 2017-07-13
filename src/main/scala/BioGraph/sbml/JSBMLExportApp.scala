@@ -18,13 +18,14 @@ object JSBMLExportApp extends App with TransactionSupport {
 //  val localDB = new File(basePath + "neo4j-community-2.3.1/data/graph.db")
   val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
-//  val organism = "Escherichia coli W"
-  val organism = "Escherichia coli str. K-12 substr. MG1655"
+//  val targetOrganism = "Escherichia coli W"
+//  val targetOrganism = "Escherichia coli str. K-12 substr. MG1655"
+  val targetOrganism = "Escherichia coli str. K-12 substr. W3110"
 //  val organism = "Staphylococcus aureus subsp. aureus N315"
 
   val biomassReactionId = "R_BIOMASS_Ec_iJO1366_core_53p95M"
 //  val model = JSBMLExport.assembleModel(organism, "biograph_export_model")(db)
-  val model = JSBMLExport.assembleHomologyModel(organism, "biograph_export_model", biomassReactionId)(db)
+  val model = JSBMLExport.assembleHomologyModel(targetOrganism, "biograph_export_model", biomassReactionId)(db)
 
   val out = basePath + "sbml_out/out.xml"
   JSBMLExport.writeToFile(model, out)
