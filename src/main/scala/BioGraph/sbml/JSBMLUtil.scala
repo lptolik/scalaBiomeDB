@@ -203,10 +203,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     geneProductCollector ++= listOfGeneProducts
       .map { gp =>
         getPolypeptideByLocusTagOrGeneName(gp.getLabel, organism.name, gp.getId)
-          .orElse(getPolypeptideByLocusTagOrGeneName(gp.getLabel.replace("Y7U", "Y75"), organism.name, gp.getId))
           .orElse(getPolypeptideByLocusTagOrGeneName(gp.getName, organism.name, gp.getId))
           .orElse(getPolypeptideBySequenceIdentity(gp.getLabel, organism.name, gp.getId))
-          .orElse(getPolypeptideBySequenceIdentity(gp.getLabel.replace("Y7U", "Y75"), organism.name, gp.getId))
           .orElse(getPolypeptideBySequenceIdentity(gp.getName, organism.name, gp.getId))
           .getOrElse(createPolypeptide(gp, organism))
       }.toMap
