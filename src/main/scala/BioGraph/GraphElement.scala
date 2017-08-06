@@ -1327,8 +1327,14 @@ package BioGraph {
           case None =>
         }
 
-        val compoundNodes = compounds.map(_.upload(graphDatabaseConnection))
-        compoundNodes.foreach(reactantNode.createRelationshipTo(_, BiomeDBRelations.isA))
+        // .distinct doesn't work properly for some reason...
+        val uniqueCompoundNodes = compounds
+          .map(_.getId)
+          .toSet[Long]
+          .map { id =>
+            val compoundNode = compounds.find(_.getId == id).get.upload(graphDatabaseConnection)
+            reactantNode.createRelationshipTo(compoundNode, BiomeDBRelations.isA)
+          }
 
         reactantNode
       }
@@ -1418,12 +1424,12 @@ package BioGraph {
                                             reactionName: String,
                                             db: GraphDatabaseService): ChemicalReaction = {
 
-      val reactantsCompounds = findCompounds(reactants, db)
-      val reactantsCompoundsIds = HashSet(reactantsCompounds.map(_.getId):_*)
+      val reactantsCompoundsMap = reactantCompoundsNodesMap(reactants, db)
+      val reactantsCompounds = reactantsCompoundsMap.flatMap(_._2).toList
       val reactantsChemicalReactions = findReactantsReactions(reactantsCompounds)
 
-      val productsCompounds = findCompounds(products, db)
-      val productsCompoundsIds = HashSet(productsCompounds.map(_.getId):_*)
+      val productsCompoundsMap = reactantCompoundsNodesMap(products, db)
+      val productsCompounds = productsCompoundsMap.flatMap(_._2).toList
       val productsChemicalReactions = findProductsReactions(productsCompounds)
 
       val reactionsToConsider = if (products.nonEmpty) {
@@ -1436,13 +1442,17 @@ package BioGraph {
       reactionsToConsider
         .find { chemReactionNode =>
           //reaction with the same reactants and products
-          val reactionReactants = findReactionReactants(chemReactionNode)
-          val reactionProducts = findReactionProducts(chemReactionNode)
+          val reactionReactantsIds = findReactionReactants(chemReactionNode).map(_.getId)
+          val reactionProductsIds = findReactionProducts(chemReactionNode).map(_.getId)
 
-          reactionReactants.size == reactantsCompoundsIds.size &&
-            reactionProducts.size == productsCompoundsIds.size &&
-          reactionReactants.forall(r => reactantsCompoundsIds.contains(r.getId)) &&
-            reactionProducts.forall(r => productsCompoundsIds.contains(r.getId))
+          val allReactantsPresent = reactantsCompoundsMap.forall { case (_, reactantCompounds) =>
+            reactantCompounds.exists(n => reactionReactantsIds.contains(n.getId))
+          }
+          val allProductsPresent = productsCompoundsMap.forall { case (_, productCompounds) =>
+            productCompounds.exists(n => reactionProductsIds.contains(n.getId))
+          }
+
+          allReactantsPresent && allProductsPresent
         }
         .map { chemReactionNode =>
           val chemReactants = reactantsCompounds.map(Compound.apply)
@@ -1479,13 +1489,14 @@ package BioGraph {
       }.toSet
     }
 
-    private def findCompounds(metabolites: List[Reactant], db: GraphDatabaseService) = {
-      metabolites.flatMap { metabolite =>
-        db.getNodeById(metabolite.getId)
+    private def reactantCompoundsNodesMap(metabolites: List[Reactant], db: GraphDatabaseService) = {
+      metabolites.map { metabolite =>
+        val compoundsNodes = db.getNodeById(metabolite.getId)
           .getRelationships(Direction.OUTGOING, BiomeDBRelations.isA).asScala
-          .headOption
           .map(_.getEndNode)
-      }
+
+        (metabolite, compoundsNodes.toSet)
+      }.toMap
     }
 
     private def createPartOfRelationship(reactionNode: org.neo4j.graphdb.Node,
