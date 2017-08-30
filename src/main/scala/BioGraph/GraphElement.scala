@@ -1,6 +1,7 @@
 import BioGraph.{DBNode, Node, XRef, SequenceAA, Rel, BioEntity}
 package BioGraph {
 
+  import org.apache.logging.log4j.LogManager
   import org.neo4j.graphdb
   import org.neo4j.graphdb.{Node, _}
   import utilFunctions._
@@ -1351,7 +1352,11 @@ package BioGraph {
                                  experiment: String = "",
                                  properties: Map[String, Any] = Map(),
                                  isSpontaneous: Boolean = false,
+                                 ecNumberStrings: Seq[String] = Seq.empty,
                                  nodeId: Long = -1) extends Node(properties = properties, nodeId) {
+
+    val logger = LogManager.getLogger(this.getClass.getName)
+
     def getName = this.name
 
     def getLabels = "BiochemicalReaction" :: (if (!isSpontaneous) Nil else "SpontaneousReaction" :: Nil)
@@ -1395,7 +1400,7 @@ package BioGraph {
       //link organism
       organism.map(organism => createPartOfRelationship(biochemReactionNode, db.getNodeById(organism.getId)))
 
-      val chemReaction = getOrCreateChemicalReaction(reactants, products, name, db)
+      val chemReaction = getOrCreateChemicalReaction(reactants, products, name, ecNumberStrings, db)
       biochemReactionNode.createRelationshipTo(db.getNodeById(chemReaction.getId), BiomeDBRelations.isA)
 
       biochemReactionNode
@@ -1403,6 +1408,7 @@ package BioGraph {
 
     private def createChemicalReaction(reactantsCompounds: List[org.neo4j.graphdb.Node],
                                        productsCompounds: List[org.neo4j.graphdb.Node],
+                                       ecNumberStrings: Seq[String],
                                        db: GraphDatabaseService): ChemicalReaction = {
       val req = reactantsCompounds.nonEmpty || productsCompounds.nonEmpty
       require(req,
@@ -1410,7 +1416,8 @@ package BioGraph {
 
       val chemReaction = ChemicalReaction(
         reactants = reactantsCompounds.map(Compound.apply),
-        products = productsCompounds.map(Compound.apply)
+        products = productsCompounds.map(Compound.apply),
+        ecNumberStrings
       )
 
       chemReaction.upload(db)
@@ -1422,6 +1429,7 @@ package BioGraph {
     private def getOrCreateChemicalReaction(reactants: List[Reactant],
                                             products: List[Reactant],
                                             reactionName: String,
+                                            ecNumberStrings: Seq[String] = Seq.empty,
                                             db: GraphDatabaseService): ChemicalReaction = {
 
       val reactantsCompoundsMap = reactantCompoundsNodesMap(reactants, db)
@@ -1453,17 +1461,30 @@ package BioGraph {
           }
 
           allReactantsPresent && allProductsPresent
-        }
-        .map { chemReactionNode =>
+        }.map { chemReactionNode =>
           val chemReactants = reactantsCompounds.map(Compound.apply)
           val chemProducts = productsCompounds.map(Compound.apply)
+
+          val cypher =
+            s"MATCH (c:ChemicalReaction)-[:${evidence.name}]->(x:XRef)-[:${linkTo.name}]->(:DB {name: 'EC'}) " +
+              s"WHERE ID(c) = ${chemReactionNode.getId} " +
+              s"RETURN x.id as ec"
+
+          val existingECNumberStrings = db.execute(cypher).columnAs[String]("ec").asScala.toSet
+          val newECNumberStrings = ecNumberStrings.toSet.diff(existingECNumberStrings)
+
+          newECNumberStrings.foreach { ecns =>
+            val xRefNode = XRef(ecns, DBNode("EC")).upload(db)
+            chemReactionNode.createRelationshipTo(xRefNode, BiomeDBRelations.evidence)
+          }
+
           ChemicalReaction(
             chemReactants,
             chemProducts,
+            newECNumberStrings.union(existingECNumberStrings).toSeq,
             chemReactionNode.getId
           )
-        }
-        .getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, db))
+        }.getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, ecNumberStrings, db))
     }
 
     private def findReactionReactants(reaction: org.neo4j.graphdb.Node): Set[org.neo4j.graphdb.Node] = {
@@ -1536,6 +1557,7 @@ package BioGraph {
 
   case class ChemicalReaction(reactants: List[Compound],
                               products: List[Compound] = List(),
+                              ecNumberStrings: Seq[String] = Seq.empty,
                               private val nodeId: Long = -1) extends Node(properties = Map(), nodeId) {
     override def getLabels: List[String] = List("ChemicalReaction")
 
@@ -1548,8 +1570,20 @@ package BioGraph {
       products.foreach { product =>
         reactionNode.createRelationshipTo(db.getNodeById(product.getId), is_product)
       }
+      ecNumberStrings.foreach { ecns =>
+        val xRefNode = findECNumberXRef(ecns, db).getOrElse {
+          XRef(ecns, DBNode("EC")).upload(db)
+        }
+        reactionNode.createRelationshipTo(xRefNode, BiomeDBRelations.evidence)
+      }
 
       reactionNode
+    }
+
+    private def findECNumberXRef(ecNumberString: String, db: GraphDatabaseService): Option[graphdb.Node] = {
+      val q = s"MATCH (:DB {name: 'EC'})<-[:${linkTo.name}]-(x:XRef {id: '$ecNumberString'}) RETURN x"
+
+      db.execute(q).columnAs[graphdb.Node]("x").asScala.toList.headOption
     }
   }
 

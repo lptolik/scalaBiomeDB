@@ -22,7 +22,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   val logger = LogManager.getLogger(this.getClass.getName)
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   val reader = new SBMLReader()
-//  var compartmentNodes = Map[String, Compartment]()
 //  get dictionary of ChEBI and Reactome XRefs
   val chebiInfo = getDataBasesNodes("ChEBI")
   val reactomeInfo = getDataBasesNodes("Reactome")
@@ -193,7 +192,6 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     val compartmentNodes = model
       .getListOfCompartments
       .asScala
-      //.toList
       .map(elem => elem.getId -> Compartment(elem.getName, organism))
       .toMap
 
@@ -408,6 +406,15 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
 
       val isSpontaneous = reactionName.toLowerCase.contains("spontaneous") ||
         reactionHasSpontaneousGeneProductRef(spontaneousReactionsIds)
+      val ecNumberStrings = reaction.getCVTerms
+        .asScala
+        .flatMap { xRefs =>
+          xRefs
+            .getResources
+            .asScala
+            .filter(_.toLowerCase().contains("ec-code"))
+            .flatMap(_.split("/").last.split(",").map(_.trim))
+        }
 
       val properties = Map(
         "reversible" -> reaction.isReversible,
@@ -422,7 +429,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         products = listOfProducts,
         organism = Some(organism),
         properties = properties,
-        isSpontaneous = isSpontaneous
+        isSpontaneous = isSpontaneous,
+        ecNumberStrings = ecNumberStrings
       )
     }
 

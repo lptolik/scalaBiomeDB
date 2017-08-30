@@ -17,8 +17,10 @@ object JSBMLUpload extends App with TransactionSupport {
 //    val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //    val localDir = "/home/artem/work/2016/JSBML/models/"
 //    val localDir = "/home/artem/work/2017/Timofei/AGORA-1.01-Reconstructions/"
-      val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/data/graph.db")
-      val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
+    val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/1500_organisms/data/graph.db")
+    val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
+//    val localDB = new File(args(0))
+//    val localDir = args(1)
 
 //      val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db/")
 //      val localDir = "/home/artem/work/2017/Timofei/AGORA_HEAD/"

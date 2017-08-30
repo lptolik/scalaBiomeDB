@@ -1,6 +1,5 @@
 package BioGraph.sbml
 
-import BioGraph.sbml.Test.graphDataBaseConnection
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Label, Node}
 import org.sbml.jsbml._
@@ -58,15 +57,14 @@ object JSBMLExport extends TransactionSupport {
     val spontaneousReactionNodes = db.execute(qSpontaneous).columnAs[Node]("s").asScala.toList
     val transportReactionNodes = db.execute(qTransport).columnAs[Node]("n").asScala.toList
     val biomassNode = db.execute(qBiomass).columnAs[Node]("n").asScala.toList
-
-//    throw new Exception()
+    val complexesReactions = getComplexesReactionsByHomology(targetOrganismName)(db)
 
     val targetReactions = (biomassNode
       ++ sameReactionsNodes
       ++ similarReactionsNodes
       ++ spontaneousReactionNodes
       ++ transportReactionNodes
-      ++ getComplexesReactionsByHomology(targetOrganismName)(db))
+      ++ complexesReactions)
 
       assembleModel( targetReactions, modelName)(db)
   }
