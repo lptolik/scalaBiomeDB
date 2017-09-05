@@ -13,7 +13,9 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
     "agora/patric-fams-2016-0904-reduced2/"
 
   val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/1500_organisms/data/graph.db")
-  val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
+  val fastaPath = bp + "families.nr/nr.0001"
+//  val localDB = new File(args(0))
+//  val fastaPath = args(1)
   val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
   val taxonIds: Set[Int] = transaction(db) {
@@ -23,7 +25,7 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
 
   println("started parsing fasta")
 
-  val allSeqs = readFasta(bp + "families.nr/nr.0001")
+  val allSeqs = readFasta(fastaPath)
   println(s"all seqs filtered")
 
   transaction(db) {
@@ -38,13 +40,13 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
           .map { case (taxonId, taxonSeqs) =>
             val q = s"MATCH (n:Taxon {tax_id: $taxonId})<-[:IS_A]-(o:Organism)<-[:PART_OF]-" +
               s"(p:Polypeptide)-[:IS_A]-(s:AA_Sequence) RETURN ID(p) as ppNodeId, s.md5 as md5"
-            val result = db.execute(q)
 
-            val ppNodeIds = result.columnAs[Long]("ppNodeId").asScala.toSeq
-            val md5s = result.columnAs[String]("md5").asScala.toSeq
-            val map = (md5s zip ppNodeIds).toMap
+            val map = db.execute(q).asScala.map { jMap =>
+              val sMap = jMap.asScala
+              (sMap("md5").asInstanceOf[String], sMap("ppNodeId").asInstanceOf[Long])
+            }.toMap
 
-            if (ppNodeIds.nonEmpty) {
+            if (map.nonEmpty) {
               val res = taxonSeqs
                 .filter(seq => map.contains(seq.md5))
                 .map { seq =>
@@ -58,7 +60,7 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
 
               res.size
             } else {
-              println(s"taxon: $taxonId, ppNodeIds is empty, 0 PEG links added")
+              println(s"taxon: $taxonId, map is empty, 0 PEG links added")
               0
             }
           }.sum
