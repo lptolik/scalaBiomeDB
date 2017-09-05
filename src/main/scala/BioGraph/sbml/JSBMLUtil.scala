@@ -88,6 +88,25 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       None
   }
 
+  def getPolypeptideByFigPegXRef(figPegId: String, organismName: String, taxonId: Int, id: String)
+  : Option[(String, org.neo4j.graphdb.Node)] = {
+
+    val realLabel = figPegId.split('.').drop(2).mkString("\\\\.")
+    val figXrefRegexp = s"fig\\\\|$taxonId\\\\.[0-9]\\\\.$realLabel"
+
+    val cypher =
+      s"MATCH (o:Organism {name: '$organismName'})<-[:PART_OF]-(p:Polypeptide)" +
+        s"-[:EVIDENCE]->(x:XRef)-[:LINK_TO]->(:DB {name: 'SEED'}) " +
+        s"WHERE x.id =~ '$figXrefRegexp' " +
+        s"RETURN p"
+
+    val resultIter = graphDataBaseConnection.execute(cypher).columnAs[Node]("p")
+    if (resultIter.hasNext)
+      Some((id, resultIter.next()))
+    else
+      None
+  }
+
   def getPolypeptideBySequenceIdentity(locusTagOrGeneName: String, organismName: String, id: String)
   : Option[(String, org.neo4j.graphdb.Node)] = {
 
@@ -158,7 +177,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
     transaction(graphDataBaseConnection) {
       val organismName = model.getName
       val organismByName = findOrganismByName(organismName)
-      val organismByTaxon = findOrganismByTaxon(getTaxonFromModel(model))
+      val taxonId = getTaxonFromModel(model)
+      val organismByTaxon = findOrganismByTaxon(taxonId)
 
       val organism = organismByTaxon match {
         case Some(byTaxon) =>
@@ -176,14 +196,14 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       }
 
       organism match {
-        case o: Organism => uploadModel(o, sourceDB, spontaneousReactionsIds)(model)
+        case o: Organism => uploadModel(o, taxonId, sourceDB, spontaneousReactionsIds)(model)
         case None =>
       }
 
     }
 
-  private def uploadModel(organism: Organism, sourceDB: String, spontaneousReactionsIds: Set[String])
-                 (model: Model): scala.Unit = transaction(graphDataBaseConnection) {
+  private def uploadModel(organism: Organism, taxonId: Int, sourceDB: String, spontaneousReactionsIds: Set[String])
+                         (model: Model): scala.Unit = transaction(graphDataBaseConnection) {
 
     val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
     // try to get fbc information from the SBML model
@@ -204,6 +224,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
           .orElse(getPolypeptideByLocusTagOrGeneName(gp.getName, organism.name, gp.getId))
           .orElse(getPolypeptideBySequenceIdentity(gp.getLabel, organism.name, gp.getId))
           .orElse(getPolypeptideBySequenceIdentity(gp.getName, organism.name, gp.getId))
+          .orElse(getPolypeptideByFigPegXRef(gp.getLabel, organism.name, taxonId, gp.getId))
           .getOrElse(createPolypeptide(gp, organism))
       }.toMap
 
