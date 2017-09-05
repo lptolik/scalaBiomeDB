@@ -608,6 +608,7 @@ trait TransactionSupport {
     catch {
       case e: Exception =>
         println(e.getMessage)
+        e.printStackTrace()
         tx.failure()
         dbOperation
     }
