@@ -479,8 +479,11 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         case (res, next: GeneProductRef) =>
           res.map(prev => next :: prev)
         case (res, next: Or) =>
-          next.getListOfAssociations.asScala.toList.flatMap { case gpr: GeneProductRef =>
-              res.map(prev => gpr :: prev)
+          next.getListOfAssociations.asScala.toList.flatMap {
+            case gpr: GeneProductRef => res.map(prev => gpr :: prev)
+            case and: And =>
+              val andRefs = and.getListOfAssociations.asScala.map { case gpr: GeneProductRef => gpr }.toList
+              res.map(prev => andRefs ++ prev)
           }
       }
     }
@@ -491,7 +494,8 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       alternatives.flatMap {
         case lgp: List[GeneProductRef] =>
           val polys = lgp.map(geneProduct).toSet
-          if (enzymeCollector.contains(polys)) List(enzymeCollector(polys))
+          if (enzymeCollector.contains(polys))
+            List(enzymeCollector(polys))
           else {
             val enzyme = Enzyme(name = reactionName)
             val enzymeNode = enzyme.upload(graphDataBaseConnection)
@@ -520,8 +524,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
         case ref: GeneProductRef => acc :+ geneProduct(ref)
         case or: Or =>
           acc ++ or.getListOfAssociations.asScala.flatMap(ass => processGeneProductAssociation(ass, acc))
-        case and: And =>
-          processAndOperator(and.getListOfAssociations.asScala.toList)
+        case and: And => processAndOperator(and.getListOfAssociations.asScala.toList)
       }
     }
   }

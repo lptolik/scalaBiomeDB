@@ -75,5 +75,6 @@ assemblyMergeStrategy in assembly := {
     oldStrategy(x)
 }
 
-//mainClass in assembly := Some("BioGraph.sbml.JSBMLUpload")
-mainClass in assembly := Some("BioGraph.PEGIDsUploadApp")
+mainClass in assembly := Some("BioGraph.sbml.JSBMLUpload")
+//mainClass in assembly := Some("BioGraph.PEGIDsUploadApp")
+//mainClass in assembly := Some("BioGraph.sbml.Test")

@@ -12,10 +12,10 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
   val bp = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/" +
     "agora/patric-fams-2016-0904-reduced2/"
 
-  val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/1500_organisms/data/graph.db")
-  val fastaPath = bp + "families.nr/nr.0001"
-//  val localDB = new File(args(0))
-//  val fastaPath = args(1)
+//  val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/1500_organisms/data/graph.db")
+//  val fastaPath = bp + "families.nr/nr.0001"
+  val localDB = new File(args(0))
+  val fastaPaths = args.drop(1)
   val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
   val taxonIds: Set[Int] = transaction(db) {
@@ -25,7 +25,7 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
 
   println("started parsing fasta")
 
-  val allSeqs = readFasta(fastaPath)
+  val allSeqs = readFasta(fastaPaths)
   println(s"all seqs filtered")
 
   transaction(db) {
@@ -69,8 +69,8 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
     println(s"Added to all organisms: $addedCount PEG links added")
   }
 
-  private def readFasta(path: String): Iterator[FastaSequence] = {
-    val linesIter = Source.fromFile(path).getLines().filter(_.nonEmpty)
+  private def readFasta(paths: Seq[String]): Iterator[FastaSequence] = {
+    val linesIter = fastaPaths.iterator.flatMap(path => Source.fromFile(path).getLines().filter(_.nonEmpty))
 
     var rawId: String = ""
     var taxonId: Int = -1
