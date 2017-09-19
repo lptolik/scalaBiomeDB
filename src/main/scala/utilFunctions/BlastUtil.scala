@@ -5,6 +5,7 @@ import java.util
 
 import BioGraph.{DBNode, SequenceAA, SequenceDNA, XRef}
 import org.apache.logging.log4j.LogManager
+import org.neo4j.graphdb.Direction._
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Node, ResourceIterator}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 
@@ -20,9 +21,9 @@ class WorkWithGraph(pathToDataBase: String) extends TransactionSupport {
   val dataBaseFile = new File(pathToDataBase)
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
-  def getAllNodesByLabel(requiredLabel: String): ResourceIterator[Node] = transaction(graphDataBaseConnection) {
+  def getAllNodesByLabel(requiredLabel: String): Iterator[Node] = transaction(graphDataBaseConnection) {
     val resultNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(requiredLabel))
-    resultNodes
+    resultNodes.asScala
   }
 }
 
@@ -38,7 +39,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     (md5, nodeId)
   }
   //  read ID of existing Sequence and its other parameters
-  var sequenceNodeCollector = getAllAASequencesNodes.asScala.map(createMapOfSequences).toMap
+  var sequenceNodeCollector = getAllAASequencesNodes.map(createMapOfSequences).toMap
 
   def getAllAASequencesNodes = getAllNodesByLabel("AA_Sequence")
 
@@ -50,14 +51,14 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     nodeIterator.asScala.foreach(makeSomethingWithNodes)
   }
 
-  def writeNodesInfoToFile(nodeIterator: ResourceIterator[Node], filename: PrintWriter)
+  def writeNodesInfoToFile(nodeIterator: Iterator[Node], filename: PrintWriter)
                            (nodesInfoWriter: (Node, PrintWriter) => Unit): Unit = transaction(graphDataBaseConnection){
     logger.debug("Transaction in writeNodesInfoToFile")
-    nodeIterator.asScala.foreach(nodesInfoWriter(_, filename))
+    nodeIterator.foreach(nodesInfoWriter(_, filename))
   }
 
   def makeSequencesFastaFile(
-                   nodeIterator : ResourceIterator[Node],
+                   nodeIterator : Iterator[Node],
                    outputFastaFileName: String,
                    byMD5: Boolean = false) = {
     val outputFastaFile = new PrintWriter(outputFastaFileName)
@@ -283,4 +284,21 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
 
   def makeGeneOuterBlastByMD5(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = true)(outerBlastFlag = true)(polyFlag = false)
   def makeGeneOuterBlastByID(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = false)(outerBlastFlag = true)(polyFlag = false)
+
+  def makeOneOrganismBlastTask(organismName: String, sequenceType: String = "Polypeptide") = transaction(graphDataBaseConnection){
+    val organism = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName)
+    val polysOrGenes = organism
+      .getRelationships(BiomeDBRelations.partOf, INCOMING)
+      .asScala
+      .map(_.getStartNode)
+      .filter(_
+        .getLabels
+        .asScala
+        .toList
+        .map(_.toString)
+        .contains(sequenceType)
+      )
+
+    polysOrGenes.map(_.getSingleRelationship(BiomeDBRelations.isA, OUTGOING).getEndNode).iterator//.map(_.getProperty("sequence"))
+  }
 }
