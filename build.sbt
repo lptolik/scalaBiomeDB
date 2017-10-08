@@ -7,6 +7,8 @@ version := "3.0"
 scalaVersion := "2.11.7"
 
 resolvers += "European Bioinformatics Institute" at "http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public"
+
+resolvers += "ebi-repo" at "http://www.ebi.ac.uk/~maven/m2repo"
 //http://www.ebi.ac.uk/~maven/m2repo/org/sbml/jsbml/jsbml/
 //http://www.ebi.ac.uk/~maven/m2repo
 //resolvers += "The EBI repository" at "http://www.ebi.ac.uk/~maven/m2repo/org/sbml/"
@@ -49,6 +51,8 @@ libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
 
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.1"
 
+libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.13"
+
 //sbt-assembly
 //assemblySettings
 assemblyMergeStrategy in assembly := {
@@ -61,6 +65,11 @@ assemblyMergeStrategy in assembly := {
 //  case PathList("org", "apache", "xalan", xs @ _*)    => MergeStrategy.first
 //  case PathList("xalan", xs @ _*)    => MergeStrategy.first
   case PathList("org", "codehaus", xs @ _*)    => MergeStrategy.first
+  case PathList("com", "ctc", xs @ _*)    => MergeStrategy.last
+  case PathList("org", "slf4j", xs @ _*)    => MergeStrategy.last
+  case PathList("org", "hamcrest", xs @ _*)    => MergeStrategy.last
+  case PathList("org", "aopalliance", xs @ _*)    => MergeStrategy.last
+  case PathList("javax", "inject", xs @ _*)    => MergeStrategy.last
   case PathList("org", "hupo", xs @ _*)    => MergeStrategy.first
   case PathList("pom.xml") => MergeStrategy.first
 //  case PathList("org", "bouncycastle", xs @ _*)    => MergeStrategy.first

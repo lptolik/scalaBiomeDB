@@ -9,75 +9,90 @@ import scala.io.Source
 import scala.collection.JavaConverters._
 
 object PEGIDsUploadApp extends App with TransactionSupport  {
-  val bp = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/" +
-    "agora/patric-fams-2016-0904-reduced2/"
+//  val bp = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/" +
+//    "agora/patric-fams-2016-0904-reduced2/"
+
+  val bp = "/home/artem/work/2017/Timofei/patric-fams-2016-0904-reduced2/families.nr/"
 
 //  val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/1500_organisms/data/graph.db")
+  val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //  val fastaPath = bp + "families.nr/nr.0001"
-  val localDB = new File(args(0))
-  val fastaPaths = args.drop(1)
-  val db = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
+  val fastaPath = bp + "nr.0001"
+//  val localDB = new File(args(0))
+//  val fastaPath = args(1)
+  val dataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(localDB)
 
-  val taxonIds: Set[Int] = transaction(db) {
-    val q = "MATCH (n:Taxon)<-[:IS_A]-(:Organism) RETURN n.tax_id as taxonId"
-    db.execute(q).columnAs[Int]("taxonId").asScala.toSet
+  val taxonIds: Set[Int] = transaction(dataBaseConnection) {
+    val TaxonToOrganismQuery = "MATCH (n:Taxon)<-[:IS_A]-(:Organism) RETURN n.tax_id as taxonId"
+    dataBaseConnection.execute(TaxonToOrganismQuery).columnAs[Int]("taxonId").asScala.toSet
   }
 
-  println("started parsing fasta")
+  println("Started parsing fasta")
 
-  val allSeqs = readFasta(fastaPaths)
-  println(s"all seqs filtered")
+  val allSeqs = readFasta(fastaPath)
+  println(s"All sequences were filtered")
 
-  transaction(db) {
+  transaction(dataBaseConnection) {
     val dbNode = DBNode("SEED")
-    dbNode.upload(db)
+    dbNode.upload(dataBaseConnection)
 
-    val addedCount = allSeqs
+    val addedPEGLinksCounter = allSeqs
       .grouped(10000)
-      .map { gr =>
+      .map {
+        gr =>
         gr.groupBy(_.taxonId)
           .filter(_._1 >= 0)
-          .map { case (taxonId, taxonSeqs) =>
-            val q = s"MATCH (n:Taxon {tax_id: $taxonId})<-[:IS_A]-(o:Organism)<-[:PART_OF]-" +
-              s"(p:Polypeptide)-[:IS_A]-(s:AA_Sequence) RETURN ID(p) as ppNodeId, s.md5 as md5"
+          .map {
+            case (taxonId: Int, taxonSeqs: Seq[FastaSequence]) => {
+              val matchingTaxonToPolypeptideQuery =
+                s"MATCH (n:Taxon {tax_id: $taxonId})<-[:IS_A]-(o:Organism)<-[:PART_OF]-" +
+                  s"(p:Polypeptide)-[:IS_A]-(s:AA_Sequence) RETURN ID(p) as ppNodeId, s.md5 as md5"
 
-            val map = db.execute(q).asScala.map { jMap =>
-              val sMap = jMap.asScala
-              (sMap("md5").asInstanceOf[String], sMap("ppNodeId").asInstanceOf[Long])
-            }.toMap
-
-            if (map.nonEmpty) {
-              val res = taxonSeqs
-                .filter(seq => map.contains(seq.md5))
-                .map { seq =>
-                  val ppNodeId = map(seq.md5)
-
-                  val xRefNode = XRef(seq.rawId.replace(">", ""), dbNode).upload(db)
-                  db.getNodeById(ppNodeId).createRelationshipTo(xRefNode, BiomeDBRelations.evidence)
+              val md5ToPolyIDDict = dataBaseConnection
+                .execute(matchingTaxonToPolypeptideQuery)
+                .asScala
+                .map { javaPolyIDmd5Pair =>
+                  val scalaPolyIDmd5Pair = javaPolyIDmd5Pair.asScala
+                  (scalaPolyIDmd5Pair("md5").asInstanceOf[String], scalaPolyIDmd5Pair("ppNodeId").asInstanceOf[Long])
                 }
+                .toMap
 
-              println(s"taxon: $taxonId, ${res.size} PEG links added")
+              if (md5ToPolyIDDict.nonEmpty) {
+                val res = taxonSeqs
+                  .filter(seq => md5ToPolyIDDict.contains(seq.md5))
+                  .map { seq =>
+                    val ppNodeId = md5ToPolyIDDict(seq.md5)
+                    val xRefNode = XRef(seq.rawId.replace(">", ""), dbNode).upload(dataBaseConnection)
+                    dataBaseConnection.getNodeById(ppNodeId).createRelationshipTo(xRefNode, BiomeDBRelations.evidence)
+                  }
 
-              res.size
-            } else {
-              println(s"taxon: $taxonId, map is empty, 0 PEG links added")
-              0
+                println(s"For taxon: $taxonId, ${res.size} PEG links added")
+
+                res.size
+              }
+              else {
+                println(s"Taxon: $taxonId, map is empty, 0 PEG links added")
+                0
+              }
             }
           }.sum
         }.sum
 
-    println(s"Added to all organisms: $addedCount PEG links added")
+    println(s"Added to all organisms: $addedPEGLinksCounter PEG links added")
   }
 
-  private def readFasta(paths: Seq[String]): Iterator[FastaSequence] = {
-    val linesIter = fastaPaths.iterator.flatMap(path => Source.fromFile(path).getLines().filter(_.nonEmpty))
+  private def readFasta(path: String): Iterator[FastaSequence] = {
+    val linesIter = Source
+      .fromFile(path)
+      .getLines()
+      .filter(_.nonEmpty)
 
     var rawId: String = ""
     var taxonId: Int = -1
     var seqAcc: String = ""
     val initSeq = FastaSequence("", -1, "")
 
-    def getNextSeq() = {
+    def getNextSeq = {
       var seq: FastaSequence = initSeq
 
       while (linesIter.nonEmpty && seq == initSeq) {
@@ -90,6 +105,7 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
           taxonId = FastaSequence.extractTaxonId(line)
           seqAcc = ""
         }
+//          not clear when this condition is working
         else { //seq accumulated, taxonId _is_ in list, add it to res and go further
           seq = FastaSequence(rawId, taxonId, utilFunctionsObject.md5ToString(seqAcc))
           rawId = line
@@ -104,7 +120,7 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
     new Iterator[FastaSequence] {
       override def hasNext = linesIter.hasNext
 
-      override def next() = getNextSeq()
+      override def next() = getNextSeq
     }
   }
 }
@@ -112,7 +128,7 @@ object PEGIDsUploadApp extends App with TransactionSupport  {
 case class FastaSequence(rawId: String, taxonId: Int, md5: String)
 
 object FastaSequence {
-  def takeFuckWhile(s: String): Int = {
+  def readLineByLetter(s: String): Int = {
     var res = s(0) - 48
     var i = 1
     var next: Char = '0'
@@ -132,7 +148,7 @@ object FastaSequence {
 
   def extractTaxonId(rawId: String): Int = {
     try {
-      takeFuckWhile(rawId.drop(5))
+      readLineByLetter(rawId.drop(5))
     } catch {
       case _ => -1
     }
