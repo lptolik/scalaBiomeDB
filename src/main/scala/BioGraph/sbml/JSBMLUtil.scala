@@ -91,20 +91,24 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
   def getPolypeptideByFigPegXRef(figPegId: String, organismName: String, taxonId: Int, id: String)
   : Option[(String, org.neo4j.graphdb.Node)] = {
 
-    val realLabel = figPegId.split('.').drop(2).mkString("\\\\.")
-    val figXrefRegexp = s"fig\\\\|$taxonId\\\\.[0-9]\\\\.$realLabel"
-
-    val cypher =
-      s"MATCH (o:Organism {name: '$organismName'})<-[:PART_OF]-(p:Polypeptide)" +
-        s"-[:EVIDENCE]->(x:XRef)-[:LINK_TO]->(:DB {name: 'SEED'}) " +
-        s"WHERE x.id =~ '$figXrefRegexp' " +
-        s"RETURN p"
-
-    val resultIter = graphDataBaseConnection.execute(cypher).columnAs[Node]("p")
-    if (resultIter.hasNext)
-      Some((id, resultIter.next()))
-    else
+    if (figPegId.startsWith("g.")) //e.g. "g.2189.peg.1511"
       None
+    else {
+      val realLabel = figPegId.split('.').drop(2).mkString("\\\\.") //handle case of 0000000.0 taxon id in AGORA models
+      val figXrefRegexp = s"fig\\\\|$taxonId\\\\.[0-9]\\\\.$realLabel"
+
+      val cypher =
+        s"MATCH (o:Organism {name: '$organismName'})<-[:PART_OF]-(p:Polypeptide)" +
+          s"-[:EVIDENCE]->(x:XRef)-[:LINK_TO]->(:DB {name: 'SEED'}) " +
+          s"WHERE x.id =~ '$figXrefRegexp' " +
+          s"RETURN p"
+
+      val resultIter = graphDataBaseConnection.execute(cypher).columnAs[Node]("p")
+      if (resultIter.hasNext)
+        Some((id, resultIter.next()))
+      else
+        None
+    }
   }
 
   def getPolypeptideBySequenceIdentity(locusTagOrGeneName: String, organismName: String, id: String)
