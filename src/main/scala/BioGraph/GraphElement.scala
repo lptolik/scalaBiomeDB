@@ -1141,9 +1141,9 @@ package BioGraph {
     with BioEntity{
 
     def getLabels = if (toCheck)
-      List("Compound", "BioEntity", "To_check")
+      List("Compound", "To_check")
     else
-      List("Compound", "BioEntity")
+      List("Compound")
 
     def getName = name
 
