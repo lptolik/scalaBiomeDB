@@ -241,6 +241,7 @@ class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
       val sbmlId = gp.getId
       createdGeneProduct.addLabel(DynamicLabel.label("To_check"))
       createdGeneProduct.setProperty("sbmlId", sbmlId)
+      createdGeneProduct.setProperty("name", gp.getLabel + "_" + model.getId)
       createdGeneProduct.setProperty("label", gp.getLabel)
       createdGeneProduct.setProperty("metaId", gp.getMetaId)
 
