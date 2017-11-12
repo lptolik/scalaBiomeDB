@@ -1610,16 +1610,13 @@ package BioGraph {
     }
 
     private def findOrganismCompartment(db: GraphDatabaseService): Option[org.neo4j.graphdb.Node] = {
-      val foundCompartments = db.findNodes(DynamicLabel.label("Compartment"), "name", this.getName)
-        .asScala
-        .flatMap{cn =>
-          cn.getRelationships(BiomeDBRelations.partOf, Direction.OUTGOING)
-            .asScala
-            .map(_.getEndNode)}
-      val filtered = foundCompartments.filter(n => n.getProperty("name").toString == organism.name)
+      val q =
+        s"MATCH (o:Organism {name: '${organism.name}'})" +
+          s"<-[:PART_OF]-(c:Compartment {name: '${this.getName}'}) RETURN c"
 
-      if (filtered.nonEmpty) Option(filtered.next)
-      else None
+      val res = db.execute(q).columnAs[org.neo4j.graphdb.Node]("c").asScala.toSeq.headOption
+
+      res
     }
 
     private def createCompartmentNode(graphDataBaseConnection: GraphDatabaseService) = {

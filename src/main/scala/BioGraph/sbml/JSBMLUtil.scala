@@ -5,7 +5,7 @@ import java.io.File
 import BioGraph.{BiochemicalReaction, Compartment, _}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.neo4j.graphdb.{Direction, DynamicLabel, Node}
+import org.neo4j.graphdb.{Direction, DynamicLabel, GraphDatabaseService, Node}
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.fbc.{GeneProduct, _}
 import utilFunctions.{BiomeDBRelations, TransactionSupport}
@@ -18,9 +18,9 @@ import scala.util.Try
 /**
   * Created by artem on 14.07.16.
   */
-class JSBMLUtil(dataBaseFile: File) extends TransactionSupport {
+class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends TransactionSupport {
   val logger = LogManager.getLogger(this.getClass.getName)
-  val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
+//  val graphDataBaseConnection: GraphDatabaseService = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
   val reader = new SBMLReader()
 //  get dictionary of ChEBI and Reactome XRefs
   val chebiInfo = getDataBasesNodes("ChEBI")
