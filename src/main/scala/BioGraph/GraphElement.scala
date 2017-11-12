@@ -1417,7 +1417,8 @@ package BioGraph {
       val chemReaction = ChemicalReaction(
         reactants = reactantsCompounds.map(Compound.apply),
         products = productsCompounds.map(Compound.apply),
-        ecNumberStrings
+        ecNumberStrings,
+        name
       )
 
       chemReaction.upload(db)
@@ -1482,6 +1483,7 @@ package BioGraph {
             chemReactants,
             chemProducts,
             newECNumberStrings.union(existingECNumberStrings).toSeq,
+            name,
             chemReactionNode.getId
           )
         }.getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, ecNumberStrings, db))
@@ -1558,11 +1560,17 @@ package BioGraph {
   case class ChemicalReaction(reactants: List[Compound],
                               products: List[Compound] = List(),
                               ecNumberStrings: Seq[String] = Seq.empty,
+                              name: String,
                               private val nodeId: Long = -1) extends Node(properties = Map(), nodeId) {
     override def getLabels: List[String] = List("ChemicalReaction")
 
     override def upload(db: GraphDatabaseService): org.neo4j.graphdb.Node = {
       val reactionNode = super.upload(db)
+      val ecOrName = ecNumberStrings
+        .headOption
+        .getOrElse(name)
+
+      reactionNode.setProperty("name", ecOrName)
 
       reactants.foreach { reactant =>
         db.getNodeById(reactant.getId).createRelationshipTo(reactionNode, is_reactant)
