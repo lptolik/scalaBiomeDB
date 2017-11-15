@@ -210,6 +210,10 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
                          (model: Model): scala.Unit = transaction(graphDataBaseConnection) {
 
     val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
+    val organismNode = graphDataBaseConnection.getNodeById(organism.getId)
+
+    modelNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
+
     // try to get fbc information from the SBML model
     val fbcModel = model.getModel.getPlugin("fbc").asInstanceOf[FBCModelPlugin]
 
@@ -245,7 +249,6 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       createdGeneProduct.setProperty("label", gp.getLabel)
       createdGeneProduct.setProperty("metaId", gp.getMetaId)
 
-      val organismNode = graphDataBaseConnection.getNodeById(organism.getId)
       createdGeneProduct.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
 
       (sbmlId, createdGeneProduct)
