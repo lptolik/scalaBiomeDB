@@ -1648,14 +1648,11 @@ package BioGraph {
   }
 
 
-  case class Enzyme(
-                     name: String,
-                     var polypeptide: List[Polypeptide] = List(),
-                     //                     var complex: List[Complex] = List(),
-                     //                     var regulates: List[EnzymeRegulation] = List(),
-                     var catalizes: List[BiochemicalReaction] = List(),
-                     nodeId: Long = -1,
-                     properties: Map[String, Any] = Map())
+  case class Enzyme(name: String,
+                    var polypeptide: List[Polypeptide] = List(),
+                    var catalizes: List[BiochemicalReaction] = List(),
+                    nodeId: Long = -1,
+                    properties: Map[String, Any] = Map())
     extends Node(properties = properties, nodeId)
     with BioEntity{
 
@@ -1665,32 +1662,19 @@ package BioGraph {
 
     def getPolypeptide = polypeptide
 
-//    def getComplexes = complex
-
-//    def getRegulations = regulates
-
     def getCatalization = catalizes
 
     def setPolypeptide(newPolypeptide: Polypeptide) = polypeptide ::: List(newPolypeptide)
 
-//    def setComplexes(listOfComplexes: List[Complex]): Unit = complex ::: listOfComplexes
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+      val node = super.upload(graphDataBaseConnection)
 
-//    def setRegulations(newRegulatesList: List[EnzymeRegulation]): Unit = regulates ::: newRegulatesList
+      node.setProperty("name", name)
+      properties.foreach { case (key, value) => node.setProperty(key, value) }
+
+      node
+    }
   }
-
-//  case class Antiantitermintor(
-//                              coordinates: Coordinates,
-//                              ccp: CCP,
-//                              var modulates: List[Terminator] = List(),
-//                              var participatesIn: List[Attenuation],
-//                              nodeId: BigInt = -1)
-//    extends Feature(coordinates, properties = Map(), ccp, nodeId)
-//    with DNA {
-//
-//    override def getLabels = List("Antiantitermintor", "Feature")
-//
-//    override def getCCP = ccp
-//  }
 
   class LinkTo(start: XRef, end: DBNode, properties: Map[String, String] = Map()) extends Rel(id = -1, start, end, properties) {
 
