@@ -210,6 +210,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
                          (model: Model): scala.Unit = transaction(graphDataBaseConnection) {
 
     val modelNode = ModelNode(model.getId, sourceDB).upload(graphDataBaseConnection)
+    modelNode.setProperty("name", organism.name)
     val organismNode = graphDataBaseConnection.getNodeById(organism.getId)
 
     modelNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
