@@ -25,7 +25,9 @@ object JSBMLExportApp extends App with TransactionSupport {
 
   val biomassReactionId = "R_BIOMASS_Ec_iJO1366_core_53p95M"
 //  val model = JSBMLExport.assembleModel(organism, "biograph_export_model")(db)
-  val model = JSBMLExport.assembleHomologyModel(targetOrganism, "biograph_export_model", biomassReactionId)(db)
+  val model = transaction(db){
+    JSBMLExport.assembleHomologyModel(targetOrganism, "biograph_export_model", biomassReactionId)(db)
+  }
 
   val out = basePath + "sbml_out/out.xml"
   JSBMLExport.writeToFile(model, out)
