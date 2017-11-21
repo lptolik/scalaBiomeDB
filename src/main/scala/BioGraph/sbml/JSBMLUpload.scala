@@ -14,15 +14,16 @@ import scala.collection.JavaConverters._
   * Created by artem on 14.07.16.
   */
 object JSBMLUpload extends App with TransactionSupport {
-  def main(): Unit = {
+  def main(configurationFilename: String): Unit = {
+    val conf = utilFunctions.utilFunctionsObject.readConfigurationFile(configurationFilename)
 
 //    val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //    val localDir = "/home/artem/work/2016/JSBML/models/"
 //    val localDir = "/home/artem/work/2017/Timofei/AGORA-1.01-Reconstructions/"
 //    val localDB = new File("/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/1500_organisms/data/graph.db")
 //    val localDir = "/Users/ramso/Yandex.Disk.localized/Studying/PhD/thesis/pushchino_phd/sbmls"
-    val localDB = new File(args(0)) // /var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db/
-    val localDir = args(1) // ...
+    val localDB = new File(conf(0)) // /var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db/
+    val localDir = conf(1) // ...
 
 //      val localDB = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db/")
 //      val localDir = "/home/artem/work/2017/Timofei/AGORA_HEAD/"
@@ -51,5 +52,4 @@ object JSBMLUpload extends App with TransactionSupport {
       jsbml.uploader(sourceDB, model, spontaneousReactionsGeneProductsIds)
     }
   }
-  main()
 }
