@@ -16,7 +16,7 @@ import scala.collection.immutable.Map
   * Created by artem on 15.05.16.
   */
 object GenBankUploader extends App with TransactionSupport{
-  def main() {
+  def main(configurationFilename: String = "/home/artem/work/2017/Timofei/genbank_upload_config.txt") {
 
     println("Upload started")
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Chlamydia_trachomatis_A2497_complete_genome_ver1.gb")
@@ -36,10 +36,14 @@ object GenBankUploader extends App with TransactionSupport{
 //    val localDB = "/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/"
     val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
 
+    val conf = utilFunctions.utilFunctionsObject.readConfigurationFile(configurationFilename)
+    val dbDir = conf(0)
+    val genomesDir = conf(1)
+
     val filesToDrop = 0
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(remoteDir, "gb").drop(filesToDrop)
-    val dataBaseFile = new File(remoteDB)
+    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(genomesDir, "gb").drop(filesToDrop)
+    val dataBaseFile = new File(dbDir)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
     var totalSequenceCollector: Map[String, SequenceAA] = Map()
@@ -106,5 +110,5 @@ object GenBankUploader extends App with TransactionSupport{
 //    gbFiles.foreach(uploadOneFile)
     println("Upload finished")
   }
-  main()
+//  main("/home/artem/work/2017/Timofei/genbank_upload_config.txt")
 }

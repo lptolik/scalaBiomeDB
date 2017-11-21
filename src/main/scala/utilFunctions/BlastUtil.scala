@@ -264,13 +264,15 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   }
 
   def makeBlast(blastOutputFilename: String, dropSize: Int)(byMD5: Boolean)(outerBlastFlag: Boolean)(polyFlag: Boolean): Unit = {
-    val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
-    logger.debug("Number of lines: " + iteratorSize)
-    def loop(res: Int): Unit = {
-      val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag)(byMD5)(polyFlag)
-      if (nextRes < iteratorSize) loop(nextRes + 500000)
+    if (blastOutputFilename != "-") {
+      val iteratorSize = Source.fromFile(blastOutputFilename).getLines().size
+      logger.debug("Number of lines: " + iteratorSize)
+      def loop(res: Int): Unit = {
+        val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag)(byMD5)(polyFlag)
+        if (nextRes < iteratorSize) loop(nextRes + 500000)
+      }
+      loop(0)
     }
-    loop(0)
   }
 
   def makePolyInnerBlastByMD5(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = true)(outerBlastFlag =  false)(polyFlag =  true)

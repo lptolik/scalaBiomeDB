@@ -545,7 +545,10 @@ package utilFunctions {
 
     def readConfigurationFile(filename: String): Array[String] = {
       val reader = Source.fromFile(filename)
-      val lines = reader.getLines().toArray
+      val lines = reader
+        .getLines()
+        .toArray
+        .filter(!_.contains("#"))
       reader.close()
       lines
     }

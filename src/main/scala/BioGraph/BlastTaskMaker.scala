@@ -9,7 +9,7 @@ import scala.collection.JavaConverters._
   * Created by artem on 28.12.16.
   */
 object BlastTaskMaker extends App{
-  def main(configurationFilename: String): Unit = {
+  def main(configurationFilename: String = "/home/jane/graph_new_release/microbiomeBlastTaskMakerConf.txt"): Unit = {
     val dbPathLocal = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
 //    val dbPathLocal = "/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/"
     val dbPathRemote = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
@@ -42,6 +42,5 @@ object BlastTaskMaker extends App{
 
   }
 //  main("/home/artem/work/2017/Timofei/blast_task_maker_config.txt")
-  main("/home/jane/graph_new_release/microbiomeBlastTaskMakerConf.txt")
 
 }

@@ -85,15 +85,15 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       val queryForIdenticalSequences = s"MATCH (:Organism{name:'${fromOrganism._1}'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(s1:Sequence)<-[:IS_A]-(:Polypeptide)-[:PART_OF]->(:Organism{name:'${toOrganism._1}'})" +
         s" RETURN COLLECT(DISTINCT s1)"
 
-      val queryFromOrgamismSequences = s"MATCH (:Organism{name:'${fromOrganism._1}'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(s1:Sequence)" +
+      val queryFromOrganismSequences = s"MATCH (:Organism{name:'${fromOrganism._1}'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(s1:Sequence)" +
         s" RETURN COLLECT(DISTINCT s1)"
-      val queryToOrgamismSequences = s"MATCH (:Organism{name:'${toOrganism._1}'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(s2:Sequence)" +
+      val queryToOrganismSequences = s"MATCH (:Organism{name:'${toOrganism._1}'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(s2:Sequence)" +
         s" RETURN COLLECT(DISTINCT s2)"
 
       val similarSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryForSimilarity)))
       val identicalSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryForIdenticalSequences)))
-      val fromSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryFromOrgamismSequences)))
-      val toSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryToOrgamismSequences)))
+      val fromSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryFromOrganismSequences)))
+      val toSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryToOrganismSequences)))
 
       val similarSequencesRes = getCollectionOfNodes(similarSequencesActor, CypherQuery)()
       val identicalSequences = getCollectionOfNodes(identicalSequencesActor, CypherQuery)()
@@ -183,7 +183,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       }
     }
 
-    val mapOfMathced = loop(mapOfOrganismsAndSequences.head, mapOfOrganismsAndSequences.tail, Map())
+    val mapOfMatched = loop(mapOfOrganismsAndSequences.head, mapOfOrganismsAndSequences.tail, Map())
 
     def mergeMaps[T <: AnyRef, U >: AnyRef](m: Map[T, List[U]], n: Map[T, List[U]]): Map[T, List[U]] = {
       val keyIntersection = m.keySet & n.keySet
@@ -194,7 +194,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
     }
 
 //    res.map(org => org)
-    val res = mapOfMathced.map(e => e._2.foldLeft(Map[String, List[AnyRef]]())((foldRes, next) => mergeMaps(foldRes, next)))
+    val res = mapOfMatched.map(e => e._2.foldLeft(Map[String, List[AnyRef]]())((foldRes, next) => mergeMaps(foldRes, next)))
     res
   }
 

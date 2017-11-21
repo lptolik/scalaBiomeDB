@@ -16,7 +16,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by artem on 06.07.16.
   */
-class PSICQUICUtil(serverAddress: String) {
+case class PSICQUICUtil(serverAddress: String) {
   val client = new UniversalPsicquicClient(serverAddress)
 
   def sendQuery(query: String, firstResult: Int = 0, maxResult: Int = 200): MitabSearchResult = {

@@ -23,7 +23,7 @@ object PSICQUICApp {
 //    http://www.ebi.ac.uk/Tools/webservices/psicquic/reactome/webservices
     val serverAddress = "http://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/psicquic"
     val dataBaseFile = new File("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
-    val psicquic = new PSICQUICUtil(serverAddress)
+    val psicquic = PSICQUICUtil(serverAddress)
 //    Q9BXW9 P39367 IM-22256-1432 IM-20125-1
     val mitab = psicquic.sendQuery("P76458", 0, 300)
     val xml = psicquic.convertQueryResult(mitab)
