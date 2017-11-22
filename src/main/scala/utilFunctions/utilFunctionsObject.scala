@@ -220,7 +220,9 @@ package utilFunctions {
     def matchRelationExistenceWithoutDirection(nodeA: Node, nodeB: Node): List[Node] = {
       def relationshipLoop(relationshipIterator: util.Iterator[Relationship]): List[Node] = {
         if (relationshipIterator.hasNext) {
-          if (relationshipIterator.next.getOtherNode(nodeA) equals nodeB) List(nodeA, nodeB)
+          if (relationshipIterator.next.getOtherNode(nodeA) equals nodeB) {
+            List(nodeA, nodeB)
+          }
           else relationshipLoop(relationshipIterator)
         }
         else List()

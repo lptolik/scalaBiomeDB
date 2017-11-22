@@ -24,6 +24,7 @@ import utilFunctions._
 import scala.collection.convert.Wrappers.SeqWrapper
 import scala.collection.parallel.mutable.ParMap
 import scala.io.Source
+import org.biojavax.bio.db.ncbi.GenbankRichSequenceDB
 
 case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implicit timeout: Timeout) extends WorkWithGraph(pathToDataBase) {
 
@@ -32,10 +33,10 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
   trait Message
 
   case object SeekPolySequenceMessage extends Message
-  case object ComparePolyMessage extends Message
+  case object FindSimilarPolyMessage extends Message
   case object MatchSequencesDifferenceMessage extends Message
-  case object CypherQuery extends Message
-  case object UpdateUniprot extends Message
+  case object CypherQueryMessage extends Message
+  case object UpdateUniprotMessage extends Message
 
   var externalDataBasesCollector = transaction(graphDataBaseConnection) {
     graphDataBaseConnection
@@ -54,9 +55,10 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       val query =
         s"MATCH (:Organism{name:'$organismName'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(seq:AA_Sequence)" +
           "RETURN COLLECT(seq)"
-      val sequences = graphDataBaseConnection.execute(query).asScala.toList
-      val nodes = sequences.map(e => e.get("COLLECT(seq)"))
-      Map(organismName -> nodes)
+      val sequencesActor = system.actorOf(Props(CypherQueryExecutor(query)))
+      val sequencesCollection = getCollectionOfNodes(sequencesActor, CypherQueryMessage)()
+      val sequences = getCollectionResults(sequencesCollection)
+      Map(organismName -> sequences)
     }
 
     def receive = {
@@ -67,16 +69,13 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
 
   case class OrganismSequenceMatchSeeker(fromOrganism: (String, List[Neo4jNode]), toOrganism: (String, List[Neo4jNode])) extends Actor {
 
-    def compareSeq(): List[Map[String, List[Neo4jNode]]] = transaction(graphDataBaseConnection) {
-      val res = fromOrganism._2.map(
-        from => toOrganism._2.map(
-          to => s"${fromOrganism._1} -> ${toOrganism._1}" ->
-            utilFunctions.utilFunctionsObject.matchRelationExistenceWithoutDirection(from, to)
-          )
-          .filter(_._2.nonEmpty)
-          .toMap
-        )//.filter(_.nonEmpty)
-      res
+    def findSimilar(): Map[String, List[List[Neo4jNode]]] = transaction(graphDataBaseConnection) {
+      val res = fromOrganism._2.flatMap {
+        from => toOrganism._2.map {
+          to => utilFunctions.utilFunctionsObject.matchRelationExistenceWithoutDirection(from, to)
+        }
+      }.filter(_.nonEmpty)
+      Map(s"${fromOrganism._1} -> ${toOrganism._1}" -> res)
     }
 
     def findDifference(): Map[String, List[Neo4jNode]] = transaction(graphDataBaseConnection) {
@@ -90,32 +89,26 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       val queryToOrganismSequences = s"MATCH (:Organism{name:'${toOrganism._1}'})<-[:PART_OF]-(:Polypeptide)-[:IS_A]->(s2:Sequence)" +
         s" RETURN COLLECT(DISTINCT s2)"
 
+      val organismsSequences = getOrganismsPolySequences(List(fromOrganism._1, toOrganism._1))
+      val fromOrganismSequences = organismsSequences(fromOrganism._1).toSet
+      val toOrganismSequences = organismsSequences(toOrganism._1).toSet
+
+
       val similarSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryForSimilarity)))
       val identicalSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryForIdenticalSequences)))
       val fromSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryFromOrganismSequences)))
       val toSequencesActor = system.actorOf(Props(CypherQueryExecutor(queryToOrganismSequences)))
 
-      val similarSequencesRes = getCollectionOfNodes(similarSequencesActor, CypherQuery)()
-      val identicalSequences = getCollectionOfNodes(identicalSequencesActor, CypherQuery)()
-        .values
-        .head
-        .asInstanceOf[SeqWrapper[Neo4jNode]]
-        .asScala
-        .toSet
+      val similarSequencesRes = getCollectionOfNodes(similarSequencesActor, CypherQueryMessage)()
 
-      val fromSequences = getCollectionOfNodes(fromSequencesActor, CypherQuery)()
-        .values
-        .head
-        .asInstanceOf[SeqWrapper[Neo4jNode]]
-        .asScala
-        .toSet
+      val identicalCollectionSequences = getCollectionOfNodes(identicalSequencesActor, CypherQueryMessage)()
+      val identicalSequences = getCollectionResults(identicalCollectionSequences).toSet
 
-      val toSequences = getCollectionOfNodes(toSequencesActor, CypherQuery)()
-        .values
-        .head
-        .asInstanceOf[SeqWrapper[Neo4jNode]]
-        .asScala
-        .toSet
+      val fromCollectionSequences = getCollectionOfNodes(fromSequencesActor, CypherQueryMessage)()
+      val fromSequences = getCollectionResults(fromCollectionSequences).toSet
+
+      val toCollectionSequences = getCollectionOfNodes(toSequencesActor, CypherQueryMessage)()
+      val toSequences = getCollectionResults(toCollectionSequences).toSet
 
       val allSimilarSequences = similarSequencesRes
         .values
@@ -125,22 +118,22 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       val toSimilarSequences = allSimilarSequences.last
 
       val similarSequencesIntersection = fromSimilarSequences.union(toSimilarSequences).union(identicalSequences)
-      val fromDifference = similarSequencesIntersection.diff(fromSequences)
-      val toDifference = similarSequencesIntersection.diff(toSequences)
+      val fromDifference = fromOrganismSequences.diff(similarSequencesIntersection).diff(identicalSequences)
+      val toDifference = toOrganismSequences.diff(similarSequencesIntersection).diff(identicalSequences)
       val res = Map(fromOrganism._1 -> fromDifference.toList, toOrganism._1 -> toDifference.toList)
       res
     }
 
     def receive = {
-      case ComparePolyMessage => sender ! compareSeq()
+      case FindSimilarPolyMessage => sender ! findSimilar()
       case MatchSequencesDifferenceMessage => sender ! findDifference()
       case _ => sender ! Map[String, List[AnyRef]]()
     }
   }
 
-  case class CypherQueryExecutor(query: String) extends Actor{
+  private case class CypherQueryExecutor(query: String) extends Actor{
     def receive = {
-      case CypherQuery => sender ! {
+      case CypherQueryMessage => sender ! {
         val res = graphDataBaseConnection.execute(query).asScala//.toList
         res.next.asScala.toMap
       }
@@ -155,6 +148,16 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
     res
   }
 
+  private def getCollectionResults(queryResult: Map[String, AnyRef]): List[Neo4jNode] = {
+    val res = queryResult
+      .values
+      .head
+      .asInstanceOf[SeqWrapper[Neo4jNode]]
+      .asScala
+      .toList
+    res
+  }
+
   def getOrganismsPolySequences(organismList: List[String]):Map[String, List[Neo4jNode]] = {
     val organismActors = organismList.map(name => system.actorOf(Props(OrganismPolySequenceSeeker(name))))
     val futureResults = organismActors.map(ask(_, SeekPolySequenceMessage).mapTo[Map[String, List[Neo4jNode]]])
@@ -164,7 +167,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
   }
 
 //  def compareSequences() = {
-  def compareSequences(mapOfOrganismsAndSequences: Map[String, List[Neo4jNode]])(message: Message) = {
+  def compareSequences(mapOfOrganismsAndSequences: Map[String, List[Neo4jNode]]) = {
 
     def loop(
               hd: (String, List[Neo4jNode]),
@@ -173,8 +176,9 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
             ): Map[String, List[Map[String, List[Neo4jNode]]]] = {
       if (tl.nonEmpty) {
         val actors = tl.map(t => system.actorOf(Props(OrganismSequenceMatchSeeker(hd, t))))
-        val futureResults = actors.map(ask(_, message).mapTo[List[Map[String, List[Neo4jNode]]]])//.mapTo[List[Neo4jNode]])
-        val res = futureResults.flatMap(Await.result(_, Duration(100, TimeUnit.SECONDS))).toList
+        val futureResults = actors.map(ask(_, MatchSequencesDifferenceMessage).mapTo[Map[String, List[Neo4jNode]]])//.mapTo[List[Neo4jNode]])
+        val res = futureResults.map(Await.result(_, Duration(100, TimeUnit.SECONDS))).toList
+
         actors.foreach(system.stop)
         loop(tl.head, tl.tail, matched ++ Map(hd._1 -> res))
       }
@@ -187,15 +191,39 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
 
     def mergeMaps[T <: AnyRef, U >: AnyRef](m: Map[T, List[U]], n: Map[T, List[U]]): Map[T, List[U]] = {
       val keyIntersection = m.keySet & n.keySet
-      val r1 = keyIntersection.map(key => key -> (m(key) ++ n(key)))
+      val r1 = keyIntersection.map(key => key -> (m(key) ++ n(key)))//.toMap
       //      val r1 = for(key <- keyIntersection) yield key -> (m(key) :: List(n(key)))
       val r2 = m.filterKeys(!keyIntersection.contains(_)) ++ n.filterKeys(!keyIntersection.contains(_))
       r2 ++ r1
     }
 
-//    res.map(org => org)
-    val res = mapOfMatched.map(e => e._2.foldLeft(Map[String, List[AnyRef]]())((foldRes, next) => mergeMaps(foldRes, next)))
-    res
+
+//    val res = mapOfMatched
+//      .map(e => e._2.foldLeft(Map[String, List[AnyRef]]())((foldRes, next) => mergeMaps(foldRes, next)))
+//    res
+    mapOfMatched
+  }
+
+  def findSimilarSequences(mapOfOrganismsAndSequences: Map[String, List[Neo4jNode]]) = {
+    def loop(
+              hd: (String, List[Neo4jNode]),
+              tl: Map[String, List[Neo4jNode]],
+              matched: Map[String, List[List[Neo4jNode]]]
+            ): Map[String, List[List[Neo4jNode]]]  = {
+      if (tl.nonEmpty) {
+        val actors = tl.map(t => system.actorOf(Props(OrganismSequenceMatchSeeker(hd, t))))
+        val futureResults = actors.map(ask(_, FindSimilarPolyMessage).mapTo[Map[String, List[List[Neo4jNode]]]])//.mapTo[List[Neo4jNode]])
+        val res = futureResults.flatMap(Await.result(_, Duration(100, TimeUnit.SECONDS)))
+        actors.foreach(system.stop)
+
+        loop(tl.head, tl.tail, matched ++ res)
+      }
+      else {
+        matched
+      }
+    }
+
+    loop(mapOfOrganismsAndSequences.head, mapOfOrganismsAndSequences.tail, Map())
   }
 
   def getDataBaseNodes = transaction(graphDataBaseConnection) {
@@ -252,7 +280,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
     }
 
     def receive = {
-      case UpdateUniprot => updateSequence()
+      case UpdateUniprotMessage => updateSequence()
       case _ => println(s"Wrong message for UniProt update")
     }
 
@@ -291,7 +319,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       .par
     externalDataBasesCollector ++=  dbNodes //++ externalDataBasesCollector
     val actors = listOfXref.map(x => system.actorOf(Props(UniProtXrefUpdater(x))))
-    actors.foreach(_.ask(UpdateUniprot))
+    actors.foreach(_.ask(UpdateUniprotMessage))
 
   }
 
