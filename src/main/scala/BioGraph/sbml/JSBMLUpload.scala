@@ -2,13 +2,10 @@ package BioGraph.sbml
 
 import java.io.File
 
-import org.neo4j.graphdb.Node
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.sbml.jsbml.{CVTerm, Model}
 import utilFunctions.TransactionSupport
 import utilFunctions.utilFunctionsObject._
 
-import scala.collection.JavaConverters._
 
 /**
   * Created by artem on 14.07.16.

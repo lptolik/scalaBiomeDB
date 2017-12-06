@@ -6,14 +6,7 @@ version := "3.0"
 
 scalaVersion := "2.11.7"
 
-resolvers += "European Bioinformatics Institute" at "http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public"
-
-resolvers += "ebi-repo" at "http://www.ebi.ac.uk/~maven/m2repo"
-//http://www.ebi.ac.uk/~maven/m2repo/org/sbml/jsbml/jsbml/
-//http://www.ebi.ac.uk/~maven/m2repo
-//resolvers += "The EBI repository" at "http://www.ebi.ac.uk/~maven/m2repo/org/sbml/"
-
-//resolvers += "Biojava3" at "http://www.biojava.org/download/maven"
+resolvers += "ebi-repo" at "https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/"
 
 resolvers += "The JSBML repository" at "http://jsbml.sourceforge.net/m2repo_snapshots"
 
