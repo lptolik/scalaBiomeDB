@@ -119,9 +119,9 @@ class GraphElementsTest extends FunSuite {
     val rna3 = RNA("15S ribosomal RNA", gene4, organism2, "tRNA", List(xref3))
 
     val intactDBNode = DBNode("Intact")
-    val reactant1 = Reactant("Super reactant", sequence = "MHQPQWWHP", toCheck = true)
+    val reactant1 = BiochemicalReactant("Super reactant", sequence = "MHQPQWWHP", toCheck = true)
     val reactant1Copy = reactant1.copy()
-    val reactant2 = Reactant("Mega reactant")
+    val reactant2 = BiochemicalReactant("Mega reactant")
     val reaction1 = BiochemicalReaction("Two reactant reaction", List(reactant1, reactant2))
     val reaction1Copy = reaction1.copy()
     val reaction2 = BiochemicalReaction("Another two reactant reaction", List(reactant1, reactant2))

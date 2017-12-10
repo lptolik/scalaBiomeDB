@@ -1250,23 +1250,93 @@ package BioGraph {
     }
   }
 
-  case class Reactant(
-                  name: String,
-                  sequence: String = "",
-                  inchi: Map[String, String] = Map(),
-                  var stoichiometry: Option[Double] = None,
-                  compartment: Option[Compartment] = None,
-                  compounds: List[Compound] = List(),
-                  formula: Option[String] = None,
-                  charge: Option[Int] = None,
-                  toCheck: Boolean = false,
-                  properties: Map[String, Any] = Map(),
-                  nodeId: Long = -1)
-  extends Node(properties = properties, nodeId) {
+  case class ChemicalReactant(name: String,
+                              properties: Map[String, AnyRef] = Map(),
+                              nodeId: Long = -1) extends Node(properties = properties, nodeId) {
+
+    def getLabels = List("ChemicalReactant")
+
+    override def upload(graphDatabaseConnection: GraphDatabaseService): graphdb.Node = {
+      if (this.getId < 0) {
+        val newProperties = Map("name" -> name) ++ properties
+
+        val reactantNode = super.upload(graphDatabaseConnection)
+        newProperties.foreach { case (k, v) => reactantNode.setProperty(k, v) }
+
+        reactantNode
+      }
+      else graphDatabaseConnection.getNodeById(this.getId)
+    }
+  }
+
+  object ChemicalReactant {
+    def apply(node: org.neo4j.graphdb.Node): ChemicalReactant = {
+      val name = node.getProperty("name").toString
+      val props = Map(node.getProperties().asScala.toSeq.filter(_._1 != "name"):_*)
+
+      ChemicalReactant(name, props, node.getId)
+    }
+
+    def getOrCreate(db: GraphDatabaseService)(compoundNodes: Set[org.neo4j.graphdb.Node]) = {
+      find(db)(compoundNodes)
+        .map(ChemicalReactant.addMissingIsALinksToChemicalReactant(db, _, compoundNodes))
+        .getOrElse(ChemicalReactant.create(db)(compoundNodes))
+    }
+
+    def create(db: GraphDatabaseService)(compoundNodes: Set[org.neo4j.graphdb.Node]): ChemicalReactant = {
+      val chemicalReactant = ChemicalReactant(compoundNodes.head.getProperty("name").toString)
+      chemicalReactant.upload(db)
+
+      addMissingIsALinksToChemicalReactant(db, chemicalReactant, compoundNodes)
+    }
+
+    def find(db: GraphDatabaseService)(compoundNodes: Set[org.neo4j.graphdb.Node]): Option[ChemicalReactant] = {
+      def isChemicalReactant(n: org.neo4j.graphdb.Node): Boolean = {
+        n.getLabels.asScala.map(_.name()).toSeq.contains("ChemicalReactant")
+      }
+
+      compoundNodes
+        .flatMap { cn =>
+          cn.getRelationships(INCOMING, isA)
+            .asScala
+            .map(_.getStartNode)
+            .filter(isChemicalReactant)
+        }.headOption
+        .map(apply)
+    }
+
+    def addMissingIsALinksToChemicalReactant(db: GraphDatabaseService,
+                                             chemicalReactant: ChemicalReactant,
+                                             compoundNodes: Set[org.neo4j.graphdb.Node]): ChemicalReactant = {
+
+      val reactantNode = db.getNodeById(chemicalReactant.getId)
+
+      compoundNodes
+        .filter { cn =>
+          !cn.getRelationships(INCOMING, isA)
+            .asScala
+            .exists(_.getStartNode.getId == chemicalReactant.nodeId)
+        }.foreach(reactantNode.createRelationshipTo(_, isA))
+
+      chemicalReactant
+    }
+  }
+
+  case class BiochemicalReactant(name: String,
+                                 sequence: String = "",
+                                 inchi: Map[String, String] = Map(),
+                                 var stoichiometry: Option[Double] = None,
+                                 compartment: Option[Compartment] = None,
+                                 compounds: List[Compound] = List(),
+                                 formula: Option[String] = None,
+                                 charge: Option[Int] = None,
+                                 toCheck: Boolean = false,
+                                 properties: Map[String, Any] = Map(),
+                                 nodeId: Long = -1) extends Node(properties = properties, nodeId) {
 
     def getLabels = this.toCheck match {
-      case true => List("Reactant", "To_check")
-      case false => List("Reactant")
+      case true => List("BiochemicalReactant", "To_check")
+      case false => List("BiochemicalReactant")
     }
 
     def getToCheck = this.toCheck
@@ -1290,13 +1360,13 @@ package BioGraph {
     def setStoichiometry(stoi: Option[Double]) = stoichiometry = stoi
 
     override def equals(that: Any): Boolean = that match {
-      case that: Reactant =>
+      case that: BiochemicalReactant =>
         (that canEqual this) &&
           this.getName == that.getName
       case _ => false
     }
 
-    override def canEqual(that: Any) = that.isInstanceOf[Reactant]
+    override def canEqual(that: Any) = that.isInstanceOf[BiochemicalReactant]
 
     override def hashCode = 41 * name.hashCode
 
@@ -1344,8 +1414,8 @@ package BioGraph {
   }
 
   case class BiochemicalReaction(name: String,
-                                 reactants: List[Reactant],
-                                 products: List[Reactant] = List(),
+                                 reactants: List[BiochemicalReactant],
+                                 products: List[BiochemicalReactant] = List(),
                                  organism: Option[Organism] = None,
                                  xRefs: List[XRef] = List(),
                                  enzymes: List[Enzyme] = List(),
@@ -1393,7 +1463,7 @@ package BioGraph {
       xrefNodes.foreach(biochemReactionNode.createRelationshipTo(_, BiomeDBRelations.evidence))
 
       //link reactants
-      val linkToReaction: (Reactant, Boolean) => Unit = createRelationshipsToReactants(db, biochemReactionNode, _, _)
+      val linkToReaction: (BiochemicalReactant, Boolean) => Unit = createRelationshipsToReactants(db, biochemReactionNode, _, _)
       reactants.foreach(linkToReaction(_, false))
       products.foreach(linkToReaction(_, true))
 
@@ -1406,17 +1476,19 @@ package BioGraph {
       biochemReactionNode
     }
 
-    private def createChemicalReaction(reactantsCompounds: List[org.neo4j.graphdb.Node],
-                                       productsCompounds: List[org.neo4j.graphdb.Node],
+    private def createChemicalReaction(reactantsCompounds: Seq[Set[org.neo4j.graphdb.Node]],
+                                       productsCompounds: Seq[Set[org.neo4j.graphdb.Node]],
                                        ecNumberStrings: Seq[String],
                                        db: GraphDatabaseService): ChemicalReaction = {
       val req = reactantsCompounds.nonEmpty || productsCompounds.nonEmpty
-      require(req,
-        "reactants and products for a ChemicalReaction are empty")
+      require(req, "reactants and products for a ChemicalReaction are empty")
+
+      val chemicalReactants = reactantsCompounds.map(ChemicalReactant.getOrCreate(db))
+      val chemicalProducts = productsCompounds.map(ChemicalReactant.getOrCreate(db))
 
       val chemReaction = ChemicalReaction(
-        reactants = reactantsCompounds.map(Compound.apply),
-        products = productsCompounds.map(Compound.apply),
+        reactants = chemicalReactants,
+        products = chemicalProducts,
         ecNumberStrings,
         name
       )
@@ -1426,100 +1498,119 @@ package BioGraph {
       chemReaction
     }
 
-
-    private def getOrCreateChemicalReaction(reactants: List[Reactant],
-                                            products: List[Reactant],
+    private def getOrCreateChemicalReaction(reactants: Seq[BiochemicalReactant],
+                                            products: Seq[BiochemicalReactant],
                                             reactionName: String,
                                             ecNumberStrings: Seq[String] = Seq.empty,
                                             db: GraphDatabaseService): ChemicalReaction = {
 
-      val reactantsCompoundsMap = reactantCompoundsNodesMap(reactants, db)
-      val reactantsCompounds = reactantsCompoundsMap.flatMap(_._2).toList
-      val reactantsChemicalReactions = findReactantsReactions(reactantsCompounds)
+      val reactantsCompounds = reactants.map(compoundNodes(db))
+      val productsCompounds = products.map(compoundNodes(db))
 
-      val productsCompoundsMap = reactantCompoundsNodesMap(products, db)
-      val productsCompounds = productsCompoundsMap.flatMap(_._2).toList
-      val productsChemicalReactions = findProductsReactions(productsCompounds)
+      val chemicalReactants = reactantsCompounds.map(ChemicalReactant.getOrCreate(db))
+      val chemicalProducts = productsCompounds.map(ChemicalReactant.getOrCreate(db))
 
-      val reactionsToConsider = if (products.nonEmpty) {
-        val productsChemicalReactionsIds = productsChemicalReactions.map(_.getId)
-        reactantsChemicalReactions.filter(rcr => productsChemicalReactionsIds.contains(rcr.getId))
+      (chemicalReactants zip reactants).foreach { case (chem, bioChem) =>
+        db.getNodeById(bioChem.getId).createRelationshipTo(db.getNodeById(chem.getId), isA)
       }
-      else //transport reactions don't have products
-        reactantsChemicalReactions
+      (chemicalProducts zip products).foreach { case (chem, bioChem) =>
+        db.getNodeById(bioChem.getId).createRelationshipTo(db.getNodeById(chem.getId), isA)
+      }
 
-      reactionsToConsider
-        .find { chemReactionNode =>
-          //reaction with the same reactants and products
-          val reactionReactantsIds = findReactionReactants(chemReactionNode).map(_.getId)
-          val reactionProductsIds = findReactionProducts(chemReactionNode).map(_.getId)
+      val reactantsReactionsIds =
+        if (reactants.nonEmpty)
+          chemicalReactants.map(reactantChemicalReactionsIds(db))
+        else
+          List.empty[Set[Long]]
+      val productsReactionsIds =
+        if (products.nonEmpty)
+          chemicalProducts.map(productChemicalReactionsIds(db))
+        else
+          List.empty[Set[Long]]
 
-          val allReactantsPresent = reactantsCompoundsMap.forall { case (_, reactantCompounds) =>
-            reactantCompounds.exists(n => reactionReactantsIds.contains(n.getId))
-          }
-          val allProductsPresent = productsCompoundsMap.forall { case (_, productCompounds) =>
-            productCompounds.exists(n => reactionProductsIds.contains(n.getId))
-          }
+      val reactionsIdsSets = reactantsReactionsIds ++ productsReactionsIds
 
-          allReactantsPresent && allProductsPresent
-        }.map { chemReactionNode =>
-          val chemReactants = reactantsCompounds.map(Compound.apply)
-          val chemProducts = productsCompounds.map(Compound.apply)
+      val commonReactionsIds = reactionsIdsSets.tail.foldLeft(reactionsIdsSets.head)((res, next) => res.intersect(next))
 
-          val cypher =
-            s"MATCH (c:ChemicalReaction)-[:${evidence.name}]->(x:XRef)-[:${linkTo.name}]->(:DB {name: 'EC'}) " +
-              s"WHERE ID(c) = ${chemReactionNode.getId} " +
-              s"RETURN x.id as ec"
+      commonReactionsIds.find { id =>
+        reactantsCount(db)(id) == reactants.size && productsCount(db)(id) == products.size
+      }.map { reactionId =>
+        val chemReactionNode = db.getNodeById(reactionId)
 
-          val existingECNumberStrings = db.execute(cypher).columnAs[String]("ec").asScala.toSet
-          val newECNumberStrings = ecNumberStrings.toSet.diff(existingECNumberStrings)
+        val q =
+          s"MATCH (c:ChemicalReaction)-[:${evidence.name()}]->(x:XRef)-[:${linkTo.name()}]->(:DB {name: 'EC'}) " +
+            s"WHERE ID(c) = ${chemReactionNode.getId} " +
+            s"RETURN x.id as ec"
 
-          newECNumberStrings.foreach { ecns =>
-            val xRefNode = XRef(ecns, DBNode("EC")).upload(db)
-            chemReactionNode.createRelationshipTo(xRefNode, BiomeDBRelations.evidence)
-          }
+        val existingECNumberStrings = db.execute(q).columnAs[String]("ec").asScala.toSet
+        val newECNumberStrings = ecNumberStrings.toSet.diff(existingECNumberStrings)
 
-          ChemicalReaction(
-            chemReactants,
-            chemProducts,
-            newECNumberStrings.union(existingECNumberStrings).toSeq,
-            name,
-            chemReactionNode.getId
-          )
-        }.getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, ecNumberStrings, db))
+        newECNumberStrings.foreach { ecns =>
+          val xRefNode = XRef(ecns, DBNode("EC")).upload(db)
+          chemReactionNode.createRelationshipTo(xRefNode, BiomeDBRelations.evidence)
+        }
+
+        ChemicalReaction(
+          chemicalReactants,
+          chemicalProducts,
+          newECNumberStrings.union(existingECNumberStrings).toSeq,
+          name,
+          chemReactionNode.getId
+        )
+      }.getOrElse(createChemicalReaction(reactantsCompounds, productsCompounds, ecNumberStrings, db))
     }
 
-    private def findReactionReactants(reaction: org.neo4j.graphdb.Node): Set[org.neo4j.graphdb.Node] = {
-      reaction.getRelationships(INCOMING, is_reactant).asScala.map(_.getStartNode).toSet
-    }
-    private def findReactionProducts(reaction: org.neo4j.graphdb.Node): Set[org.neo4j.graphdb.Node] = {
-      reaction.getRelationships(OUTGOING, is_product).asScala.map(_.getEndNode).toSet
+    private def compoundNodes(db: GraphDatabaseService)(reactant: BiochemicalReactant): Set[org.neo4j.graphdb.Node] = {
+      db.getNodeById(reactant.getId).getRelationships(isA, OUTGOING).asScala.map(_.getEndNode).toSet
     }
 
-    private def findProductsReactions(compounds: List[org.neo4j.graphdb.Node]): Set[org.neo4j.graphdb.Node] = {
-      compounds.flatMap { compound =>
-        compound
-          .getRelationships(INCOMING, is_product).asScala
-          .map(_.getStartNode)
-      }.toSet
+    private def reactantsCount(db: GraphDatabaseService)(chemicalReactionId: Long): Long = {
+      val q =
+        s"MATCH (c:ChemicalReactant)-[:${is_reactant.name()}]->(cr:ChemicalReaction) " +
+          s"WHERE ID(cr) = $chemicalReactionId " +
+          s"RETURN COUNT(c) as count"
+
+      db.execute(q)
+        .columnAs[Long]("count")
+        .asScala
+        .toSeq
+        .head
     }
 
-    private def findReactantsReactions(compounds: List[org.neo4j.graphdb.Node]): Set[org.neo4j.graphdb.Node] = {
-      compounds.flatMap { compound =>
-        compound
-          .getRelationships(OUTGOING, is_reactant).asScala
-          .map(_.getEndNode)
-      }.toSet
+    private def productsCount(db: GraphDatabaseService)(chemicalReactionId: Long): Long = {
+      val q =
+        s"MATCH (c:ChemicalReactant)<-[:${is_product.name()}]-(cr:ChemicalReaction) " +
+          s"WHERE ID(cr) = $chemicalReactionId " +
+          s"RETURN COUNT(c) as count"
+
+      db.execute(q)
+        .columnAs[Long]("count")
+        .asScala
+        .toSeq
+        .head
     }
 
-    private def reactantCompoundsNodesMap(metabolites: List[Reactant], db: GraphDatabaseService) = {
-      metabolites.map { metabolite =>
-        val compoundsNodes = db.getNodeById(metabolite.getId)
-          .getRelationships(Direction.OUTGOING, BiomeDBRelations.isA).asScala
-          .map(_.getEndNode)
+    private def reactantChemicalReactionsIds(db: GraphDatabaseService)(reactant: ChemicalReactant): Set[Long] = {
+      val q =
+        s"MATCH (r:ChemicalReactant)-[:${is_reactant.name()}]->(cr:ChemicalReaction) " +
+          s"WHERE ID(r) = ${reactant.getId} " +
+          s"RETURN ID(cr) as ids"
 
-        (metabolite, compoundsNodes.toSet)
-      }.toMap
+      db.execute(q)
+        .columnAs[Long]("ids")
+        .asScala
+        .toSet
+    }
+    private def productChemicalReactionsIds(db: GraphDatabaseService)(reactant: ChemicalReactant): Set[Long] = {
+      val q =
+        s"MATCH (r:ChemicalReactant)<-[:${is_product.name()}]-(cr:ChemicalReaction) " +
+          s"WHERE ID(r) = ${reactant.getId} " +
+          s"RETURN ID(cr) as ids"
+
+      db.execute(q)
+        .columnAs[Long]("ids")
+        .asScala
+        .toSet
     }
 
     private def createPartOfRelationship(reactionNode: org.neo4j.graphdb.Node,
@@ -1529,7 +1620,7 @@ package BioGraph {
 
     private def createRelationshipsToReactants(db: GraphDatabaseService,
                                                reactionNode: org.neo4j.graphdb.Node,
-                                               reactant: Reactant,
+                                               reactant: BiochemicalReactant,
                                                productFlag: Boolean): Unit = {
       val reactantNode = db.getNodeById(reactant.getId)
       val tryToFindReaction = utilFunctionsObject.findExistingRelationship(db,
@@ -1557,8 +1648,8 @@ package BioGraph {
     }
   }
 
-  case class ChemicalReaction(reactants: List[Compound],
-                              products: List[Compound] = List(),
+  case class ChemicalReaction(reactants: Seq[ChemicalReactant],
+                              products: Seq[ChemicalReactant],
                               ecNumberStrings: Seq[String] = Seq.empty,
                               name: String,
                               private val nodeId: Long = -1) extends Node(properties = Map(), nodeId) {

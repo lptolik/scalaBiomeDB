@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 class IntactUtil(psiXmlEntries: Iterable[Entry]) extends TransactionSupport {
 
   //  var gbs = scala.collection.mutable.Set[String]()
-  var mapOfReactants = Map[Int, Reactant]()
+  var mapOfReactants = Map[Int, BiochemicalReactant]()
   var mapOfExperiments = Map[Int, ExperimentInfo]()
 
   val intactDB = DBNode("Intact")
@@ -130,7 +130,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry]) extends TransactionSupport {
       //      Try to match a polypeptide in DB to a reactant
       val reactant = queryResult.nonEmpty match {
         case true =>
-          val reactant = Reactant(name = reactantName)
+          val reactant = BiochemicalReactant(name = reactantName)
           val reactantNode = reactant.upload(graphDataBaseConnection)
           xrefNodes.foreach(reactantNode.createRelationshipTo(_, BiomeDBRelations.evidence))
           queryResult.head.get("ID(p)") match {
@@ -141,7 +141,7 @@ class IntactUtil(psiXmlEntries: Iterable[Entry]) extends TransactionSupport {
           }
           reactant
         case false =>
-          val reactant = Reactant(
+          val reactant = BiochemicalReactant(
             name = reactantName,
             sequence = parsedInteractor.getSequence,
             inchi = inchiMap,
