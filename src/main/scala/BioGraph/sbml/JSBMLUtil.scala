@@ -56,7 +56,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     totalCompoundNameCollector).par
 
   //  collectors of Reactants and GeneProducts
-  var reactantCollector: Map[String, Reactant] = Map()
+  var reactantCollector: Map[String, BiochemicalReactant] = Map()
   var geneProductCollector: Map[String, org.neo4j.graphdb.Node] = Map()
   var enzymeCollector: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = Map()
 
@@ -388,7 +388,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
 
     def makeReactantObject(speciesReference: SpeciesReference,
                            compartmentNodes: Map[String, Compartment],
-                           isProduct:Boolean = false): Reactant = {
+                           isProduct:Boolean = false): BiochemicalReactant = {
       val species = parsedModel.getSpecies(speciesReference.getSpecies)
       val sbmlId = species.getId
       val stoi = if (isProduct) speciesReference.getStoichiometry else -speciesReference.getStoichiometry
@@ -405,7 +405,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
         //      make return as reactant and several compounds
         val formula = Try(speciesFBC.getChemicalFormula).toOption
         val charge = Try(speciesFBC.getCharge).toOption
-        val r = Reactant(
+        val r = BiochemicalReactant(
           name = speciesName,
           stoichiometry = Some(stoi),
           compartment = Some(compartmentNodes(compartment)),

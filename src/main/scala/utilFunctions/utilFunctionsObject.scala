@@ -482,9 +482,9 @@ package utilFunctions {
       text -> term
     }
 
-    def getReactantProperties(reactantNode: Node): (String, Reactant) = {
+    def getReactantProperties(reactantNode: Node): (String, BiochemicalReactant) = {
       val name = reactantNode.getProperty("name").toString
-      val reactant = Reactant(
+      val reactant = BiochemicalReactant(
         name = name,
         nodeId = reactantNode.getId
       )
