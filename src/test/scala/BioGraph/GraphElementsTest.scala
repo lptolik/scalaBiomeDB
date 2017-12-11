@@ -771,7 +771,7 @@ class GraphElementsTest extends FunSuite {
 
   test("test compound getLabels") {
     new TestNodesAndRels {
-      assert(compound1.getLabels === List("Compound", "BioEntity"))
+      assert(compound1.getLabels === List("Compound"))
     }
   }
 

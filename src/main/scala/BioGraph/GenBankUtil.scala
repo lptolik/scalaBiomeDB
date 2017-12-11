@@ -93,12 +93,27 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
         logger.warn("Unknown CCP type")
         "Contig"
       }
+    val taxonID = dnaSeq
+      .getFeaturesByType("source")
+      .get(0)
+      .getQualifiers
+      .get("db_xref")
+      .get(0)
+      .toString
+      .split(":")(1)
 //    features(0).getQualifiers.get("organism").get(0).getValue
-    val organismName = dnaSeq.getFeaturesByType("source").get(0).getQualifiers.get("organism").get(0).getValue
+    val organismName = dnaSeq
+      .getFeaturesByType("source")
+      .get(0)
+      .getQualifiers
+      .get("organism")
+      .get(0)
+      .getValue
 //    val organismName = dnaSeq.getFeatures.get(0).getQualifiers.get("organism").get(0).getValue
     val organism = Organism(
       name = organismName,
       accessions = List(makeXref("GenBank:"  + accession)),
+      taxon = Taxon("", TaxonType.no_rank, taxonID.toInt),
       source = genbankSourceValue,
       properties = Map("accession" -> accession))
 

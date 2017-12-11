@@ -96,7 +96,8 @@ object GenBankUploader extends App with TransactionSupport{
 
           features.next().foreach({
             case elem: Some[Node] => elem.get.upload(graphDataBaseConnection)
-            case None => })
+            case None =>
+          })
           uploader(inits.tail, features)
         }
       }

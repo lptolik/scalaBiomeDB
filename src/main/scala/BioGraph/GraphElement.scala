@@ -209,11 +209,13 @@ package BioGraph {
     family,
     phylum,
     order,
-    subspecies_class,
+    subspecies,
+    `class`,
     subgenus,
     superphylum,
     species_group,
-    subphylum, suborder,
+    subphylum,
+    suborder,
     subclass,
     varietas,
     forma,
@@ -857,8 +859,10 @@ package BioGraph {
     def setAccessions(newAccessions: List[String]) = accessions :: newAccessions
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-        val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
-        if (findOrganismNode == null) {
+      val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
+
+      val organismNode = findOrganismNode match {
+        case null =>
           val organismNode = super.upload(graphDataBaseConnection)
           this.setProperties(
             Map("source" -> this.getSource.mkString(", "), "name" -> this.getName))
@@ -866,8 +870,15 @@ package BioGraph {
           val xrefNodes = this.getAccessions.map(_.upload(graphDataBaseConnection))
           xrefNodes.foreach(organismNode.createRelationshipTo(_, BiomeDBRelations.evidence))
           organismNode
-        }
-        else findOrganismNode
+        case n: graphdb.Node => n
+      }
+
+      val taxonNode = Try(utilFunctionsObject.findNode(graphDataBaseConnection, "Taxon", "tax_id", taxon.getTaxID)).toOption
+      taxonNode match {
+        case Some(taxonNode: graphdb.Node) => organismNode.createRelationshipTo(taxonNode, BiomeDBRelations.isA)
+        case Some(null) => println(s"Taxon ${taxon.getTaxID} not found for Organism ${this.getName}.")
+      }
+      organismNode
 
 //        if (findOrganismNode.isInstanceOf[Node]) findOrganismNode
 //        else {
@@ -1128,6 +1139,7 @@ package BioGraph {
     def getTaxID = taxID
 
     def getTaxonType = taxonType
+
   }
 
   case class Compound(
