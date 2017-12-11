@@ -111,5 +111,5 @@ object GenBankUploader extends App with TransactionSupport{
 //    gbFiles.foreach(uploadOneFile)
     println("Upload finished")
   }
-//  main("/home/artem/work/2017/Timofei/genbank_upload_config.txt")
+  main("/home/artem/work/2017/Timofei/genbank_upload_config.txt")
 }
