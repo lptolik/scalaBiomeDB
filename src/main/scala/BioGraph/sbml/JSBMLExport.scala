@@ -40,7 +40,7 @@ object JSBMLExport extends TransactionSupport {
     }
 
     val qSimilar = s"MATCH (:Organism {name: '$targetOrganismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
-      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]->" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]-" +
       s"(:AA_Sequence)<-[:${BiomeDBRelations.isA.name()}]-(:Polypeptide)-[:${BiomeDBRelations.catalyzes.name()}]->" +
       s"(brs:BiochemicalReaction) " +
       s"WHERE NOT (brs)-[:PART_OF]->(:Organism {name: '$referenceOrganismName'})" +
@@ -85,7 +85,7 @@ object JSBMLExport extends TransactionSupport {
       println(s"Reference organism for '$targetOrganismName' model is '$referenceOrganismName'")
 
       val qSimilar = s"MATCH (:Organism {name: '$targetOrganismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
-        s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]->" +
+        s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]-" +
         s"(:AA_Sequence)<-[:${BiomeDBRelations.isA.name()}]-(:Polypeptide)-[:${BiomeDBRelations.catalyzes.name()}]->" +
         s"(brs:BiochemicalReaction)-[:PART_OF]->(:Organism {name: '$referenceOrganismName'})" +
         s"RETURN DISTINCT brs"
@@ -116,7 +116,7 @@ object JSBMLExport extends TransactionSupport {
                                              (db: GraphDatabaseService): Iterable[Node] = {
 
     val qSimilar = s"MATCH (:Organism {name: '$organismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
-      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]->" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]-" +
       s"(:AA_Sequence)<-[:${BiomeDBRelations.isA.name()}]-(p:Polypeptide)" +
       s"RETURN DISTINCT p"
 
@@ -141,7 +141,7 @@ object JSBMLExport extends TransactionSupport {
   : Iterable[Node] = {
 
     val qSimilar = s"MATCH (:Organism {name: '$targetOrganismName'})<-[:${BiomeDBRelations.partOf.name()}]" +
-      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]->" +
+      s"-(:Polypeptide)-[:${BiomeDBRelations.isA.name()}]->(:AA_Sequence)-[:${BiomeDBRelations.similar.name()}]-" +
       s"(:AA_Sequence)<-[:${BiomeDBRelations.isA.name()}]-(p:Polypeptide)" +
       s"-[:PART_OF]->(:Organism {name: '$sourceOrganismName'})" +
       s"RETURN DISTINCT p"
