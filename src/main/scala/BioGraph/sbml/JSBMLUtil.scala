@@ -193,14 +193,26 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
             logger.info("Model matched by organism name.")
             byName
           case None =>
-            println(s"Organism for model ${model.getName} not found")
-            logger.warn(s"Organism for model ${model.getName} not found")
+            println(s"Organism for model ${model.getName} not found, model cannot be uploaded")
+            logger.warn(s"Organism for model ${model.getName} not found, model cannot be uploaded")
             None
         }
       }
 
       organism match {
-        case o: Organism => uploadModel(o, taxonId, sourceDB, spontaneousReactionsIds)(model)
+        case o: Organism => {
+          val cypher = s"MATCH (m:Model) RETURN m.sourceDBId as id"
+
+          val existingIds = graphDataBaseConnection.execute(cypher).columnAs[String]("id").asScala.toSeq
+
+          if (!existingIds.contains(model.getId))
+            uploadModel(o, taxonId, sourceDB, spontaneousReactionsIds)(model)
+          else {
+            val msg = s"Model with id ${model.getId} for organism '${o.name}' already exists, don't upload it"
+            logger.info(msg)
+            println(msg)
+          }
+        }
         case None =>
       }
 
