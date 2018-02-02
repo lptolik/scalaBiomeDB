@@ -30,9 +30,12 @@ val contig = Contig("Blautia hansenii DSM 20583 genomic scaffold Scfld1, whole g
 val coordinates = Coordinates(150, 301, Strand.reverse)
 val coordinates2 = Coordinates(387, 780, Strand.forward)
 val coordinates3 = Coordinates(750, 1013, Strand.reverse)
-val gene = Gene("Super name", coordinates, plasmid, List(geneTerm), organism, List("GenBank", "MetaCyc"), Map("source" -> "GenBank"), nodeId = 134)
-val gene2 = Gene("Such name", coordinates2, contig, List(geneTerm2), organism, List("GenBank"))
-val gene3 = Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, List("GenBank"), Map("source" -> "GenBank"), nodeId = 134)
+val seq1 = SequenceDNA("MYR")
+val seq2 = SequenceDNA("MRY")
+val seq3 = SequenceDNA("KHR")
+val gene = Gene("Super name", coordinates, plasmid, List(geneTerm), organism, List("GenBank", "MetaCyc"), seq1, Map("source" -> "GenBank"), nodeId = 134)
+val gene2 = Gene("Such name", coordinates2, contig, List(geneTerm2), organism, List("GenBank"), seq2)
+val gene3 = Gene("Super name", coordinates3, plasmid, List(geneTerm), organism, List("GenBank"), seq3, Map("source" -> "GenBank"), nodeId = 134)
 gene.setProperties(Map("comment" -> "comment"))
 gene.getCoordinates.getStrand
 gene.getId
@@ -85,6 +88,7 @@ seqSet.filter(x => x equals sequenceBlast1).head.getSimilarities
 val sequenceBlast4 = sequenceBlast1.copy()
 val setSeq = HashSet(sequenceBlast1)
 tu1.consistsOf
+utilFunctionsObject.getFromEntrez()
 //polys.next().getProperty("seq")
 //val polyMap = utilFunctionsObject.getPolypeptides("/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db")
 //val filtered = polyMap.filter(x => x._2.length > 1)

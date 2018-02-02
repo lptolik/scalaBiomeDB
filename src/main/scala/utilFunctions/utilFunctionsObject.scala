@@ -15,8 +15,10 @@ package utilFunctions {
   import scala.io.Source
   import scala.collection.JavaConverters._
   import BioGraph._
+  import org.biojava.bio.seq.db.FetchURL
   import org.biojava.nbio.core.sequence.DNASequence
   import org.biojava.nbio.core.sequence.io.{FastaReaderHelper, FastaWriter}
+  import org.biojavax.bio.db.ncbi.GenbankRichSequenceDB
 
   /**
     * Created by artem on 12.02.16.
@@ -596,6 +598,20 @@ package utilFunctions {
       writingLoop(stringsIterator, "", firstHeader)
       reader.close()
       writer.close()
+    }
+
+    def getFromEntrez(ncbiID: String = "PKMS01000001"): Unit = {
+      val fu = new FetchURL("genbank", ncbiID)
+      val db = fu.getDB
+      val baseURL = fu.getbaseURL()
+      baseURL
+      val gbrs = new GenbankRichSequenceDB()
+      gbrs.setEmail("temar@yandex.ru")
+      val entry = gbrs.getBioEntry(ncbiID)
+      val seq = gbrs.getRichSequence(ncbiID)
+      seq
+      entry
+
     }
 
   }

@@ -3,7 +3,7 @@ package utilFunctions
 import java.io.{File, PrintWriter}
 import java.util
 
-import BioGraph.{DBNode, SequenceAA, SequenceDNA, XRef}
+import BioGraph._
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.Direction._
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Node, ResourceIterator}
@@ -144,7 +144,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
             lineList.head,
             lineList(2)
           )
-        case false => graphDataBaseConnection.getNodeById(lineList (1).toLong)
+        case false => graphDataBaseConnection.getNodeById(lineList(1).toLong)
       }
 
       val targetSeqNode = outerBlastFlag match {
@@ -165,8 +165,6 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         createSimilarRelationship(querySeqNode, targetSeqNode)
       }
     }
-
-
 
     def getOrCreateSequenceNode(md5: String, seq: String, xrefId: String): Node = {
       if (sequenceNodeCollector.contains(md5)) graphDataBaseConnection.getNodeById(sequenceNodeCollector(md5))
@@ -194,8 +192,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
 
     def createBlastRelationships(currentString: String): Unit = {
       val lineList = outerBlastFlag match {
-        case true => parseStringOfOuterBlast(currentString)
-        case false => parseStringOfInnerBlast(currentString)
+        case true => parseStringOfOuterBlast(currentString, polyFlag)
+        case false => parseStringOfInnerBlast(currentString, polyFlag)
       }
       lineList.tail.nonEmpty match {
         case true => createBlastSimilarRelationship(lineList)
@@ -211,7 +209,14 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     dropSize
   }
 
-  private def parseStringOfInnerBlast(currentString: String): List[String] = {
+  private def sequenceChecker(sequence: String, polyFlag: Boolean): Boolean = {
+    polyFlag match {
+      case true => utilFunctionsObject.checkSequenceAA(sequence)
+      case false => utilFunctionsObject.checkSequenceDNA(sequence)
+    }
+  }
+
+  private def parseStringOfInnerBlast(currentString: String, polyFlag:Boolean): List[String] = {
     val splitString = currentString.split('\t')
     val querySeqId: String = splitString(0)
     val querySeq: String = splitString.last.toUpperCase
@@ -220,8 +225,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     val evalue: String = splitString(10)
     val identity: String = splitString(1)
     val length: String = splitString(4)
-    val md5: String = utilFunctionsObject.md5ToString(querySeq)
-    utilFunctionsObject.checkSequenceAA(targetSeq) match {
+    sequenceChecker(targetSeq, polyFlag) match {
       case true =>
         List(
           querySeq,
@@ -237,7 +241,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     }
   }
 
-  private def parseStringOfOuterBlast(currentString: String): List[String] = {
+  private def parseStringOfOuterBlast(currentString: String, polyFlag: Boolean): List[String] = {
     val splitString = currentString.split('\t')
     val querySeqId: String = splitString(0)
     val querySeq: String = splitString.last.toUpperCase
@@ -247,7 +251,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     val md5: String = utilFunctionsObject.md5ToString(targetSeq)
     val uniprotXref: String = splitString(3)
     val length: String = splitString(4)
-    utilFunctionsObject.checkSequenceAA(targetSeq) match {
+    sequenceChecker(targetSeq, polyFlag) match {
       case true =>
         List(
           querySeq,
@@ -271,7 +275,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
         val nextRes = createSimilarRelationshipsForBlast(blastOutputFilename, res, outerBlastFlag)(byMD5)(polyFlag)
         if (nextRes < iteratorSize) loop(nextRes + 500000)
       }
-      loop(0)
+      loop(0 + dropSize)
     }
   }
 

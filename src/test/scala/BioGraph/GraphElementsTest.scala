@@ -974,13 +974,13 @@ class GraphElementsTest extends FunSuite {
 
   test("test reactant getLabels 1") {
     new TestNodesAndRels {
-      assert(reactant1.getLabels === List("Reactant", "To_check"))
+      assert(reactant1.getLabels === List("BiochemicalReactant", "To_check"))
     }
   }
 
   test("test reactant getLabels 2") {
     new TestNodesAndRels {
-      assert(reactant2.getLabels === List("Reactant"))
+      assert(reactant2.getLabels === List("BiochemicalReactant"))
     }
   }
 

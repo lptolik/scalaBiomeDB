@@ -2,22 +2,25 @@ package BioGraph
 
 import java.io.File
 
+import org.apache.logging.log4j.LogManager
 import org.biojava.nbio.core.sequence.DNASequence
 import org.neo4j.graphdb
 import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import utilFunctions.{TransactionSupport, BiomeDBRelations}
+import utilFunctions.{BiomeDBRelations, TransactionSupport, utilFunctionsObject}
 import utilFunctions.utilFunctionsObject._
-import scala.collection.JavaConverters._
 
+import scala.collection.JavaConverters._
+import scala.io.Source
 import scala.collection.immutable.Map
+import scala.util.Try
 
 /**
   * Created by artem on 15.05.16.
   */
 object GenBankUploader extends App with TransactionSupport{
-  def main(configurationFilename: String = "/home/artem/work/2017/Timofei/genbank_upload_config.txt") {
-
+  def main(configurationFilename: String) {
+    val logger = LogManager.getLogger(this.getClass.getName)
     println("Upload started")
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Chlamydia_trachomatis_A2497_complete_genome_ver1.gb")
 //    val gbReader = new GenBankUtil("/home/artem/work/reps/GenBank/Aliivibrio_salmonicida_LFI1238_chromosome_1.gb")
@@ -38,11 +41,10 @@ object GenBankUploader extends App with TransactionSupport{
 
     val conf = utilFunctions.utilFunctionsObject.readConfigurationFile(configurationFilename)
     val dbDir = conf(0)
-    val genomesDir = conf(1)
+    val genomesDir = conf(2)
 
     val filesToDrop = 0
 
-    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(genomesDir, "gb").drop(filesToDrop)
     val dataBaseFile = new File(dbDir)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
@@ -60,10 +62,23 @@ object GenBankUploader extends App with TransactionSupport{
       }
     }
 
-    makeDicts(flag = false)
+    makeDicts(flag = conf(3).toBoolean)
 
-    def uploadOneFile(gbFile: File): Unit = transaction(graphDataBaseConnection) {
+    def makeQueueForUpload(dataListLocation: String) = {
+      val fileLines = Source.fromFile(dataListLocation).getLines().toList
+      val splitLines = fileLines
+        .map(l => l.split('\t').tail)
+        .map(e => e.head -> e.tail.head.split(','))
+      splitLines
+
+    }
+    val uploadQueue = makeQueueForUpload(conf(1))
+
+//    val gbFiles = utilFunctions.utilFunctionsObject.getUploadFilesFromDirectory(genomesDir, "gb").drop(filesToDrop)
+
+    def uploadOneFile(taxonNode: graphdb.Node, gbFile: File): Unit = transaction(graphDataBaseConnection) {
       println(gbFile.getName)
+
       val gbReader = new GenBankUtil(gbFile)
       gbReader.sequenceCollector = totalSequenceCollector
       gbReader.externalDataBasesCollector = totalDBCollector
@@ -94,6 +109,9 @@ object GenBankUploader extends App with TransactionSupport{
           val ccpNode = nextOrgAndCCP._2.upload(graphDataBaseConnection)
           nextOrgAndCCP._2.setId(ccpNode.getId)
 
+          val check = utilFunctions.utilFunctionsObject.checkRelationExistenceWithDirection(organismNode, taxonNode)
+          if (!check) organismNode.createRelationshipTo(taxonNode, BiomeDBRelations.isA)
+
           features.next().foreach({
             case elem: Some[Node] => elem.get.upload(graphDataBaseConnection)
             case None =>
@@ -106,10 +124,24 @@ object GenBankUploader extends App with TransactionSupport{
       totalDBCollector = gbReader.externalDataBasesCollector
       totalTermCollector = gbReader.termCollector
     }
-    gbFiles.foreach(uploadOneFile)
+
+    def uploadOneTaxon(taxonAndFiles: (String, Array[String])) = transaction(graphDataBaseConnection) {
+      val taxID = taxonAndFiles._1.toLong
+      val taxonNode = Try(graphDataBaseConnection.findNode(DynamicLabel.label("Taxon"), "tax_id", taxID)).toOption
+      taxonNode match {
+        case Some(t: graphdb.Node) =>
+//          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + "genBankRecord_" + n + ".gb"))
+          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + n + ".gbff"))
+          gbFiles.foreach(uploadOneFile(t, _))
+        case _ => logger.warn(s"Taxon $taxID not found.")
+      }
+
+    }
+//    gbFiles.foreach(uploadOneFile(1, _))
+    uploadQueue.foreach(uploadOneTaxon)
     graphDataBaseConnection.shutdown()
-//    gbFiles.foreach(uploadOneFile)
+
     println("Upload finished")
   }
-  main("/home/artem/work/2017/Timofei/genbank_upload_config.txt")
+  main("/home/artem/work/2018/staphylococcus/genbank_upload_config.txt")
 }

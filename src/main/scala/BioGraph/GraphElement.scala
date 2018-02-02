@@ -873,11 +873,11 @@ package BioGraph {
         case n: graphdb.Node => n
       }
 
-      val taxonNode = Try(utilFunctionsObject.findNode(graphDataBaseConnection, "Taxon", "tax_id", taxon.getTaxID)).toOption
-      taxonNode match {
-        case Some(taxonNode: graphdb.Node) => organismNode.createRelationshipTo(taxonNode, BiomeDBRelations.isA)
-        case Some(null) => println(s"Taxon ${taxon.getTaxID} not found for Organism ${this.getName}.")
-      }
+//      val taxonNode = Try(utilFunctionsObject.findNode(graphDataBaseConnection, "Taxon", "tax_id", taxon.getTaxID)).toOption
+//      taxonNode match {
+//        case Some(taxonNode: graphdb.Node) => organismNode.createRelationshipTo(taxonNode, BiomeDBRelations.isA)
+//        case Some(null) => println(s"Taxon ${taxon.getTaxID} not found for Organism ${this.getName}.")
+//      }
       organismNode
 
 //        if (findOrganismNode.isInstanceOf[Node]) findOrganismNode
@@ -1692,7 +1692,7 @@ package BioGraph {
     }
 
     private def findECNumberXRef(ecNumberString: String, db: GraphDatabaseService): Option[graphdb.Node] = {
-      val q = s"MATCH (:DB {name: 'EC'})<-[:${linkTo.name}]-(x:XRef {id: '$ecNumberString'}) RETURN x"
+      val q = s"MATCH (:DB {name: 'EC'})<-[:${linkTo.name()}]-(x:XRef {id: '$ecNumberString'}) RETURN x"
 
       db.execute(q).columnAs[graphdb.Node]("x").asScala.toList.headOption
     }
