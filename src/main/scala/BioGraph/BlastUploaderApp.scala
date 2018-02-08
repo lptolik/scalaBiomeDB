@@ -52,5 +52,5 @@ object BlastUploaderApp extends App{
 
 //    blastTool.makeGeneInnerBlastByMD5("/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byMD5_inner_blast_result.txt", 0)
   }
-//  main("/home/artem/work/2017/Timofei/blast_upload_config.txt")
+  main("/home/artem/work/2018/staphylococcus/blast_upload_config.txt")
 }

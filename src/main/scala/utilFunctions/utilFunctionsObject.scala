@@ -1,4 +1,5 @@
 import BioGraph._
+import org.neo4j.graphdb.GraphDatabaseService
 package utilFunctions {
 
   import java.util
@@ -19,6 +20,8 @@ package utilFunctions {
   import org.biojava.nbio.core.sequence.DNASequence
   import org.biojava.nbio.core.sequence.io.{FastaReaderHelper, FastaWriter}
   import org.biojavax.bio.db.ncbi.GenbankRichSequenceDB
+
+  import scala.util.Try
 
   /**
     * Created by artem on 12.02.16.
@@ -372,7 +375,7 @@ package utilFunctions {
               listOfFeatures.tail.foldLeft(listOfFeatures.head.endNode)((previousFeature, nextFeaturePath) =>
                 createNext(previousFeature: Node, nextFeaturePath: Path))))
         }
-        else println("Empty ccp list.")
+        else println(s"Empty ccp list for ${organismName}.")
       }
 
     def makeOverlapRelationship(
@@ -600,18 +603,16 @@ package utilFunctions {
       writer.close()
     }
 
-    def getFromEntrez(ncbiID: String = "PKMS01000001"): Unit = {
-      val fu = new FetchURL("genbank", ncbiID)
-      val db = fu.getDB
-      val baseURL = fu.getbaseURL()
-      baseURL
-      val gbrs = new GenbankRichSequenceDB()
-      gbrs.setEmail("temar@yandex.ru")
-      val entry = gbrs.getBioEntry(ncbiID)
-      val seq = gbrs.getRichSequence(ncbiID)
-      seq
-      entry
-
+    def findCCP(graphDatabaseConnection: GraphDatabaseService)(ccp: CCP, organism: Organism): Option[Node] = {
+      val organismNode = graphDatabaseConnection.findNode(DynamicLabel.label("Organism"), "name", organism.getName)
+      val ccps = organismNode
+        .getRelationships(Direction.INCOMING, BiomeDBRelations.partOf)
+        .asScala
+        .map(_.getStartNode)
+        .filter(c => c.hasLabel(DynamicLabel.label(ccp.getType.toString)) && c.getProperty("name") == ccp.getName)
+        .toList
+//      if (ccps.length > 0) Option(ccps.head) else None
+      Try(ccps.head).toOption
     }
 
   }

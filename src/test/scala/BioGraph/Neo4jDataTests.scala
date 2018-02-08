@@ -18,14 +18,13 @@ class Neo4jDataTests extends FunSuite with TransactionSupport{
     testNode.addLabel(DynamicLabel.label("Test Node"))
     testNode.addLabel(DynamicLabel.label("So much very exciting"))
     testNode.setProperty("very", "important")
+
   }
 
   def findNode(graphDataBaseConnection: GraphDatabaseService) = transaction(graphDataBaseConnection) {
     val foundNode = graphDataBaseConnection.findNode(DynamicLabel.label("Test Node"), "very", "important")
     foundNode
   }
-
-
 
   test("test find node labels") {
     val graphDataBaseConnection = new TestGraphDatabaseFactory().newImpermanentDatabase()
@@ -45,5 +44,7 @@ class Neo4jDataTests extends FunSuite with TransactionSupport{
     assert((foundNode.getId > -1) === true)
     graphDataBaseConnection.shutdown()
   }
+
+
 
 }

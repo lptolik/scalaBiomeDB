@@ -55,7 +55,7 @@ object GenBankUploader extends App with TransactionSupport{
     def makeDicts(flag: Boolean = true) = {
       flag match {
         case true =>
-          totalSequenceCollector ++= getNodesDict(graphDataBaseConnection)(getSequenceProperties, "Sequence")()
+          totalSequenceCollector ++= getNodesDict(graphDataBaseConnection)(getSequenceProperties, "AA_Sequence")()
           totalDBCollector ++= getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")()
           totalTermCollector ++= getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")()
         case false =>
@@ -131,9 +131,12 @@ object GenBankUploader extends App with TransactionSupport{
       taxonNode match {
         case Some(t: graphdb.Node) =>
 //          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + "genBankRecord_" + n + ".gb"))
-          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + n + ".gbff"))
+          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + n + ".gb"))
           gbFiles.foreach(uploadOneFile(t, _))
-        case _ => logger.warn(s"Taxon $taxID not found.")
+        case _ =>
+          val warnMessage = s"Taxon $taxID not found."
+          logger.warn(warnMessage)
+          print(warnMessage)
       }
 
     }

@@ -24,5 +24,5 @@ object NextOverlapApp extends App{
   }
 //  val localDB = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
 //  val remoteDB = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
-//  main("/home/artem/work/2017/Timofei/next_overlap_config.txt")
+  main("/home/artem/work/2018/staphylococcus/next_overlap_config.txt")
 }

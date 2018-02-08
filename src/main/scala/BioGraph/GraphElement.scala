@@ -128,8 +128,9 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
 
-      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label(getType.toString), "name", this.getName)
-      if (tryToFindNode == null) {
+//      val tryToFindNode = graphDataBaseConnection.findNode(DynamicLabel.label(getType.toString), "name", this.getName)
+      val tryToFindNode = utilFunctionsObject.findCCP(graphDataBaseConnection)(this, this.getOrganism)
+      if (tryToFindNode.isEmpty) {
         val newProperties = this.setProperties(Map(
           "length" -> this.getLength,
           "type" -> this.getChromType.toString,
@@ -141,7 +142,7 @@ package BioGraph {
         ccpNode.createRelationshipTo(organismNode, BiomeDBRelations.partOf)
         ccpNode
       }
-      else tryToFindNode
+      else tryToFindNode.get
 
     }
   }
