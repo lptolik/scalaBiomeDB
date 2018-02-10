@@ -32,6 +32,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   var sequenceCollector: Map[String, SequenceAA] = Map()
   var termCollector: Map[String, Term] = Map()
   var externalDataBasesCollector: Map[String, DBNode] = Map()
+  var xrefCollector: Map[String, XRef] = Map()
 
   private def correctDBXrefInFile(gbFile: File): File = {
     val outputFileName = gbFile.getAbsolutePath.split(".gb")(0) + "_corrected_dbxrefs.gb"
@@ -424,12 +425,20 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   private def makeXref(ref: String): XRef = {
     val dbName = ref.split(":")(0)
     val xrefText = ref.split(":")(1)
-    if (externalDataBasesCollector.contains(dbName)) XRef(xrefText, externalDataBasesCollector(dbName))
+
+    val dbNode = getOrCreateDBNode(dbName)
+    if (xrefCollector.contains(xrefText)) xrefCollector(xrefText)
     else {
-      val newDB = DBNode(dbName)
-      val xrefNode = XRef(xrefText, newDB)
-      externalDataBasesCollector = externalDataBasesCollector ++ Map(dbName -> newDB)
-      xrefNode
+      XRef(xrefText, dbNode)
+    }
+  }
+
+  private def getOrCreateDBNode(dbName: String): DBNode = {
+    if (externalDataBasesCollector.contains(dbName)) externalDataBasesCollector(dbName)
+    else {
+      val db = DBNode(dbName)
+      externalDataBasesCollector = externalDataBasesCollector ++ Map(dbName -> db)
+      db
     }
   }
 
@@ -446,7 +455,6 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
 
   private def makeListOfXrefs(feature: NucleotideFeature): List[XRef] = {
     try {
-
       val xrefs = feature.getQualifiers.get("db_xref")
       val resultXrefs = xrefs.asScala.toList.map(_.toString).filter(!_.contains("GeneID"))
       resultXrefs.map(ref => makeXref(ref))
