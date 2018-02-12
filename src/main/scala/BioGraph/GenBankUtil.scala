@@ -429,7 +429,9 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val dbNode = getOrCreateDBNode(dbName)
     if (xrefCollector.contains(xrefText)) xrefCollector(xrefText)
     else {
-      XRef(xrefText, dbNode)
+      val xref = XRef(xrefText, dbNode)
+      xrefCollector ++= Map(xrefText -> xref)
+      xref
     }
   }
 

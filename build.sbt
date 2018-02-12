@@ -44,7 +44,7 @@ libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
 
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.1"
 
-libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.13"
+libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.16"
 
 //sbt-assembly
 //assemblySettings

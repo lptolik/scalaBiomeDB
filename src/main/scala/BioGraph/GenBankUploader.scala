@@ -51,6 +51,7 @@ object GenBankUploader extends App with TransactionSupport{
     var totalSequenceCollector: Map[String, SequenceAA] = Map()
     var totalDBCollector: Map[String, DBNode] = Map()
     var totalTermCollector: Map[String, Term] = Map()
+    var totalXRefCollector: Map[String, XRef] = Map()
 
     def makeDicts(flag: Boolean = true) = {
       flag match {
@@ -58,6 +59,7 @@ object GenBankUploader extends App with TransactionSupport{
           totalSequenceCollector ++= getNodesDict(graphDataBaseConnection)(getSequenceProperties, "AA_Sequence")()
           totalDBCollector ++= getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")()
           totalTermCollector ++= getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")()
+          totalXRefCollector ++= totalDBCollector.values.flatMap(db => getNodesDict(graphDataBaseConnection)(getXRefProperties(db), "XRef")())
         case false =>
       }
     }
@@ -83,6 +85,7 @@ object GenBankUploader extends App with TransactionSupport{
       gbReader.sequenceCollector = totalSequenceCollector
       gbReader.externalDataBasesCollector = totalDBCollector
       gbReader.termCollector = totalTermCollector
+      gbReader.xrefCollector = totalXRefCollector
       val accessions = gbReader.getAccessionsFromGenBankFile
       val setOfFeatures = accessions.values.map(gbReader.getFeatures).iterator
       val setOfOrganismsNodes = accessions.values.map(gbReader.getInitialData)
@@ -123,6 +126,7 @@ object GenBankUploader extends App with TransactionSupport{
       totalSequenceCollector = gbReader.sequenceCollector
       totalDBCollector = gbReader.externalDataBasesCollector
       totalTermCollector = gbReader.termCollector
+      totalXRefCollector = gbReader.xrefCollector
     }
 
     def uploadOneTaxon(taxonAndFiles: (String, Array[String])) = transaction(graphDataBaseConnection) {

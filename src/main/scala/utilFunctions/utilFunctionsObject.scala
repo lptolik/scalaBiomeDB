@@ -496,6 +496,12 @@ package utilFunctions {
       name -> reactant
     }
 
+    def getXRefProperties(dbNode: DBNode)(xrefNode: Node): (String, XRef) = {
+      val id = xrefNode.getProperty("id").toString
+      val xref = XRef(id, dbNode)
+      (id, xref)
+    }
+
     def getCompoundPropertiesByXRefs(xrefNode: Node): (String, Compound) = {
       val xrefId = xrefNode.getProperty("id").toString
       val compoundNode = xrefNode.getSingleRelationship(BiomeDBRelations.evidence, Direction.INCOMING).getStartNode

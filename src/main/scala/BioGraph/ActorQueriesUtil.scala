@@ -25,6 +25,9 @@ import scala.collection.convert.Wrappers.SeqWrapper
 import scala.collection.parallel.mutable.ParMap
 import scala.io.Source
 import org.biojavax.bio.db.ncbi.GenbankRichSequenceDB
+import uk.ac.ebi.kraken.interfaces.uniprot.comments.DomainComment
+import uk.ac.ebi.kraken.interfaces.uniprot.features.{DomainFeature, FeatureType}
+import uk.ac.ebi.kraken.model.uniprot.features.DomainFeatureImpl
 
 case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implicit timeout: Timeout) extends WorkWithGraph(pathToDataBase) {
 
@@ -268,12 +271,21 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       val service = client.getUniProtQueryService
       service.start()
       val accession = UniProtQueryBuilder.accession(xref._1)
-      val accessionReferences = service.getEntries(accession).asScala
+      val qs = accession.getQueryString
+      val features = service.getFeatures(accession).asScala.toList
+//      val comments = service.getComments(accession).asScala.toList.flatMap(_.getComponent.asScala)
+      val accessionReferences = service.getEntries(accession).asScala.toList
+      val domains = accessionReferences.flatMap(ref => ref.getFeatures(FeatureType.DOMAIN).asScala).toIterable
+//        .flatMap[DomainFeatureImpl](ref => ref.getFeatures(FeatureType.DOMAIN).asScala)
+//        .toIterable
+      domains.foreach(processDomain)
+
       accessionReferences
         .map(ref => ref
           .getDatabaseCrossReferences
           .asScala)
         .foreach(processCrossReferences)
+
 
 //      val first = accessionReferences.next()
 //      val cref = first.getDatabaseCrossReferences.asScala.toList
@@ -282,24 +294,49 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
       service.stop()
     }
 
-    private def processCrossReferences(props: Iterable[DatabaseCrossReference]): Unit = {
+    private def processCrossReferences(props: Iterable[DatabaseCrossReference]): Unit = transaction(graphDataBaseConnection){
       val refs = props.map(e => e.getDatabase.toString -> e.getPrimaryId.toString)
       val dbs = props.map(_.getPrimaryId)
       val desc = props.map(_.getDescription)
       refs.foreach(makeXref)
     }
 
+    private def processDomain(domain: DomainFeatureImpl): Unit = transaction(graphDataBaseConnection){
+//      todo double relationships
+      val features = domain.getFeatureDescription
+      val location = domain.getFeatureLocation
+      val domainObject = Domain(features.getValue)
+//      connect Domain to Sequence or Poly?
+      val poly = Option(xref._2.getSingleRelationship(BiomeDBRelations.evidence, Direction.INCOMING).getStartNode)
+      val rel = poly match {
+        case Some(p) =>
+          domainObject.upload(graphDataBaseConnection).createRelationshipTo(p, BiomeDBRelations.partOf)
+        case None =>
+          domainObject.upload(graphDataBaseConnection).createRelationshipTo(xref._2, BiomeDBRelations.partOf)
+      }
+      rel.setProperty("start", location.getStart)
+      rel.setProperty("end", location.getEnd)
+    }
+
     private def makeXref(ref: (String, String)): Unit = transaction(graphDataBaseConnection){
       //      todo make relationships to Polypeptides of Sequences
       //      get some more info maybe?
-// todo STRINGXRE not found in the DB list
       val dbName = ref._1
       val xrefText = ref._2
-      val xrefObject = XRef(xrefText, externalDataBasesCollector(dbName), properties = Map("To_check" -> "True"))
+      val findDB =
+        if (externalDataBasesCollector.contains(dbName)) externalDataBasesCollector(dbName)
+        else {
+          val db = DBNode(dbName)
+          db.upload(graphDataBaseConnection)
+          externalDataBasesCollector ++= Map(dbName -> db)
+          db
+        }
+
+      val xrefObject = XRef(xrefText, findDB, properties = Map("To_check" -> "True")).upload(graphDataBaseConnection)
       val poly = Option(xref._2.getSingleRelationship(BiomeDBRelations.evidence, Direction.INCOMING).getStartNode)
       poly match {
-        case Some(p) => p.createRelationshipTo(xrefObject.upload(graphDataBaseConnection), BiomeDBRelations.evidence)
-        case None => xref._2.createRelationshipTo(xrefObject.upload(graphDataBaseConnection), BiomeDBRelations.evidence)
+        case Some(p) => p.createRelationshipTo(xrefObject, BiomeDBRelations.evidence)
+        case None => xref._2.createRelationshipTo(xrefObject, BiomeDBRelations.evidence)
       }
     }
 
@@ -331,19 +368,29 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
     Map(id -> node)
   }
 
-  def updateUniProtSequences(dbNamesFileName: String)(listOfXref: Map[String, Neo4jNode]): Unit = transaction(graphDataBaseConnection) {
+  private def getOrCreateDBNodes(dbNamesFileName: String): Unit = transaction(graphDataBaseConnection) {
     val dbNodes = Source
       .fromFile(dbNamesFileName)
       .getLines()
       .map(name => DBNode(name.trim))
       .map{db =>
-        db.upload(graphDataBaseConnection)
+//        db.upload(graphDataBaseConnection)
         db.name.toUpperCase -> db}
       .toMap
-      .par
-    externalDataBasesCollector ++=  dbNodes //++ externalDataBasesCollector
+
+    dbNodes.foreach(_._2.upload(graphDataBaseConnection))
+    externalDataBasesCollector ++=  dbNodes.par
+  }
+
+  def updateUniProtSequences
+  (dbNamesFileName: String)(listOfXref: Map[String, Neo4jNode]): Unit = {
+    getOrCreateDBNodes(dbNamesFileName)
     val actors = listOfXref.map(x => system.actorOf(Props(UniProtXrefUpdater(x))))
     actors.foreach(_.ask(UpdateUniprotMessage))
+    val futureResults = actors.map(ask(_, UpdateUniprotMessage))
+    futureResults.foreach(Await.result(_, Duration(100, TimeUnit.SECONDS)))
+//    val futureResults = actors.map(ask(_, FindSimilarPolyMessage).mapTo[Map[String, List[List[Neo4jNode]]]])//.mapTo[List[Neo4jNode]])
+//    val res = futureResults.flatMap(Await.result(_, Duration(100, TimeUnit.SECONDS)))
 
   }
 

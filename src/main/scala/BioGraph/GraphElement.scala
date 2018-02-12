@@ -362,7 +362,9 @@ package BioGraph {
       if (this.getId < 0) {
         val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName))
         val dbNode = tryToFindNode match {
-          case Some(n) => n
+          case Some(n) =>
+            this.id =  n.getId
+            n
           case None =>
             val createdDBNode = super.upload(graphDataBaseConnection)
             this.setProperties(Map("name" -> this.getName)).foreach{case (k, v) => createdDBNode.setProperty(k, v)}
@@ -370,7 +372,9 @@ package BioGraph {
         }
         dbNode
       }
-      else graphDataBaseConnection.getNodeById(this.getId)
+      else {
+        graphDataBaseConnection.getNodeById(this.getId)
+      }
     }
   }
 
@@ -398,14 +402,54 @@ package BioGraph {
     override def hashCode = 41 * xrefId.toUpperCase.hashCode
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-      val newProperties = this.setProperties(Map("id" -> this.getXRef))
+//      val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("XRef"), "id", this.getXRef))
+//      val xrefNode = tryToFindNode match {
+//        case Some(n) => n
+//        case None =>
+//          val createdXRefNode = super.upload(graphDataBaseConnection)
+//          this.setProperties(Map("id" -> this.getXRef)).foreach{case (k, v) => createdXRefNode.setProperty(k, v)}
+//          createdXRefNode
+//      }
       val xrefNode = super.upload(graphDataBaseConnection)
-      newProperties.foreach{case (k, v) => xrefNode.setProperty(k, v)}
-
+      this.setProperties(Map("id" -> this.getXRef)).foreach{case (k, v) => xrefNode.setProperty(k, v)}
       val dbNode = this.getDB.upload(graphDataBaseConnection)
       xrefNode.createRelationshipTo(dbNode, BiomeDBRelations.linkTo)
-
       xrefNode
+    }
+  }
+
+  case class Domain(
+                   name: String,
+                   properties: Map[String, Any] = Map(),
+                   nodeId: Long = -1
+                   ) extends Node(properties, nodeId) {
+
+    def getLabels = List("Domain")
+
+    def getName = name
+
+
+
+    override def equals(that: Any) = that match {
+      case that: Domain =>
+        (that canEqual this) && (this.getName == that.getName)
+      case _ => false
+    }
+
+    override def canEqual(that: Any) = that.isInstanceOf[Domain]
+
+    override def hashCode = 41 * name.hashCode
+
+    override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
+      val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Domain"), "name", this.getName))
+      val domainNode = tryToFindNode match {
+        case Some(n) => n
+        case None =>
+          val createdDomainNode = super.upload(graphDataBaseConnection)
+          this.setProperties(Map("name" -> this.getName)).foreach { case (k, v) => createdDomainNode.setProperty(k, v) }
+          createdDomainNode
+      }
+      domainNode
     }
   }
 
@@ -431,7 +475,8 @@ package BioGraph {
     def getSource = source
 
     override def equals(that: Any) = that match {
-      case that: Feature => this.getCCP == that.getCCP &&
+      case that: Feature =>
+        this.getCCP == that.getCCP &&
         this.getCoordinates == that.getCoordinates
       case _ => false
     }
