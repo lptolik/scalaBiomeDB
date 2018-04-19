@@ -15,7 +15,7 @@ import utilFunctions.utilFunctionsObject.getOrganismNames
 
 object ActorQueriesApp extends App {
   def main(): Unit = {
-    implicit val timeout = Timeout(Duration(200, TimeUnit.SECONDS))
+    implicit val timeout: Timeout = Timeout(Duration(200, TimeUnit.SECONDS))
     val system = ActorSystem("ScalaBiomeSystem")
     val aqu = ActorQueriesUtil("/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/", system)
 //    val organisms = getOrganismNames(aqu.graphDataBaseConnection).drop(6)

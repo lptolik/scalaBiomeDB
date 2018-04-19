@@ -602,6 +602,18 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  test("test sequence sequenceLength") {
+    new TestNodesAndRels {
+      assert(sequence3.getLength === 111)
+    }
+  }
+
+  test("test sequence default properties") {
+    new TestNodesAndRels {
+      assert(sequence3.getProperties === Map())
+    }
+  }
+
   test("test similarity required identity") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {

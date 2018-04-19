@@ -1024,9 +1024,11 @@ package BioGraph {
 
 //    if (md5.length < 32) md5 = countMD5
 
+    val sequenceLength = sequence.length
+
     def getSequence = sequence
 
-    def getLength: Int = sequence.length
+    def getLength: Int = sequenceLength
 
     def getMD5: String
 

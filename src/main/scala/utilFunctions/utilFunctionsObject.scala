@@ -254,6 +254,17 @@ package utilFunctions {
       listOfNeighbours(nodeB)
     }
 
+    def checkRelationExistenceWithDirectionAndProperties(
+                                              nodeA: Node,
+                                              nodeB: Node,
+                                              relationLabel: RelationshipType,
+                                              direction: Direction,
+                                              propertyKey: String,
+                                              propertyValue: Any): Boolean = {
+      val listOfRelationships = nodeA.getRelationships(relationLabel, direction)
+      listOfRelationships.asScala.exists(r => r.getProperty(propertyKey) == propertyValue)
+    }
+
     def checkIsASequence(isARelationshipIter: util.Iterator[Relationship]): List[Node] = {
       val isARelationships = isARelationshipIter.asScala.toList
       def loop(rels: List[Relationship]): List[Node] = {
