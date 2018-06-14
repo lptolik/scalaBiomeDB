@@ -6,6 +6,10 @@ version := "3.0"
 
 scalaVersion := "2.11.7"
 
+resolvers += "European Bioinformatics Institute" at "http://www.ebi.ac.uk/intact/maven/nexus/content/groups/public"
+
+resolvers += "ebi-repo111" at "http://www.ebi.ac.uk/~maven/m2repo"
+
 resolvers += "ebi-repo" at "https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/"
 
 resolvers += "The JSBML repository" at "http://jsbml.sourceforge.net/m2repo_snapshots"
@@ -38,7 +42,8 @@ libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3" 
 
 //libraryDependencies += "com.graphaware.neo4j" % "tests" % "3.0.3.39"
 
-libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
+//libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
+libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.3.1"
 
 libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
 
