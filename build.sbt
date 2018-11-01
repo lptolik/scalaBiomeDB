@@ -21,6 +21,7 @@ libraryDependencies += "org.neo4j" % "neo4j" % "2.3.1"
 //libraryDependencies += "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.1.0"
 
 libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.5"
+libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.7.25" % Test
 
 //libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.5"
 
@@ -45,7 +46,8 @@ libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3" 
 //libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
 libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.3.1"
 
-libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
+//libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
+libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.3.1"
 
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.1"
 

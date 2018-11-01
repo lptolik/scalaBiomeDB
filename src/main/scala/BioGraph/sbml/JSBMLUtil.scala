@@ -66,9 +66,9 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     (db, dbNodeId)
   }
 
-  def jsbmlModelFromFile(fileName: File): Model = transaction(graphDataBaseConnection){
-//    get one model
-    val readResult = reader.readSBML(fileName)
+  def jsbmlModelFromFile(file: File): Model = transaction(graphDataBaseConnection){
+
+    val readResult = reader.readSBML(file)
     val parsedModel = readResult.getModel
     parsedModel
   }
@@ -163,8 +163,8 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     }
   }
 
-  def getTaxonFromModel(model: Model): Int = {
-    val taxonID = model
+  def getTaxonFromModel(model: Model): Option[Int]= {
+    val taxonID = Try(model
       .getAnnotation
       .getListOfCVTerms
       .asScala
@@ -173,16 +173,16 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       .toString
       .split("taxonomy/")(1)
       .dropRight(2)
-      .toInt
+      .toInt).toOption
     taxonID
   }
 
-  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String]): scala.Unit =
+  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String], externalTaxonId: Option[Int] = None): scala.Unit =
     transaction(graphDataBaseConnection) {
       val organismName = model.getName
       val organismByName = findOrganismByName(organismName)
-      val taxonId = getTaxonFromModel(model)
-      val organismByTaxon = findOrganismByTaxon(taxonId)
+      val taxonId = externalTaxonId.orElse(getTaxonFromModel(model))
+      val organismByTaxon = taxonId.flatMap(findOrganismByTaxon)
 
       val organism = organismByTaxon match {
         case Some(byTaxon) =>
@@ -206,7 +206,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
           val existingIds = graphDataBaseConnection.execute(cypher).columnAs[String]("id").asScala.toSeq
 
           if (!existingIds.contains(model.getId))
-            uploadModel(o, taxonId, sourceDB, spontaneousReactionsIds)(model)
+            uploadModel(o, taxonId.get, sourceDB, spontaneousReactionsIds)(model)
           else {
             val msg = s"Model with id ${model.getId} for organism '${o.name}' already exists, don't upload it"
             logger.info(msg)
@@ -321,9 +321,9 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       sbmlIdPolyPair
     }
 
-    def makeCompoundObject(specie: Species, speciesName: String): List[Compound] = transaction(graphDataBaseConnection) {
+    def makeCompoundObject(species: Species, speciesName: String): List[Compound] = transaction(graphDataBaseConnection) {
       val chebiXRefs = Try(
-        specie
+        species
           .getCVTerms
           .asScala
           .head
@@ -336,7 +336,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
         case _ => List()
       }
       val reactomeXRefs = Try(
-        specie
+        species
           .getCVTerms
           .asScala
           .head
