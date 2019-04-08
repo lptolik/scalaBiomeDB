@@ -8,7 +8,9 @@ scalaVersion := "2.11.7"
 
 resolvers += "ebi-repo" at "https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/"
 
-resolvers += "The JSBML repository" at "http://jsbml.sourceforge.net/m2repo_snapshots"
+resolvers += "spring-plugins" at "http://repo.spring.io/plugins-release/"
+
+resolvers += "biopax" at "http://www.biopax.org/m2repo/releases/"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.1.7" % "test"
 
@@ -28,9 +30,11 @@ libraryDependencies += "org.neo4j" % "neo4j-kernel" % "2.3.1" classifier "tests"
 
 libraryDependencies += "org.neo4j" % "neo4j-io" % "2.3.1" classifier "tests"
 
-libraryDependencies += "psidev.psi.mi" % "psi25-xml" % "1.8.4" % "provided"
+// https://mvnrepository.com/artifact/psidev.psi.mi/psi25-xml
+libraryDependencies += "psidev.psi.mi" % "psi25-xml" % "1.8.4"
 
-libraryDependencies += "psidev.psi.mi" % "psimitab" % "1.8.4" % "provided"
+// https://mvnrepository.com/artifact/psidev.psi.mi/psimitab
+libraryDependencies += "psidev.psi.mi" % "psimitab" % "1.8.4"
 
 libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3"  % "provided"
 
@@ -38,13 +42,13 @@ libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3" 
 
 //libraryDependencies += "com.graphaware.neo4j" % "tests" % "3.0.3.39"
 
-libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2-SNAPSHOT"
+libraryDependencies += "org.sbml.jsbml" % "jsbml" % "1.2"
 
-libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2-SNAPSHOT"
+libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2"
 
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.1"
 
-libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.16"
+libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.25"
 
 //sbt-assembly
 //assemblySettings
