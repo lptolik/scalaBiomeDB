@@ -29,7 +29,8 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
   val genbankSourceValue = List("GenBank")
   val logger = LogManager.getLogger(this.getClass.getName)
   logger.info("Start processing " + gbFile.getName)
-  var sequenceCollector: Map[String, SequenceAA] = Map()
+  var sequenceAACollector: Map[String, SequenceAA] = Map()
+  var sequenceDNACollector: Map[String, SequenceDNA] = Map()
   var termCollector: Map[String, Term] = Map()
   var externalDataBasesCollector: Map[String, DBNode] = Map()
   var xrefCollector: Map[String, XRef] = Map()
@@ -235,7 +236,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       }
       else List()
     }
-    
+
     def getECNumber: List[Term] = {
       val tryGetECNumber = getGeneNames("EC_number")
       val ecNumberTerm = tryGetECNumber match {
@@ -252,9 +253,17 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
     val geneTermList = getECNumber ++ List(Term(locusTag)) ++ List(Term(geneName)) ++ getGeneSynonymNames
 
     val DNASeq = getDNASequence(genome, feature)
-    val geneSeq = utilFunctions.utilFunctionsObject.checkSequenceDNA(DNASeq) match {
+    val geneSeq: SequenceDNA = utilFunctions.utilFunctionsObject.checkSequenceDNA(DNASeq) match {
       case true => SequenceDNA(sequence = getDNASequence(genome, feature), translatable = true)
       case false => SequenceDNA(sequence = getDNASequence(genome, feature), translatable = false)
+    }
+
+    val md5 = geneSeq.getMD5
+    val outputSequence = sequenceDNACollector.contains(md5) match {
+      case true => sequenceDNACollector(md5)
+      case false =>
+        sequenceDNACollector = sequenceDNACollector ++ Map(md5 -> geneSeq)
+        geneSeq
     }
 
     val gene = Gene(
@@ -264,9 +273,9 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       organism = organism,
       ccp = ccp,
       source = genbankSourceValue,
-      sequence = geneSeq,
+      sequence = outputSequence,
       properties = Map("locus_tag" -> locusTag))
-    (geneSeq, gene)
+    (outputSequence, gene)
   }
 
   def makeGenePolypeptideSequence(
@@ -300,10 +309,10 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
       if (sequenceToCheck.nonEmpty) {
         val sequenceObject = SequenceAA(sequence = sequenceToCheck)
         val md5 = sequenceObject.getMD5
-        val outputSequence = sequenceCollector.contains(md5) match {
-          case true => sequenceCollector(md5)
+        val outputSequence = sequenceAACollector.contains(md5) match {
+          case true => sequenceAACollector(md5)
           case false =>
-            sequenceCollector = sequenceCollector ++ Map(md5 -> sequenceObject)
+            sequenceAACollector = sequenceAACollector ++ Map(md5 -> sequenceObject)
             sequenceObject
         }
         Option(outputSequence)
@@ -330,7 +339,7 @@ class GenBankUtil(gbFile: File) extends TransactionSupport{
           name = gene.getName,
           xRefs = listOfXrefs,
           sequence = s,
-          terms = polypeptideTerms.distinct,
+          terms = checkTermsForDuplicates(polypeptideTerms.distinct),
           gene = gene,
           organism = orgCCPSeq._1,
           properties = product
