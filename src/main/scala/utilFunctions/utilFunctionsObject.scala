@@ -470,9 +470,19 @@ package utilFunctions {
       files
     }
 
-    def getSequenceProperties(sequenceNode: Node): (String, SequenceAA) = {
+    def getSequenceAAProperties(sequenceNode: Node): (String, SequenceAA) = {
       val md5 = sequenceNode.getProperty("md5").toString
       val seq = SequenceAA(
+        sequence = sequenceNode.getProperty("seq").toString.toUpperCase,
+        md5 = md5,
+        nodeId = sequenceNode.getId
+      )
+      md5 -> seq
+    }
+
+    def getSequenceDNAProperties(sequenceNode: Node): (String, SequenceDNA) = {
+      val md5 = sequenceNode.getProperty("md5").toString
+      val seq = SequenceDNA(
         sequence = sequenceNode.getProperty("seq").toString.toUpperCase,
         md5 = md5,
         nodeId = sequenceNode.getId

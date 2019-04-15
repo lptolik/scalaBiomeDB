@@ -38,8 +38,7 @@ object BlastTaskMaker extends App{
     blastTool.makeSequencesFastaFile(genesSequences, outputGeneSeqFile, byMD5=byMD5)
 
 //    blastTool.makeSequencesFastaFile(genesSequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byMD5.fasta", true)
-//    blastTool.makeSequencesFastaFile(genesSequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byID.fasta", false)
-
+//    blastTool.makeSequencesFastaFile(genesSequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byID.fasta", ca
 //    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_poly_byMD5.fasta", true)
 //    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_poly_byID.fasta", false)
 

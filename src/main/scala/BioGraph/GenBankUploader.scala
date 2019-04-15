@@ -48,7 +48,8 @@ object GenBankUploader extends App with TransactionSupport{
     val dataBaseFile = new File(dbDir)
     val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
-    var totalSequenceCollector: Map[String, SequenceAA] = Map()
+    var totalSequenceAACollector: Map[String, SequenceAA] = Map()
+    var totalSequenceDNACollector: Map[String, SequenceDNA] = Map()
     var totalDBCollector: Map[String, DBNode] = Map()
     var totalTermCollector: Map[String, Term] = Map()
     var totalXRefCollector: Map[String, XRef] = Map()
@@ -56,7 +57,8 @@ object GenBankUploader extends App with TransactionSupport{
     def makeDicts(flag: Boolean = true) = {
       flag match {
         case true =>
-          totalSequenceCollector ++= getNodesDict(graphDataBaseConnection)(getSequenceProperties, "AA_Sequence")()
+          totalSequenceAACollector ++= getNodesDict(graphDataBaseConnection)(getSequenceAAProperties, "AA_Sequence")()
+          totalSequenceDNACollector ++= getNodesDict(graphDataBaseConnection)(getSequenceDNAProperties, "DNA_Sequence")()
           totalDBCollector ++= getNodesDict(graphDataBaseConnection)(getDBProperties, "DB")()
           totalTermCollector ++= getNodesDict(graphDataBaseConnection)(getTermProperties, "Term")()
           totalXRefCollector ++= totalDBCollector.values.flatMap(db => getNodesDict(graphDataBaseConnection)(getXRefProperties(db), "XRef")())
@@ -82,7 +84,8 @@ object GenBankUploader extends App with TransactionSupport{
       println(gbFile.getName)
 
       val gbReader = new GenBankUtil(gbFile)
-      gbReader.sequenceCollector = totalSequenceCollector
+      gbReader.sequenceAACollector = totalSequenceAACollector
+      gbReader.sequenceDNACollector = totalSequenceDNACollector
       gbReader.externalDataBasesCollector = totalDBCollector
       gbReader.termCollector = totalTermCollector
       gbReader.xrefCollector = totalXRefCollector
@@ -123,7 +126,8 @@ object GenBankUploader extends App with TransactionSupport{
         }
       }
       uploader(setOfOrganismsNodes, processReadGenBankObjects)
-      totalSequenceCollector = gbReader.sequenceCollector
+      totalSequenceAACollector = gbReader.sequenceAACollector
+      totalSequenceDNACollector = gbReader.sequenceDNACollector
       totalDBCollector = gbReader.externalDataBasesCollector
       totalTermCollector = gbReader.termCollector
       totalXRefCollector = gbReader.xrefCollector
