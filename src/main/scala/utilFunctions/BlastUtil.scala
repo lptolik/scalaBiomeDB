@@ -39,7 +39,10 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     (md5, nodeId)
   }
   //  read ID of existing Sequence and its other parameters
-  var sequenceNodeCollector = getAllAASequencesNodes.map(createMapOfSequences).toMap
+  var sequenceNodeCollectorPoly = getAllAASequencesNodes.map(createMapOfSequences).toMap
+
+  var sequenceNodeCollectorDNA = getAllDNASequencesNodes.map(createMapOfSequences).toMap
+
 
   def getAllAASequencesNodes = getAllNodesByLabel("AA_Sequence")
 
@@ -120,6 +123,11 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     val db = polyFlag match {
       case true => DBNode("UniProtKB/Swiss-Prot")
       case false => DBNode("RefSeq")
+    }
+
+    var sequenceNodeCollector = polyFlag match {
+      case true => sequenceNodeCollectorPoly
+      case false => sequenceNodeCollectorDNA
     }
     val dbNode = db.upload(graphDataBaseConnection)
 
