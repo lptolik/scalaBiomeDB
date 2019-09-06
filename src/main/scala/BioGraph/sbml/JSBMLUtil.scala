@@ -171,7 +171,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       .map(_.getResources)
       .filter(_.toString.contains("taxonomy"))
       .toString
-      .split("taxonomy/")(1)
+      .split("taxonomy(/|:)")(1)
       .dropRight(2)
       .toInt
     taxonID
@@ -461,9 +461,9 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       val properties = Map(
         "reversible" -> reaction.isReversible,
         "metaId" -> reaction.getMetaId,
-        "sbmlId" -> reaction.getId,
-        "lowerFluxBound" -> parameters(zipFBCReaction._2.getLowerFluxBound),
-        "upperFluxBound" -> parameters(zipFBCReaction._2.getUpperFluxBound)
+        "sbmlId" -> reaction.getId//,
+        //"lowerFluxBound" -> parameters(zipFBCReaction._2.getLowerFluxBound),
+        //"upperFluxBound" -> parameters(zipFBCReaction._2.getUpperFluxBound)
       )
       BiochemicalReaction(
         name = reactionName,
