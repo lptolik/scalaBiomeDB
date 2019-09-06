@@ -2,13 +2,13 @@ import sbtassembly.AssemblyPlugin.autoImport._
 
 name := "BioGraph"
 
-version := "3.0"
+version := "3.0.2"
 
 scalaVersion := "2.11.7"
 
 resolvers += "ebi-repo" at "https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/"
 
-resolvers += "spring-plugins" at "http://repo.spring.io/plugins-release/"
+//resolvers += "spring-plugins" at "http://repo.spring.io/plugins-release/"
 
 resolvers += "biopax" at "http://www.biopax.org/m2repo/releases/"
 
@@ -31,10 +31,10 @@ libraryDependencies += "org.neo4j" % "neo4j-kernel" % "2.3.1" classifier "tests"
 libraryDependencies += "org.neo4j" % "neo4j-io" % "2.3.1" classifier "tests"
 
 // https://mvnrepository.com/artifact/psidev.psi.mi/psi25-xml
-libraryDependencies += "psidev.psi.mi" % "psi25-xml" % "1.8.4"
+libraryDependencies += "psidev.psi.mi" % "psi25-xml" % "1.8.4" % "provided"
 
 // https://mvnrepository.com/artifact/psidev.psi.mi/psimitab
-libraryDependencies += "psidev.psi.mi" % "psimitab" % "1.8.4"
+libraryDependencies += "psidev.psi.mi" % "psimitab" % "1.8.4" % "provided"
 
 libraryDependencies += "org.hupo.psi.mi.psicquic" % "psicquic-client" % "1.5.3"  % "provided"
 
@@ -48,7 +48,7 @@ libraryDependencies += "org.sbml.jsbml.ext" % "jsbml-fbc" % "1.2"
 
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.1"
 
-libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.25"
+libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.25" % "provided"
 
 //sbt-assembly
 //assemblySettings
