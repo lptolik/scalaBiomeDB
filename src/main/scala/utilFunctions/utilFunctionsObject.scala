@@ -573,9 +573,13 @@ package utilFunctions {
       }
     }
 
-    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYV")(seqeunceString)
+//    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYV")(seqeunceString)
 
-    def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
+    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYVXZ")(seqeunceString)
+
+//    def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
+
+    def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGCN")(seqeunceString)
 
     def readConfigurationFile(filename: String): Array[String] = {
       val reader = Source.fromFile(filename)
