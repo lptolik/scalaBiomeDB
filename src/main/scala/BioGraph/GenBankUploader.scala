@@ -155,5 +155,5 @@ object GenBankUploader extends App with TransactionSupport{
 
     println("Upload finished")
   }
-  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/genbank_upload_config.txt")
+  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/genbank_upload_config.others.txt")
 }
