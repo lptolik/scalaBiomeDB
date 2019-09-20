@@ -22,7 +22,7 @@ libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.5"
 
 //libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.5"
 
-libraryDependencies += "org.biojava" % "biojava-core" % "4.2.0"
+libraryDependencies += "org.biojava" % "biojava-core" % "5.3.0"
 
 libraryDependencies += "org.biojava" % "sequencing" % "1.9.2"
 
