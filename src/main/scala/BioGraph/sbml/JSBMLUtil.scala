@@ -177,13 +177,17 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     taxonID
   }
 
-  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String]): scala.Unit =
-    transaction(graphDataBaseConnection) {
+  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String]): scala.Unit = {
       val organismName = model.getName
-      val organismByName = findOrganismByName(organismName)
       val taxonId = getTaxonFromModel(model)
-      val organismByTaxon = findOrganismByTaxon(taxonId)
+      uploader(sourceDB,model,spontaneousReactionsIds,taxonId,organismName)
+    }
 
+  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String],taxonId: Int, organismName: String): scala.Unit =
+    transaction(graphDataBaseConnection) {
+
+      val organismByName = findOrganismByName(organismName)
+      val organismByTaxon = findOrganismByTaxon(taxonId)
       val organism = organismByTaxon match {
         case Some(byTaxon) =>
           logger.info("Model matched by taxon.")

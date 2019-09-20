@@ -48,6 +48,15 @@ object JSBMLUpload extends App with TransactionSupport {
       println(s"Uploading model of '$organism' organism from ${smblModelFile.getName} file")
       jsbml.uploader(sourceDB, model, spontaneousReactionsGeneProductsIds)
     }
+    def uploadOneModelOrg(smblModelFile: File,taxonId: Int, organismName: String): Unit = {
+      val jsbml = new JSBMLUtil(db)
+
+      val model = jsbml.jsbmlModelFromFile(smblModelFile)
+      val organism = model.getName
+
+      println(s"Uploading model of '$organism' organism from ${smblModelFile.getName} file")
+      jsbml.uploader(sourceDB, model, spontaneousReactionsGeneProductsIds,taxonId, organismName)
+    }
   }
   main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/sbml_upload_config.txt")
 }
