@@ -139,6 +139,7 @@ object GenBankUploader extends App with TransactionSupport{
       taxonNode match {
         case Some(t: graphdb.Node) =>
 //          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + "genBankRecord_" + n + ".gb"))
+          print(taxonAndFiles)
           val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + n + ".gb"))
           gbFiles.foreach(uploadOneFile(t, _))
         case _ =>
@@ -154,5 +155,5 @@ object GenBankUploader extends App with TransactionSupport{
 
     println("Upload finished")
   }
-  main("/home/artem/work/2018/staphylococcus/genbank_upload_config.txt")
+  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/genbank_upload_config.others.txt")
 }

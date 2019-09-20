@@ -6,7 +6,8 @@ import utilFunctions.BlastUtil
   */
 object BlastUploaderApp extends App{
   def main(configurationFilename: String = "/home/artem/work/2017/Timofei/blast_upload_config.txt"): Unit = {
-    val dbPathLocal = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
+    val dbPathLocal = "/Users/lptolik/Documents/Projects/Liverpool/Penicillium/neo4j/penicillium/data/graph.db"
+//    val dbPathLocal = "/home/artem/work/reps/neo4j-2.3.1/neo4j-community-2.3.1/data/graph.db"
 //    val dbPathLocal = "/home/artem/work/2017/staphylococcus/neo4j-community-2.3.1/data/graph.db/"
     val dbPathRemote = "/var/lib/neo4j_2.3.1_240_bacs_scala/neo4j-community-2.3.1/data/graph.db"
     val staphylococcusDB = "/var/lib/neo4j_staphylococcus/neo4j-community-2.3.1/data/graph.db"
@@ -52,5 +53,6 @@ object BlastUploaderApp extends App{
 
 //    blastTool.makeGeneInnerBlastByMD5("/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byMD5_inner_blast_result.txt", 0)
   }
-  main("/home/artem/work/2018/staphylococcus/blast_upload_config.txt")
+//  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/usearch_upload_config.txt")
+  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/blast_upload_config.txt")
 }

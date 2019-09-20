@@ -429,6 +429,7 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+  /*
   test("test utilFunctionsObject.readInsideBlastResultFile result") {
     new TestNodesAndRels {
       val blastedSequences: Map[Int, SequenceAA] = utilFunctionsObject.readInsideBlastResultFile("/home/artem/work/reps/GenBank/biome_api/biome/load/genbank/cross_blast_scala_text_upper.txt")
@@ -436,6 +437,8 @@ class GraphElementsTest extends FunSuite {
     }
   }
 
+
+   */
   test("test coordinates required start and end") {
     new TestNodesAndRels {
       val thrown = intercept[Exception] {
