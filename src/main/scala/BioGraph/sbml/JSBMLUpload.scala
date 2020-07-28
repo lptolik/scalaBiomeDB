@@ -58,9 +58,5 @@ object JSBMLUpload extends App with TransactionSupport {
       jsbml.uploader(sourceDB, model, spontaneousReactionsGeneProductsIds,taxonId, organismName)
     }
   }
-<<<<<<< HEAD
   main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium/sbml_upload_config.1.txt")
-=======
-  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/sbml_upload_config.txt")
->>>>>>> feature/n4j_339
 }
