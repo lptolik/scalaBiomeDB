@@ -58,8 +58,9 @@ libraryDependencies += "uk.ac.ebi.uniprot" % "japi" % "1.0.25" % "provided"
 //sbt-assembly
 //assemblySettings
 assemblyMergeStrategy in assembly := {
+  case "module-info.class" => MergeStrategy.discard 
   case PathList("org", "neo4j", xs @ _*)           => MergeStrategy.first
-  case PathList("org", "bouncycastle", xs @ _*)    => MergeStrategy.first
+//  case PathList("org", "bouncycastle", xs @ _*)    => MergeStrategy.last
   case PathList("org", "sbml", xs @ _*)           => MergeStrategy.first
   case PathList("org", "biojava", xs @ _*)           => MergeStrategy.first
   case PathList("org", "apache", xs @ _*)    => MergeStrategy.first
@@ -75,6 +76,8 @@ assemblyMergeStrategy in assembly := {
   case PathList("javax", "ws", xs @ _*)    => MergeStrategy.last
   case PathList("org", "hupo", xs @ _*)    => MergeStrategy.first
   case PathList("pom.xml") => MergeStrategy.first
+//  case PathList("bcpkix-jdk15on-1.64.jar", xs @ _*) => MergeStrategy.last
+//  case PathList("bcprov-jdk15on-1.64.jar", xs @ _*) => MergeStrategy.last
 //  case PathList("org", "bouncycastle", xs @ _*)    => MergeStrategy.first
 //  case PathList("org", "springframework", xs @ _*)    => MergeStrategy.first
 //  case PathList("org", "springsource", xs @ _*)    => MergeStrategy.first
@@ -82,9 +85,11 @@ assemblyMergeStrategy in assembly := {
   case PathList("META-INF", "LICENSES.txt") => MergeStrategy.discard
   case "overview.html" => MergeStrategy.first
   case "log4j2.xml"                          => MergeStrategy.first
+  case x if x.endsWith("/module-info.class") => MergeStrategy.discard
   case x =>
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
+
 }
 
 mainClass in assembly := Some("BioGraph.sbml.JSBMLUpload")
