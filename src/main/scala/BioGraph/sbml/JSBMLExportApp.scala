@@ -2,7 +2,7 @@ package BioGraph.sbml
 
 import java.io.File
 
-import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import utilFunctions.TransactionSupport
 

@@ -6,7 +6,7 @@ import java.util
 import BioGraph._
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.Direction._
-import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService, Node, ResourceIterator}
+import org.neo4j.graphdb.{Label, GraphDatabaseService, Node, ResourceIterator}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 
 import scala.collection.JavaConverters._
@@ -22,7 +22,7 @@ class WorkWithGraph(pathToDataBase: String) extends TransactionSupport {
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
   def getAllNodesByLabel(requiredLabel: String): Iterator[Node] = transaction(graphDataBaseConnection) {
-    val resultNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(requiredLabel))
+    val resultNodes = graphDataBaseConnection.findNodes(Label.label(requiredLabel))
     resultNodes.asScala
   }
 }
@@ -300,7 +300,7 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   def makeGeneOuterBlastByID(blastOutputFilename: String, dropSize: Int) = makeBlast(blastOutputFilename, dropSize)(byMD5 = false)(outerBlastFlag = true)(polyFlag = false)
 
   def makeOneOrganismBlastTask(organismName: String, sequenceType: String = "Polypeptide") = transaction(graphDataBaseConnection){
-    val organism = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName)
+    val organism = graphDataBaseConnection.findNode(Label.label("Organism"), "name", organismName)
     val polysOrGenes = organism
       .getRelationships(BiomeDBRelations.partOf, INCOMING)
       .asScala

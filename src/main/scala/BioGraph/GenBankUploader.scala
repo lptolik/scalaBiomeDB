@@ -5,7 +5,7 @@ import java.io.File
 import org.apache.logging.log4j.LogManager
 import org.biojava.nbio.core.sequence.DNASequence
 import org.neo4j.graphdb
-import org.neo4j.graphdb.{DynamicLabel, GraphDatabaseService}
+import org.neo4j.graphdb.{Label, GraphDatabaseService}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import utilFunctions.{BiomeDBRelations, TransactionSupport, utilFunctionsObject}
 import utilFunctions.utilFunctionsObject._
@@ -135,7 +135,7 @@ object GenBankUploader extends App with TransactionSupport{
 
     def uploadOneTaxon(taxonAndFiles: (String, Array[String])) = transaction(graphDataBaseConnection) {
       val taxID = taxonAndFiles._1.toLong
-      val taxonNode = Try(graphDataBaseConnection.findNode(DynamicLabel.label("Taxon"), "tax_id", taxID)).toOption
+      val taxonNode = Try(graphDataBaseConnection.findNode(Label.label("Taxon"), "tax_id", taxID)).toOption
       taxonNode match {
         case Some(t: graphdb.Node) =>
 //          val gbFiles = taxonAndFiles._2.map(n => new File(genomesDir + "genBankRecord_" + n + ".gb"))
@@ -155,5 +155,6 @@ object GenBankUploader extends App with TransactionSupport{
 
     println("Upload finished")
   }
-  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/genbank_upload_config.others.txt")
+//  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/genbank_upload_config.txt")
+  main("/Users/lptolik/Documents/Projects/Liverpool/Sclav/Neo4J.3.5.20/configs/genbank_upload_config.txt")
 }

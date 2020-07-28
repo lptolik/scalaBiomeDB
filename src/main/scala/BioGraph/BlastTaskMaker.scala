@@ -43,6 +43,7 @@ object BlastTaskMaker extends App{
 //    blastTool.makeSequencesFastaFile(polySequences, "/home/artem/work/2017/staphylococcus/staphylococcusDB_poly_byID.fasta", false)
 
   }
-  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/blast_task_maker_config.txt")
+//  main("/home/artem/work/2018/staphylococcus/blast_task_maker_config.txt")
+  main("/Users/lptolik/Documents/Projects/Liverpool/Sclav/Neo4J.3.5.20/configs/blast_task_maker_config.txt")
 
 }

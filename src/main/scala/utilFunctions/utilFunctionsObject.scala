@@ -5,7 +5,7 @@ package utilFunctions {
   import java.util
 
   import org.neo4j.graphdb.traversal.Evaluators
-  import org.neo4j.graphdb.{Direction, DynamicLabel, GraphDatabaseService, Label, Node, Path, Relationship, RelationshipType, ResourceIterator, Result, Transaction}
+  import org.neo4j.graphdb.{Direction, GraphDatabaseService, Label, Node, Path, Relationship, RelationshipType, ResourceIterator, Result, Transaction}
   import java.security.MessageDigest
   import java.io.{File, PrintWriter}
 
@@ -126,7 +126,7 @@ package utilFunctions {
       val dataBaseFile = new File(pathToDataBase)
       val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
       val transaction: Transaction = gdb.beginTx()
-      val polypeptidesIterator = gdb.findNodes(DynamicLabel.label("Polypeptide"))
+      val polypeptidesIterator = gdb.findNodes(Label.label("Polypeptide"))
       try{
         val cypherQueryResult = gdb.execute(
           "match (p:Polypeptide) " +
@@ -172,7 +172,7 @@ package utilFunctions {
       val dataBaseFile = new File(pathToDataBase)
       val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
       val transaction: Transaction = gdb.beginTx()
-      val polypeptides = gdb.findNodes(DynamicLabel.label("Polypeptide"))
+      val polypeptides = gdb.findNodes(Label.label("Polypeptide"))
       try {
         def polypeptideLoop(polypeptideIter: ResourceIterator[Node], size: Int): Unit = {
           if (polypeptideIter.hasNext && size < 600000) {
@@ -271,7 +271,7 @@ package utilFunctions {
         if (rels.nonEmpty) {
           val currentNode = rels.head.getEndNode
           val nodeLabels = currentNode.getLabels.asScala.toList
-          if (nodeLabels contains DynamicLabel.label("Sequence")) List(currentNode)
+          if (nodeLabels contains Label.label("Sequence")) List(currentNode)
           else loop(rels.tail)
         }
         else List()
@@ -283,7 +283,7 @@ package utilFunctions {
       val dataBaseFile = new File(pathToDataBase)
       val gdb = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
       val transactionToRead: Transaction = gdb.beginTx()
-      val polypeptidesIterator = gdb.findNodes(DynamicLabel.label("Polypeptide"))
+      val polypeptidesIterator = gdb.findNodes(Label.label("Polypeptide"))
       try {
 //        val td = gdb.traversalDescription()
         val transactionToWrite: Transaction = gdb.beginTx()
@@ -315,7 +315,7 @@ package utilFunctions {
                 processingPolypeptidesLoop(polypeptideIterator, seqCollector, transactionSize + 1, currentTransaction)
               }
               else {
-                val sequenceNode = gdb.createNode(DynamicLabel.label("Sequence"), DynamicLabel.label("AA_Seqeunce"))
+                val sequenceNode = gdb.createNode(Label.label("Sequence"), Label.label("AA_Seqeunce"))
                 sequenceNode.setProperty("md5", polyMD5)
                 sequenceNode.setProperty("seq", polySequence)
                 polyNode.createRelationshipTo(sequenceNode, BiomeDBRelations.isA)
@@ -353,7 +353,7 @@ package utilFunctions {
                   propertyKey: String,
                   propertyValue: Any
                 ): Node = transaction(graphDataBaseConnection) {
-      val foundNode = graphDataBaseConnection.findNode(DynamicLabel.label(label), propertyKey, propertyValue)
+      val foundNode = graphDataBaseConnection.findNode(Label.label(label), propertyKey, propertyValue)
       foundNode
       }
 
@@ -373,7 +373,7 @@ package utilFunctions {
         val listOfCCP = getOrganismCCP(graphDataBaseConnection, organismName)
         if (listOfCCP.nonEmpty) {
           val strandList = List(Strand.forward, Strand.reverse)
-          val sortedFeatures = strandList.map(strand => listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label(typeOfFeature), strand)))
+          val sortedFeatures = strandList.map(strand => listOfCCP.map(orderFeatures(graphDataBaseConnection, _, Label.label(typeOfFeature), strand)))
 
           def createNext(previousFeature: Node, nextFeaturePath: Path): Node = {
             val nextFeature = nextFeaturePath.endNode()
@@ -395,7 +395,7 @@ package utilFunctions {
                                  organismName: String): Unit =
       transaction(graphDataBaseConnection){
         val listOfCCP = getOrganismCCP(graphDataBaseConnection, organismName)
-        val sortedFeatures = listOfCCP.map(orderFeatures(graphDataBaseConnection, _, DynamicLabel.label(typeOfFeature), Strand.unknown))
+        val sortedFeatures = listOfCCP.map(orderFeatures(graphDataBaseConnection, _, Label.label(typeOfFeature), Strand.unknown))
 
         def createOverlap(shortList: List[Path], feature: Path): List[Path] = {
           val end = feature.endNode().getProperty("end").toString.toInt
@@ -410,7 +410,7 @@ package utilFunctions {
 
     def getOrganismNames(graphDataBaseConnection: GraphDatabaseService): List[String] = transaction(graphDataBaseConnection){
       val names = graphDataBaseConnection
-        .findNodes(DynamicLabel.label("Organism"))
+        .findNodes(Label.label("Organism"))
         .asScala
         .toList
         .map(_.getProperty("name").toString)
@@ -422,9 +422,9 @@ package utilFunctions {
                                       organismName: String): List[Long] = {
       def findCCP(p: Path): Boolean = {
         val labels = p.endNode().getLabels.asScala.toList
-        labels.contains(DynamicLabel.label("Chromosome")) |
-          labels.contains(DynamicLabel.label("Contig")) |
-          labels.contains(DynamicLabel.label("Plasmid"))
+        labels.contains(Label.label("Chromosome")) |
+          labels.contains(Label.label("Contig")) |
+          labels.contains(Label.label("Plasmid"))
       }
 
       val traversalResult = graphDataBaseConnection
@@ -432,7 +432,7 @@ package utilFunctions {
         .breadthFirst()
         .relationships(BiomeDBRelations.partOf, Direction.INCOMING)
         .evaluator(Evaluators.toDepth(1))
-        .traverse(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", organismName))
+        .traverse(graphDataBaseConnection.findNode(Label.label("Organism"), "name", organismName))
       val ccpIdList = traversalResult.asScala.toList.filter(findCCP).map(_.endNode().getId)
       ccpIdList
     }
@@ -533,7 +533,7 @@ package utilFunctions {
     def makeNodesDict(nodeLabel: String, nodeProperty: String, processKey: String => String = {a: String => a})
                      (graphDataBaseConnection: GraphDatabaseService): Map[String, Compound] =
       transaction(graphDataBaseConnection) {
-        val compoundNodes = graphDataBaseConnection.findNodes(DynamicLabel.label(nodeLabel)).asScala
+        val compoundNodes = graphDataBaseConnection.findNodes(Label.label(nodeLabel)).asScala
         compoundNodes
           .map { c =>
             val name = c.getProperty(nodeProperty).toString
@@ -546,7 +546,7 @@ package utilFunctions {
     (graphDataBaseConnection: GraphDatabaseService)
     (f: Node => (String, T), label: String)
     (filterFunc: Node => Boolean = _ => true): Map[String, T] = transaction(graphDataBaseConnection) {
-      val nodes = graphDataBaseConnection.findNodes(DynamicLabel.label(label)).asScala//.toList
+      val nodes = graphDataBaseConnection.findNodes(Label.label(label)).asScala//.toList
       val dict = nodes.filter(filterFunc)
       val res = dict.map{node => f(node)}.toMap
       res
@@ -635,12 +635,12 @@ package utilFunctions {
     }
 
     def findCCP(graphDatabaseConnection: GraphDatabaseService)(ccp: CCP, organism: Organism): Option[Node] = {
-      val organismNode = graphDatabaseConnection.findNode(DynamicLabel.label("Organism"), "name", organism.getName)
+      val organismNode = graphDatabaseConnection.findNode(Label.label("Organism"), "name", organism.getName)
       val ccps = organismNode
         .getRelationships(Direction.INCOMING, BiomeDBRelations.partOf)
         .asScala
         .map(_.getStartNode)
-        .filter(c => c.hasLabel(DynamicLabel.label(ccp.getType.toString)) && c.getProperty("name") == ccp.getName)
+        .filter(c => c.hasLabel(Label.label(ccp.getType.toString)) && c.getProperty("name") == ccp.getName)
         .toList
 //      if (ccps.length > 0) Option(ccps.head) else None
       Try(ccps.head).toOption

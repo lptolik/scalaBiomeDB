@@ -1,6 +1,6 @@
 package BioGraph
 
-import org.neo4j.graphdb.{GraphDatabaseService, DynamicLabel}
+import org.neo4j.graphdb.{GraphDatabaseService, Label}
 import org.scalatest.FunSuite
 import org.neo4j.test.TestGraphDatabaseFactory
 import utilFunctions.TransactionSupport
@@ -13,13 +13,13 @@ class Neo4jDataTests extends FunSuite with TransactionSupport{
 
   def createFirstNodes(graphDataBaseConnection: GraphDatabaseService): Unit = transaction(graphDataBaseConnection) {
     val testNode = graphDataBaseConnection.createNode()
-    testNode.addLabel(DynamicLabel.label("Test Node"))
-    testNode.addLabel(DynamicLabel.label("So much very exciting"))
+    testNode.addLabel(Label.label("Test Node"))
+    testNode.addLabel(Label.label("So much very exciting"))
     testNode.setProperty("very", "important")
   }
 
   def findNode(graphDataBaseConnection: GraphDatabaseService) = transaction(graphDataBaseConnection) {
-    val foundNode = graphDataBaseConnection.findNode(DynamicLabel.label("Test Node"), "very", "important")
+    val foundNode = graphDataBaseConnection.findNode(Label.label("Test Node"), "very", "important")
     foundNode
   }
 
@@ -30,7 +30,7 @@ class Neo4jDataTests extends FunSuite with TransactionSupport{
     def getLabels = transaction(graphDataBaseConnection) {
       foundNode.getLabels.asScala.toList
     }
-    assert(getLabels === List(DynamicLabel.label("Test Node"), DynamicLabel.label("So much very exciting")))
+    assert(getLabels === List(Label.label("Test Node"), Label.label("So much very exciting")))
     graphDataBaseConnection.shutdown()
   }
 

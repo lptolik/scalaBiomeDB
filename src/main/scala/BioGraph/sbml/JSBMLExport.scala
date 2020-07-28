@@ -528,8 +528,8 @@ case object NoAssociations extends GeneProductAssociationOut {
 }
 
 object GeneProductAssociationOut {
-  val polypeptideLabel = DynamicLabel.label("Polypeptide")
-  val enzymeLabel = DynamicLabel.label("Enzyme")
+  val polypeptideLabel = Label.label("Polypeptide")
+  val enzymeLabel = Label.label("Enzyme")
 
   def apply(reactionNode: Node): GeneProductAssociationOut = {
     reactionNode.getRelationships(catalyzes).asScala.map(_.getStartNode).toList match {

@@ -4,7 +4,7 @@ import java.io.File
 
 import org.hupo.psi.mi.psicquic.wsclient.UniversalPsicquicClient
 import org.hupo.psi.mi.psicquic.wsclient.result.MitabSearchResult
-import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 
 import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml
@@ -37,7 +37,7 @@ case class PSICQUICUtil(serverAddress: String) {
     val reader = new IntactUtil(entries)
     val reactants = reader.getInteractors.map(reader.interactorInfo)
     val reactionInfo = reader.getInteractions.map(reader.interactionInfo)
-    val xrefNode = graphDataBaseConnection.findNode(DynamicLabel.label("XRef"), "id", reactionInfo.head.getIntactId)
+    val xrefNode = graphDataBaseConnection.findNode(Label.label("XRef"), "id", reactionInfo.head.getIntactId)
     val reactionNode = xrefNode.getRelationships(BiomeDBRelations.evidence).asScala.head.getStartNode
   }
 }

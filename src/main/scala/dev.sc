@@ -2,7 +2,7 @@
 import java.io.File
 import java.security.MessageDigest
 import BioGraph._
-import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import utilFunctions._
 import sun.security.provider.MD5

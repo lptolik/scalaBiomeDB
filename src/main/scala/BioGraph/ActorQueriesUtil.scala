@@ -15,7 +15,7 @@ import scala.concurrent.{Await, Future}
 import akka.pattern.ask
 import akka.util.Timeout
 import org.neo4j.consistency.ConsistencyCheckService.Result
-import org.neo4j.graphdb.{Direction, DynamicLabel}
+import org.neo4j.graphdb.{Direction, Label}
 import uk.ac.ebi.kraken.interfaces.uniprot.DatabaseCrossReference
 import uk.ac.ebi.uniprot.dataservice.client.Client
 import uk.ac.ebi.uniprot.dataservice.client.uniprot.UniProtQueryBuilder
@@ -44,7 +44,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
 
   var externalDataBasesCollector = transaction(graphDataBaseConnection) {
     graphDataBaseConnection
-      .findNodes(DynamicLabel.label("DB"))
+      .findNodes(Label.label("DB"))
       .asScala
       .map{n=>
         val name = n.getProperty("name").toString
@@ -255,7 +255,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
 
   def getDataBaseNodes: Map[String, DBNode] = transaction(graphDataBaseConnection) {
     graphDataBaseConnection
-      .findNodes(DynamicLabel.label("DB"))
+      .findNodes(Label.label("DB"))
       .asScala
       .map{db =>
         val name = db.getProperty("name").toString
@@ -359,7 +359,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
 
   def getUniProtSequences: Map[String, Neo4jNode] = transaction(graphDataBaseConnection) {
     val uniProtXrefs = {
-      graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", "UniProtKB/Swiss-Prot")
+      graphDataBaseConnection.findNode(Label.label("DB"), "name", "UniProtKB/Swiss-Prot")
         .getRelationships(BiomeDBRelations.linkTo, Direction.INCOMING)
         .asScala
         .toList
@@ -372,7 +372,7 @@ case class ActorQueriesUtil(pathToDataBase: String, system: ActorSystem)(implici
   }
 
   def getUniprotSequenceByID(id: String): Map[String, Neo4jNode] = transaction(graphDataBaseConnection) {
-    val node = graphDataBaseConnection.findNode(DynamicLabel.label("AA_Sequence"), "id", id)
+    val node = graphDataBaseConnection.findNode(Label.label("AA_Sequence"), "id", id)
     Map(id -> node)
   }
 

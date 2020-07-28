@@ -5,7 +5,7 @@ import java.io.File
 import BioGraph.{BiochemicalReaction, Compartment, _}
 import org.apache.logging.log4j.LogManager
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.neo4j.graphdb.{Direction, DynamicLabel, GraphDatabaseService, Node}
+import org.neo4j.graphdb.{Direction, Label, GraphDatabaseService, Node}
 import org.sbml.jsbml._
 import org.sbml.jsbml.ext.fbc.{GeneProduct, _}
 import utilFunctions.{BiomeDBRelations, TransactionSupport}
@@ -38,7 +38,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     utilFunctions.utilFunctionsObject.makeNodesDict("Compound", "name", n => n.toLowerCase.trim)(graphDataBaseConnection)
 
   val totalSynonymsCompoundCollector = transaction(graphDataBaseConnection) {
-    graphDataBaseConnection.findNodes(DynamicLabel.label("Compound"))
+    graphDataBaseConnection.findNodes(Label.label("Compound"))
       .asScala
       .flatMap{cn =>
         val compoundObject = Compound(cn)
@@ -135,7 +135,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
 
   def findOrganismByName(name: String): Option[Organism] = {
     val warnMessage = s"Organism with name '$name' not found"
-    val res  = Try(graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", name)).toOption match {
+    val res  = Try(graphDataBaseConnection.findNode(Label.label("Organism"), "name", name)).toOption match {
       case Some(o: Node) => Option(createOrganismObject(o))
       case Some(null) =>
         logger.warn(warnMessage)
@@ -149,7 +149,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
 
   def findOrganismByTaxon(taxonID: Int): Option[Organism] = {
     val warnMessage = s"Taxon with tax_id '$taxonID' not found"
-    Option(graphDataBaseConnection.findNode(DynamicLabel.label("Taxon"), "tax_id", taxonID)) match {
+    Option(graphDataBaseConnection.findNode(Label.label("Taxon"), "tax_id", taxonID)) match {
       case Some(t: Node) =>
         Try(createOrganismObject(t
           .getSingleRelationship(BiomeDBRelations.isA, Direction.INCOMING)
@@ -171,19 +171,23 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       .map(_.getResources)
       .filter(_.toString.contains("taxonomy"))
       .toString
-      .split("taxonomy/")(1)
+      .split("taxonomy(/|:)")(1)
       .dropRight(2)
       .toInt
     taxonID
   }
 
-  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String]): scala.Unit =
-    transaction(graphDataBaseConnection) {
+  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String]): scala.Unit = {
       val organismName = model.getName
-      val organismByName = findOrganismByName(organismName)
       val taxonId = getTaxonFromModel(model)
-      val organismByTaxon = findOrganismByTaxon(taxonId)
+      uploader(sourceDB,model,spontaneousReactionsIds,taxonId,organismName)
+    }
 
+  def uploader(sourceDB: String, model: Model, spontaneousReactionsIds: Set[String],taxonId: Int, organismName: String): scala.Unit =
+    transaction(graphDataBaseConnection) {
+
+      val organismByName = findOrganismByName(organismName)
+      val organismByTaxon = findOrganismByTaxon(taxonId)
       val organism = organismByTaxon match {
         case Some(byTaxon) =>
           logger.info("Model matched by taxon.")
@@ -254,9 +258,9 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     enzymeCollector ++= getEnzymes
 
     def createPolypeptide(gp: GeneProduct, organism: Organism) = {
-      val createdGeneProduct = graphDataBaseConnection.createNode(DynamicLabel.label("Polypeptide"))
+      val createdGeneProduct = graphDataBaseConnection.createNode(Label.label("Polypeptide"))
       val sbmlId = gp.getId
-      createdGeneProduct.addLabel(DynamicLabel.label("To_check"))
+      createdGeneProduct.addLabel(Label.label("To_check"))
       createdGeneProduct.setProperty("sbmlId", sbmlId)
       createdGeneProduct.setProperty("name", gp.getLabel + "_" + model.getId)
       createdGeneProduct.setProperty("label", gp.getLabel)
@@ -290,7 +294,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
 
   def getEnzymes: Map[Set[org.neo4j.graphdb.Node], org.neo4j.graphdb.Node] = {
     graphDataBaseConnection
-      .findNodes(DynamicLabel.label("Enzyme"))
+      .findNodes(Label.label("Enzyme"))
       .asScala
       .map { enzymeNode =>
         val enzymePolys = enzymeNode
@@ -309,7 +313,7 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
     def getPolypeptideByLocusTag(geneProduct: org.sbml.jsbml.ext.fbc.GeneProduct): Option[(String, org.neo4j.graphdb.Node)] = {
       val geneNode = Option(
         graphDataBaseConnection.findNode(
-          DynamicLabel.label("Gene"), "locus_tag", geneProduct.getLabel
+          Label.label("Gene"), "locus_tag", geneProduct.getLabel
         )
       )
       val sbmlIdPolyPair = geneNode match {
@@ -461,9 +465,9 @@ class JSBMLUtil(graphDataBaseConnection: GraphDatabaseService) extends Transacti
       val properties = Map(
         "reversible" -> reaction.isReversible,
         "metaId" -> reaction.getMetaId,
-        "sbmlId" -> reaction.getId,
-        "lowerFluxBound" -> parameters(zipFBCReaction._2.getLowerFluxBound),
-        "upperFluxBound" -> parameters(zipFBCReaction._2.getUpperFluxBound)
+        "sbmlId" -> reaction.getId//,
+        //"lowerFluxBound" -> parameters(zipFBCReaction._2.getLowerFluxBound),
+        //"upperFluxBound" -> parameters(zipFBCReaction._2.getUpperFluxBound)
       )
       BiochemicalReaction(
         name = reactionName,

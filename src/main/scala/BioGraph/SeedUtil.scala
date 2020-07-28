@@ -3,7 +3,7 @@ package BioGraph
 import java.io.File
 import org.neo4j.graphdb.Node
 import org.apache.logging.log4j.LogManager
-import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import utilFunctions.{BiomeDBRelations, TransactionSupport}
 import scala.collection.JavaConverters._
@@ -33,7 +33,7 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
 
     val seedDBNode = DBNode("SEED").upload(graphDataBaseConnection)
     val organismNode = graphDataBaseConnection.findNode(
-      DynamicLabel.label("Organism"),
+      Label.label("Organism"),
       "accession",
       accession
     )
@@ -50,7 +50,7 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
 
 
       def createSeedXref(geneNode: org.neo4j.graphdb.Node): Unit = {
-        val xrefNode = graphDataBaseConnection.createNode(DynamicLabel.label("XRef"))
+        val xrefNode = graphDataBaseConnection.createNode(Label.label("XRef"))
         xrefNode.setProperty("id", lineRecords(8).split(";Name=")(0).split("=")(1))
 
         geneNode.createRelationshipTo(xrefNode, BiomeDBRelations.evidence)
@@ -70,7 +70,7 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
       def getOrCreateGeneFunctionNode(func: String): org.neo4j.graphdb.Node = {
         if (geneFunctionDictionary.contains(func)) geneFunctionDictionary(func)
         else {
-          val testingNode = graphDataBaseConnection.createNode(DynamicLabel.label("Function"))
+          val testingNode = graphDataBaseConnection.createNode(Label.label("Function"))
           testingNode.setProperty("function", func)
           geneFunctionDictionary += (func -> testingNode)
           testingNode
@@ -92,7 +92,7 @@ class SeedUtil(seedFile: File, dataBaseFile: File) extends TransactionSupport {
   }
 
   private def getFunctionsNodesFromDB: Map[String, org.neo4j.graphdb.Node] = transaction(graphDataBaseConnection) {
-    val functionNodes = graphDataBaseConnection.findNodes(DynamicLabel.label("Function"))
+    val functionNodes = graphDataBaseConnection.findNodes(Label.label("Function"))
     val dict = functionNodes.asScala.map{elem => elem.getProperty("function").toString -> elem}
     dict.toMap
   }

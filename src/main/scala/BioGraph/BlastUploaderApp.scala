@@ -53,6 +53,7 @@ object BlastUploaderApp extends App{
 
 //    blastTool.makeGeneInnerBlastByMD5("/home/artem/work/2017/staphylococcus/staphylococcusDB_gene_byMD5_inner_blast_result.txt", 0)
   }
-//  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/usearch_upload_config.txt")
-  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/blast_upload_config.txt")
+  main("/Users/lptolik/Dropbox/Projects/Liverpool/Penicillium/Penicillium/config/penicillium_gems/usearch_tcdb_upload_config.txt")
+  //main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/usearch_upload_config.txt")
+//  main("/Users/lptolik/Documents/Projects/Liverpool/Penicillium/config/penicillium_gems/blast_upload_config.txt")
 }

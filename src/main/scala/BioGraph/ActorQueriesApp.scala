@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.util.Timeout
-import org.neo4j.graphdb.DynamicLabel
+import org.neo4j.graphdb.Label
 
 import scala.concurrent.duration.Duration
 
