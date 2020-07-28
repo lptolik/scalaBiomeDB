@@ -14,7 +14,12 @@ resolvers += "biopax" at "http://www.biopax.org/m2repo/releases/"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.1.7" % "test"
 
+libraryDependencies += "javax.ws.rs" % "javax.ws.rs-api" % "2.1.1" artifacts( Artifact("javax.ws.rs-api", "jar", "jar"))
+
 libraryDependencies += "org.neo4j" % "neo4j" % "3.5.20"
+
+// https://mvnrepository.com/artifact/org.neo4j.community/it-test-support
+libraryDependencies += "org.neo4j.community" % "it-test-support" % "3.5.20" % Test
 
 //libraryDependencies += "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.1.0"
 
@@ -26,9 +31,9 @@ libraryDependencies += "org.biojava" % "biojava-core" % "4.2.0"
 
 libraryDependencies += "org.biojava" % "sequencing" % "1.9.2"
 
-libraryDependencies += "org.neo4j" % "neo4j-kernel" % "2.3.1" classifier "tests"
+libraryDependencies += "org.neo4j" % "neo4j-kernel" % "3.5.20" classifier "tests"
 
-libraryDependencies += "org.neo4j" % "neo4j-io" % "2.3.1" classifier "tests"
+libraryDependencies += "org.neo4j" % "neo4j-io" % "3.5.20" classifier "tests"
 
 // https://mvnrepository.com/artifact/psidev.psi.mi/psi25-xml
 libraryDependencies += "psidev.psi.mi" % "psi25-xml" % "1.8.4" % "provided"
@@ -67,6 +72,7 @@ assemblyMergeStrategy in assembly := {
   case PathList("org", "hamcrest", xs @ _*)    => MergeStrategy.last
   case PathList("org", "aopalliance", xs @ _*)    => MergeStrategy.last
   case PathList("javax", "inject", xs @ _*)    => MergeStrategy.last
+  case PathList("javax", "ws", xs @ _*)    => MergeStrategy.last
   case PathList("org", "hupo", xs @ _*)    => MergeStrategy.first
   case PathList("pom.xml") => MergeStrategy.first
 //  case PathList("org", "bouncycastle", xs @ _*)    => MergeStrategy.first
