@@ -21,7 +21,7 @@ import java.io.File
 //val source = Source.fromFile("/home/artem/work/reps/neo4j-community-2.3.1/data/graph.db")
 
 
-val l = DynamicLabel.label("Organism")
+val l = Label.label("Organism")
 
 class myNeo4j {
   def main() {
@@ -30,19 +30,19 @@ class myNeo4j {
     val tx: Transaction = gdb.beginTx()
     try {
 
-      val organismNode = gdb.createNode(DynamicLabel.label("Organism"))
+      val organismNode = gdb.createNode(Label.label("Organism"))
       organismNode.setProperty("name", "E. coli")
 
-      val geneNode = gdb.createNode(DynamicLabel.label("Gene"))
+      val geneNode = gdb.createNode(Label.label("Gene"))
       geneNode.setProperty("name", "qyur")
 
-      val polyNode = gdb.createNode(DynamicLabel.label("Polypeptide"))
+      val polyNode = gdb.createNode(Label.label("Polypeptide"))
       polyNode.setProperty("name", "Qyur")
 
-      val dbNode = gdb.createNode(DynamicLabel.label("DB"))
+      val dbNode = gdb.createNode(Label.label("DB"))
       dbNode.setProperty("name", "UniProt")
 
-      val termNode = gdb.createNode(DynamicLabel.label("XRef"))
+      val termNode = gdb.createNode(Label.label("XRef"))
       termNode.setProperty("XRef", "A001")
 
       val partOf = new RelationshipType {

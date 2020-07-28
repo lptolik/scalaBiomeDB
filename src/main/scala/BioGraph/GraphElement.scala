@@ -3,7 +3,7 @@ package BioGraph {
 
   import org.apache.logging.log4j.LogManager
   import org.neo4j.graphdb
-  import org.neo4j.graphdb.{Node, _}
+  import org.neo4j.graphdb.{Node, Label, _}
   import utilFunctions._
   import org.neo4j.graphdb.Direction._
   import utilFunctions.BiomeDBRelations._
@@ -360,7 +360,7 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       if (this.getId < 0) {
-        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("DB"), "name", this.getName))
+        val tryToFindNode = Option(graphDataBaseConnection.findNode(Label.label("DB"), "name", this.getName))
         val dbNode = tryToFindNode match {
           case Some(n) =>
             this.id =  n.getId
@@ -441,7 +441,7 @@ package BioGraph {
     override def hashCode = 41 * name.hashCode
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-      val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Domain"), "name", this.getName))
+      val tryToFindNode = Option(graphDataBaseConnection.findNode(Label.label("Domain"), "name", this.getName))
       val domainNode = tryToFindNode match {
         case Some(n) => n
         case None =>
@@ -905,7 +905,7 @@ package BioGraph {
     def setAccessions(newAccessions: List[String]) = accessions :: newAccessions
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
-      val findOrganismNode = graphDataBaseConnection.findNode(DynamicLabel.label("Organism"), "name", this.getName)
+      val findOrganismNode = graphDataBaseConnection.findNode(Label.label("Organism"), "name", this.getName)
 
       val organismNode = findOrganismNode match {
         case null =>
@@ -1228,7 +1228,7 @@ package BioGraph {
 
     override def upload(graphDataBaseConnection: GraphDatabaseService): graphdb.Node = {
       if (this.getId < 0) {
-        val tryToFindNode = Option(graphDataBaseConnection.findNode(DynamicLabel.label("Compound"), "name", this.getName))
+        val tryToFindNode = Option(graphDataBaseConnection.findNode(Label.label("Compound"), "name", this.getName))
         val compoundNode = tryToFindNode match {
           case Some(n) => n
           case None =>
