@@ -2,7 +2,7 @@ import sbtassembly.AssemblyPlugin.autoImport._
 
 name := "BioGraph"
 
-version := "3.0.2"
+version := "3.0.3"
 
 scalaVersion := "2.11.7"
 
@@ -14,7 +14,7 @@ resolvers += "biopax" at "http://www.biopax.org/m2repo/releases/"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.1.7" % "test"
 
-libraryDependencies += "org.neo4j" % "neo4j" % "2.3.1"
+libraryDependencies += "org.neo4j" % "neo4j" % "3.5.20"
 
 //libraryDependencies += "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.1.0"
 
