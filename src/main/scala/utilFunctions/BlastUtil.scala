@@ -21,9 +21,9 @@ class WorkWithGraph(pathToDataBase: String) extends TransactionSupport {
   val dataBaseFile = new File(pathToDataBase)
   val graphDataBaseConnection = new GraphDatabaseFactory().newEmbeddedDatabase(dataBaseFile)
 
-  def getAllNodesByLabel(requiredLabel: String): Iterator[Node] = transaction(graphDataBaseConnection) {
+  def getAllNodesByLabel(requiredLabel: String): List[Node] = transaction(graphDataBaseConnection) {
     val resultNodes = graphDataBaseConnection.findNodes(Label.label(requiredLabel))
-    resultNodes.asScala
+    resultNodes.asScala.toList
   }
 }
 
@@ -40,6 +40,8 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
   }
   //  read ID of existing Sequence and its other parameters
   var sequenceNodeCollectorPoly = getAllAASequencesNodes.map(createMapOfSequences).toMap
+//  val res = getAllAASequencesNodes
+//  var sequenceNodeCollectorPoly = res.map(createMapOfSequences).toMap
 
   var sequenceNodeCollectorDNA = getAllDNASequencesNodes.map(createMapOfSequences).toMap
 
@@ -54,14 +56,14 @@ class BlastUtil(pathToDataBase: String) extends WorkWithGraph(pathToDataBase) {
     nodeIterator.asScala.foreach(makeSomethingWithNodes)
   }
 
-  def writeNodesInfoToFile(nodeIterator: Iterator[Node], filename: PrintWriter)
+  def writeNodesInfoToFile(nodeList: List[Node], filename: PrintWriter)
                            (nodesInfoWriter: (Node, PrintWriter) => Unit): Unit = transaction(graphDataBaseConnection){
     logger.debug("Transaction in writeNodesInfoToFile")
-    nodeIterator.foreach(nodesInfoWriter(_, filename))
+    nodeList.foreach(nodesInfoWriter(_, filename))
   }
 
   def makeSequencesFastaFile(
-                   nodeIterator : Iterator[Node],
+                   nodeIterator : List[Node],
                    outputFastaFileName: String,
                    byMD5: Boolean = false) = {
     val outputFastaFile = new PrintWriter(outputFastaFileName)

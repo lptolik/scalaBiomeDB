@@ -44,6 +44,6 @@ object BlastTaskMaker extends App{
 
   }
 //  main("/home/artem/work/2018/staphylococcus/blast_task_maker_config.txt")
-  main("/Users/lptolik/Documents/Projects/Liverpool/Sclav/Neo4J.3.5.20/configs/blast_task_maker_config.txt")
+  main("/home/artem/work/2021/blast_task_maker_config.txt")
 
 }

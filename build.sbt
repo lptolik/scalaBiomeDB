@@ -32,6 +32,7 @@ libraryDependencies += "org.biojava" % "biojava-core" % "5.3.0"
 libraryDependencies += "org.biojava" % "sequencing" % "1.9.2"
 
 libraryDependencies += "org.neo4j" % "neo4j-kernel" % "3.5.20" classifier "tests"
+libraryDependencies += "org.neo4j" % "neo4j-enterprise-kernel" % "3.5.20" classifier "tests"
 
 libraryDependencies += "org.neo4j" % "neo4j-io" % "3.5.20" classifier "tests"
 
