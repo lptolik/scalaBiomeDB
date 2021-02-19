@@ -575,7 +575,7 @@ package utilFunctions {
 
 //    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYV")(seqeunceString)
 
-    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYVXZ")(seqeunceString)
+    def checkSequenceAA(seqeunceString: String) = checkSequence("ARNDCEQGHILKMFPSTWYVXZU")(seqeunceString)
 
 //    def checkSequenceDNA(seqeunceString: String) = checkSequence("ATGC")(seqeunceString)
 
